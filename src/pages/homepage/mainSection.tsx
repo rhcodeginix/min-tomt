@@ -59,7 +59,7 @@ const MainSection = () => {
               </div>
             </div>
             <div
-              className="bg-lightGreen p-5 md:p-6 desktop:p-8 relative w-full laptop:w-[519px] flex flex-col gap-4 md:gap-6"
+              className="bg-lightGreen p-5 md:p-6 desktop:p-8 relative w-full laptop:w-[540px] flex flex-col gap-4 md:gap-6"
               style={{
                 clipPath:
                   "polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px)",
