@@ -214,7 +214,7 @@ const Header = () => {
                     >
                       <Link
                         href={"/search-history"}
-                        className="px-2 py-1.5 text-sm hover:bg-lightPurple text-black w-full text-left cursor-pointer flex gap-2 items-center"
+                        className="px-2 py-1.5 text-sm hover:bg-lightGreen2 text-black w-full text-left cursor-pointer flex gap-2 items-center"
                         onClick={() => {
                           setIsDropdownOpen(false);
                         }}
@@ -229,7 +229,7 @@ const Header = () => {
                       </Link>
                       <Link
                         href={"/add-plot-list"}
-                        className="px-2 py-1.5 text-sm hover:bg-lightPurple text-black w-full text-left cursor-pointer flex gap-2 items-center"
+                        className="px-2 py-1.5 text-sm hover:bg-lightGreen2 text-black w-full text-left cursor-pointer flex gap-2 items-center"
                         onClick={() => {
                           setIsDropdownOpen(false);
                         }}
@@ -244,7 +244,7 @@ const Header = () => {
                       </Link>
                       <Link
                         href={"/login"}
-                        className="px-2 py-1.5 text-sm hover:bg-lightPurple text-black w-full text-left cursor-pointer flex gap-2 items-center"
+                        className="px-2 py-1.5 text-sm hover:bg-lightGreen2 text-black w-full text-left cursor-pointer flex gap-2 items-center"
                         onClick={handleLogout}
                       >
                         <Image
