@@ -80,7 +80,7 @@ const MainSection = () => {
                 Start byggelånsprosessen på 1 minutt med Vipps
               </h4>
               <button
-                className={`px-3 lg:px-4 lg:py-2.5 cursor-pointer flex justify-center items-center bg-purple rounded-[40px] transition-all duration-300 ease-out h-[40px] md:h-[48px] m-2 gap-2`}
+                className={`px-3 lg:px-4 lg:py-2.5 cursor-pointer flex justify-center items-center bg-purple rounded-[40px] transition-all duration-300 ease-out h-[40px] md:h-[48px] gap-2`}
                 type="button"
                 onClick={handleVippsLogin}
               >
