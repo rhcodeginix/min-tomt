@@ -11,7 +11,7 @@ const SideSpaceContainer: React.FC<SideSpaceContainerProps> = ({
 }) => {
   return (
     <div
-      className={`px-4 sm:px-5 md:px-8 lg:px-10 big:px-[80px] xBig:px-[112px] ${className && className}`}
+      className={`px-4 sm:px-5 md:px-8 lg:px-10 desktop:px-[80px] big:px-[112px] xBig:px-[140px] ${className && className}`}
     >
       {children}
     </div>

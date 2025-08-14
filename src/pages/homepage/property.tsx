@@ -178,9 +178,7 @@ const Property: React.FC = () => {
                             property?.additionalData?.answer?.bya_calculations
                               ?.input?.bya_percentage
                           }{" "}
-                          <span className="text-secondary font-normal">
-                            m<sup>2</sup>
-                          </span>
+                          %
                         </p>
                       </div>
                       <div className="h-[40px] border-l border-gray2"></div>
