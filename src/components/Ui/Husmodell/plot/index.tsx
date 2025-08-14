@@ -125,29 +125,7 @@ const Plots: React.FC<{
           return;
         }
         let kommuneNumbers: number[] = [];
-        // const kommuneNumbers: number[] = matchedCities
-        //   .flatMap((city: any) => {
-        //     if (subCityFormLocalStorage.length > 0) {
-        //       const matched =
-        //         city.kommunerList?.filter((k: any) =>
-        //           subCityFormLocalStorage.includes(k.name)
-        //         ) || [];
 
-        //       if (matched.length > 0) {
-        //         return matched.map((k: any) => parseInt(k.number, 10));
-        //       }
-        //     }
-
-        //     return Object.values(city.kommunenummer).map((val: any) =>
-        //       parseInt(
-        //         typeof val === "string"
-        //           ? val.replace(/"/g, "")
-        //           : val.toString(),
-        //         10
-        //       )
-        //     );
-        //   })
-        //   .filter((num: any) => !isNaN(num));
         matchedCities.forEach((property: any) => {
           if (subCityFormLocalStorage.length > 0) {
             const matched = property.kommunerList?.filter((k: any) =>
@@ -159,7 +137,6 @@ const Plots: React.FC<{
               );
             }
           } else {
-            // Use all subkommuner under the city
             kommuneNumbers.push(
               ...(property.kommunerList || []).map((k: any) =>
                 parseInt(k.number, 10)
@@ -168,7 +145,6 @@ const Plots: React.FC<{
           }
         });
 
-        // kommuneNumbers = kommuneNumbers.filter((num) => !isNaN(num));
         kommuneNumbers = [...new Set(kommuneNumbers)].filter(
           (num) => !isNaN(num)
         );

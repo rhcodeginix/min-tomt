@@ -81,23 +81,6 @@ const testimonials: Testimonial[] = [
     location: "Østlandet",
     image: Img_slider_avatar,
   },
-  // {
-  //   stars: 5,
-  //   text: (
-  //     <div className="text-black text-xs md:text-sm lg:text-base">
-  //       Etter å ha fått avslag i flere ulike banker begynte jeg å miste troen på
-  //       at boligdrømmen kunne bli virkelighet. Men via{" "}
-  //       <span className="font-bold">MinTomt</span> og{" "}
-  //       <span className="font-bold">SpareBank 1 Hallingdal Valdres</span> fikk
-  //       jeg raskt respons og en konkret finansieringsramme – tilpasset både
-  //       tomten og huset jeg ønsket å bygge. Det tok bare ett døgn før jeg satt
-  //       med en godkjent løsning.
-  //     </div>
-  //   ),
-  //   author: "— Kristian Bergh",
-  //   location: "Østlandet",
-  //   image: Img_slider_avatar,
-  // },
 ];
 
 const AboutUs: React.FC = () => {
@@ -148,7 +131,6 @@ const AboutUs: React.FC = () => {
           slidesToShow: 1,
           centerPadding: "20px",
           centerMode: true,
-          // arrows: false,
         },
       },
     ],

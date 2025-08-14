@@ -60,35 +60,6 @@ const HouseDetailPage: React.FC = () => {
     }
   }, [loginUser]);
 
-  // const [supplierData, setSupplierData] = useState<any>(null);
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const supplierDocRef = doc(
-  //         db,
-  //         "suppliers",
-  //         husmodellData?.Leverandører
-  //       );
-  //       const docSnap: any = await getDoc(supplierDocRef);
-
-  //       if (docSnap.exists()) {
-  //         setSupplierData(docSnap.data());
-  //       } else {
-  //         console.error(
-  //           "No document found for ID:",
-  //           husmodellData?.Leverandører
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching supplier data:", error);
-  //     }
-  //   };
-  //   if (husmodellData?.Leverandører) {
-  //     getData();
-  //   }
-  // }, [husmodellData?.Leverandører]);
-
   useEffect(() => {
     if (isPopupOpen) {
       document.body.style.overflow = "hidden";
@@ -122,53 +93,6 @@ const HouseDetailPage: React.FC = () => {
     <div className="relative">
       <div className="w-full flex flex-col lg:flex-row gap-5 md:gap-6 lg:gap-10 desktop:gap-[60px] mb-8">
         <div className="w-full lg:w-[43%]">
-          {/* <h4 className="text-black mb-4 md:mb-6 font-semibold text-lg md:text-xl desktop:text-2xl">
-                {husmodellData?.husmodell_name}
-              </h4> */}
-          {/* <div className="relative">
-                <img
-                  src={husmodellData?.photo}
-                  alt="image"
-                  className="w-full h-[262px] object-cover rounded-[12px] overflow-hidden"
-                />
-                <img
-                  src={supplierData?.photo}
-                  alt="image"
-                  className="absolute top-[12px] left-[12px] bg-[#FFFFFFB2] py-2 px-3 flex items-center justify-center rounded-[32px] w-[130px]"
-                />
-              </div> */}
-          {/* <div className="my-4 md:my-[20px] flex items-center justify-between">
-                <div className="flex flex-col gap-1 md:gap-2">
-                  <p className="text-secondary text-sm md:text-base">
-                    Pris fra
-                  </p>
-                  <h4 className="text-base md:text-lg desktop:text-xl font-semibold text-black">
-                    {formatCurrency(husmodellData?.pris)}
-                  </h4>
-                </div>
-                <div className="flex items-center gap-2 md:gap-4">
-                  <div className="text-secondary text-xs md:text-sm">
-                    <span className="text-black font-semibold">
-                      {husmodellData?.BRATotal}
-                    </span>{" "}
-                    m<sup>2</sup>
-                  </div>
-                  <div className="h-[12px] w-[1px] border-l border-gray"></div>
-                  <div className="text-secondary text-xs md:text-sm">
-                    <span className="text-black font-semibold">
-                      {husmodellData?.Soverom}
-                    </span>{" "}
-                    soverom
-                  </div>
-                  <div className="h-[12px] w-[1px] border-l border-gray"></div>
-                  <div className="text-secondary text-xs md:text-sm">
-                    <span className="text-black font-semibold">
-                      {husmodellData?.Bad}
-                    </span>{" "}
-                    bad
-                  </div>
-                </div>
-              </div> */}
           <div className="w-full flex flex-col sm:flex-row gap-4 md:gap-6 desktop:gap-8 mb-8 md:mb-[60px]">
             <div className="w-full sm:w-1/2 border-t-2 border-b-0 border-l-0 border-r-0 border-primary pt-3 md:pt-4">
               <table className="table-auto border-0 w-full text-left property_detail_tbl">
@@ -426,7 +350,6 @@ const HouseDetailPage: React.FC = () => {
             ></div>
           ) : (
             <h2 className="text-black mb-4 md:mb-6 font-semibold text-lg md:text-xl desktop:text-2xl">
-              {/* Film av {husmodellData?.husmodell_name} */}
               {husmodellData?.TittelVideo}
             </h2>
           )}

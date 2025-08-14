@@ -113,7 +113,6 @@ const Belop: React.FC<{
 
         setFormData((prev) => ({
           ...prev,
-          // Område: cityFormLocalStorage || 0,
           Område:
             cityFormLocalStorage.length > 0
               ? cityFormLocalStorage
@@ -131,44 +130,6 @@ const Belop: React.FC<{
 
         let kommuneNumbers: number[] = [];
 
-        // if (subCityFormLocalStorage.length > 0) {
-        //   matchedCities.forEach((property: any) => {
-        //     const matched = property.kommunerList?.filter((k: any) =>
-        //       subCityFormLocalStorage.includes(k.name)
-        //     );
-        //     if (matched?.length) {
-        //       kommuneNumbers.push(
-        //         ...matched.map((k: any) => parseInt(k.number, 10))
-        //       );
-        //     } else {
-        //       kommuneNumbers.push(
-        //         ...Object.values(property?.kommunenummer || {}).map(
-        //           (val: any) =>
-        //             parseInt(
-        //               (typeof val === "string"
-        //                 ? val.replace(/"/g, "")
-        //                 : val
-        //               ).toString(),
-        //               10
-        //             )
-        //         )
-        //       );
-        //     }
-        //   });
-        // } else {
-        //   kommuneNumbers = matchedCities.flatMap((property: any) =>
-        //     Object.values(property?.kommunenummer || {}).map((val: any) =>
-        //       parseInt(
-        //         (typeof val === "string"
-        //           ? val.replace(/"/g, "")
-        //           : val
-        //         ).toString(),
-        //         10
-        //       )
-        //     )
-        //   );
-        // }
-
         matchedCities.forEach((property: any) => {
           if (subCityFormLocalStorage.length > 0) {
             const matched = property.kommunerList?.filter((k: any) =>
@@ -180,7 +141,6 @@ const Belop: React.FC<{
               );
             }
           } else {
-            // Use all subkommuner under the city
             kommuneNumbers.push(
               ...(property.kommunerList || []).map((k: any) =>
                 parseInt(k.number, 10)
@@ -189,7 +149,6 @@ const Belop: React.FC<{
           }
         });
 
-        // kommuneNumbers = kommuneNumbers.filter((num) => !isNaN(num));
         kommuneNumbers = [...new Set(kommuneNumbers)].filter(
           (num) => !isNaN(num)
         );

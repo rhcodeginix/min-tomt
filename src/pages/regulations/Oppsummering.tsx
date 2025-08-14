@@ -75,9 +75,6 @@ const Oppsummering: React.FC<{
       : Yup.boolean()
           .oneOf([true], "You must accept the sharing data")
           .required("Påkrevd"),
-    // Isopt: Yup.boolean()
-    //   .oneOf([true], "You must accept this")
-    //   .required("Påkrevd"),
     Isopt: skipSharingDataValidation
       ? Yup.boolean().notRequired()
       : Yup.boolean().oneOf([true], "You must accept this").required("Påkrevd"),
@@ -455,7 +452,7 @@ const Oppsummering: React.FC<{
                                   )}
                               </div>
                               <p
-                                className="border-2 border-primary text-primary     text-sm sm:text-base rounded-[40px] w-max h-[40px] font-medium flex items-center justify-center px-3 md:px-5 cursor-pointer"
+                                className="border-2 border-primary text-primary text-sm sm:text-base rounded-[40px] w-max h-[40px] font-medium flex items-center justify-center px-3 md:px-5 cursor-pointer"
                                 onClick={() => {
                                   setSkipSharingDataValidation(true);
                                   setTimeout(() => {

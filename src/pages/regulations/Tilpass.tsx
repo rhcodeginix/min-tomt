@@ -479,7 +479,6 @@ const Tilpass: React.FC<{
                                           </SwiperSlide>
                                         )
                                       )}
-                                      {/* <div className="swiper-pagination"></div> */}
                                     </Swiper>
                                   )}
                                   <div
@@ -496,21 +495,6 @@ const Tilpass: React.FC<{
                                 <p className="text-darkBlack text-xs md:text-sm two_line_elipse mb-1.5 md:mb-3">
                                   {product?.Produktbeskrivelse}
                                 </p>
-                                {/* <div className="relative group">
-                                  <p className="text-darkBlack text-xs md:text-sm two_line_elipse mb-1.5 md:mb-3 cursor-pointer">
-                                    {product?.Produktbeskrivelse}
-                                  </p>
-                                  <div
-                                    className="absolute hidden group-hover:block bg-white shadow-lg border border-gray p-2 rounded-md w-64 transition-all duration-300 opacity-0 group-hover:opacity-100"
-                                    style={{
-                                      zIndex: 999,
-                                    }}
-                                  >
-                                    <p className="text-xs text-black">
-                                      {product?.Produktbeskrivelse}
-                                    </p>
-                                  </div>
-                                </div> */}
                               </div>
                               <div className="flex items-center gap-1 justify-between">
                                 <div>

@@ -743,11 +743,7 @@ const HomePageSearchTab: React.FC = () => {
                       <h4 className="text-darkBlack text-sm md:text-base lg:text-lg lg:leading-[30px] mb-3">
                         <span className="font-bold">
                           {property?.Husdetaljer?.husmodell_name}
-                        </span>{" "}
-                        {/* fra{" "}
-                        <span className="font-bold">
-                          {finalData?.company_name}
-                        </span> */}
+                        </span>
                       </h4>
                       <img
                         src={property?.Husdetaljer?.photo}

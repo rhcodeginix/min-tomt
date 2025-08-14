@@ -39,7 +39,7 @@ const UserLayout = ({ children }: Props) => {
       updateCustomizeHouse(null);
     }
   }, [router.pathname, router.isReady, updateCustomizeHouse]);
-  // className="mt-[62px] sm:mt-[66px] md:mt-[86px]"
+
   return (
     <div
       className={`${

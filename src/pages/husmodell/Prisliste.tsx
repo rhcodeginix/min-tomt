@@ -167,56 +167,40 @@ const Prisliste: React.FC<{ husmodellData: any; loading: any }> = ({
           <div className="flex flex-col gap-2 md:gap-4 p-3 lg:p-5">
             {Tomtekost &&
               Tomtekost?.length > 0 &&
-              Tomtekost
-                // sort((a: any, b: any) => {
-                //   const aPris =
-                //     parseInt(String(a?.pris)?.replace(/\D/g, "")) || 0;
-                //   const bPris =
-                //     parseInt(String(b?.pris)?.replace(/\D/g, "")) || 0;
-
-                //   const aHasPris = !!a?.pris;
-                //   const bHasPris = !!b?.pris;
-
-                //   if (aHasPris && !bHasPris) return -1;
-                //   if (!aHasPris && bHasPris) return 1;
-
-                //   return bPris - aPris;
-                // })
-                // .
-                ?.map((item: any, index: number) => {
-                  return (
-                    <div
-                      className="flex items-center gap-2 justify-between"
-                      key={index}
-                    >
-                      <div className="flex items-center gap-1 md:gap-2">
-                        {loading ? (
-                          <div className="w-3.5 h-3.5 rounded-lg custom-shimmer"></div>
-                        ) : (
-                          <Image
-                            src={Ic_info_circle}
-                            alt="icon"
-                            className="w-3.5 h-3.5 md:w-auto md:h-auto"
-                          />
-                        )}
-                        {loading ? (
-                          <div className="w-[140px] h-[20px] rounded-lg custom-shimmer"></div>
-                        ) : (
-                          <p className="text-secondary2 text-xs md:text-sm">
-                            {item?.Headline}
-                          </p>
-                        )}
-                      </div>
+              Tomtekost?.map((item: any, index: number) => {
+                return (
+                  <div
+                    className="flex items-center gap-2 justify-between"
+                    key={index}
+                  >
+                    <div className="flex items-center gap-1 md:gap-2">
+                      {loading ? (
+                        <div className="w-3.5 h-3.5 rounded-lg custom-shimmer"></div>
+                      ) : (
+                        <Image
+                          src={Ic_info_circle}
+                          alt="icon"
+                          className="w-3.5 h-3.5 md:w-auto md:h-auto"
+                        />
+                      )}
                       {loading ? (
                         <div className="w-[140px] h-[20px] rounded-lg custom-shimmer"></div>
                       ) : (
-                        <h4 className="text-black font-medium text-sm md:text-base whitespace-nowrap">
-                          {item?.pris ? `kr ${item.pris}` : "inkl. i tilbud"}
-                        </h4>
+                        <p className="text-secondary2 text-xs md:text-sm">
+                          {item?.Headline}
+                        </p>
                       )}
                     </div>
-                  );
-                })}
+                    {loading ? (
+                      <div className="w-[140px] h-[20px] rounded-lg custom-shimmer"></div>
+                    ) : (
+                      <h4 className="text-black font-medium text-sm md:text-base whitespace-nowrap">
+                        {item?.pris ? `kr ${item.pris}` : "inkl. i tilbud"}
+                      </h4>
+                    )}
+                  </div>
+                );
+              })}
             <div className="flex items-center gap-2 justify-between">
               <div className="flex items-center gap-1 md:gap-2">
                 {loading ? (

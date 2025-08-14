@@ -419,11 +419,8 @@ const Oppsummering: React.FC<{
                                     </p>
                                   )}
                               </div>
-                              {/* <p className="border-2 border-primary text-primary     text-sm sm:text-base rounded-[40px] w-max h-[40px] font-medium flex items-center justify-center px-3 md:px-5 cursor-pointer">
-                                Legg til
-                              </p> */}
                               <p
-                                className="border-2 border-primary text-primary     text-sm sm:text-base rounded-[40px] w-max h-[40px] font-medium flex items-center justify-center px-3 md:px-5 cursor-pointer"
+                                className="border-2 border-primary text-primary text-sm sm:text-base rounded-[40px] w-max h-[40px] font-medium flex items-center justify-center px-3 md:px-5 cursor-pointer"
                                 onClick={() => {
                                   setSkipSharingDataValidation(true);
                                   setTimeout(() => {

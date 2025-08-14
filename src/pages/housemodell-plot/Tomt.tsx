@@ -283,7 +283,6 @@ const Tomt: React.FC<{
               className="absolute top-2 md:top-3 right-0 md:right-3"
               onClick={() => {
                 setIsPopupOpen(false);
-                // router.push("/");
                 delete updatedQuery.propertyId;
                 delete updatedQuery.husmodellId;
                 delete updatedQuery.leadId;

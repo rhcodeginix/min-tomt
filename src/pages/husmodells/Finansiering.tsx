@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SideSpaceContainer from "@/components/common/sideSpace";
 import Image from "next/image";
-// import Ic_close from "@/public/images/Ic_close.svg";
 import Ic_breadcrumb_arrow from "@/public/images/Ic_breadcrumb_arrow.svg";
 import Button from "@/components/common/button";
 import Link from "next/link";
@@ -122,15 +121,6 @@ const Finansiering: React.FC<{
       }, 0)
     : 0;
   const formattedNumberOfByggekostnader = totalPrisOfByggekostnader;
-  // const [isOpen, setIsOpen] = useState(false);
-
-  // const handlePopup = () => {
-  //   if (isOpen) {
-  //     setIsOpen(false);
-  //   } else {
-  //     setIsOpen(true);
-  //   }
-  // };
 
   return (
     <div className="relative">
@@ -222,7 +212,6 @@ const Finansiering: React.FC<{
                   helpWithFinancing: null,
                 }}
                 validationSchema={validationSchema}
-                // onSubmit={handleSubmit}
                 onSubmit={(values, { setTouched }) => {
                   if (values.helpWithFinancing === null) {
                     setTouched({ helpWithFinancing: true });
@@ -564,7 +553,6 @@ const Finansiering: React.FC<{
                   setTimeout(() => {
                     document.querySelector("form")?.requestSubmit();
                   }, 0);
-                  // handlePopup();
                 }}
               />
             </div>

@@ -125,7 +125,6 @@ const SelectPlot: React.FC<{
                             JSON.stringify(address)
                           );
                           setStoreAddress(address);
-                          // handleNext();
                           router.push(
                             `${router.asPath}&kommunenummer=${address.kommunenummer}&gardsnummer=${address.gardsnummer}&bruksnummer=${address.bruksnummer}&kommunenavn=${address.kommunenavn}`
                           );

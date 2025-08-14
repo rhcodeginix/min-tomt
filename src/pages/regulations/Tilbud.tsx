@@ -3,7 +3,6 @@ import SideSpaceContainer from "@/components/common/sideSpace";
 import Image from "next/image";
 import Ic_breadcrumb_arrow from "@/public/images/Ic_breadcrumb_arrow.svg";
 import Button from "@/components/common/button";
-// import Loader from "@/components/Loader";
 import Link from "next/link";
 import PropertyHouseDetails from "@/components/Ui/husmodellPlot/PropertyHouseDetails";
 import PropertyDetails from "@/components/Ui/husmodellPlot/properyDetails";
@@ -455,45 +454,6 @@ const Tilbud: React.FC<{
                       Prisliste (inkludert MVA)
                     </h5>
                     <div className="flex flex-col gap-2 md:gap-3">
-                      {/* {updatedArray?.length > 0 ? (
-                        <div className="flex flex-col gap-2 md:gap-3">
-                          {updatedArray.map((item: any, index: number) => (
-                            <div
-                              key={index}
-                              className="flex-col flex gap-2 md:gap-3"
-                            >
-                              {item?.Kategorinavn?.map(
-                                (cat: any, catIndex: number) => (
-                                  <div key={catIndex}>
-                                    {cat?.produkter?.map(
-                                      (product: any, proIndex: number) => (
-                                        <div
-                                          key={proIndex}
-                                          className="flex gap-2 w-full justify-between"
-                                        >
-                                          <h4 className="text-secondary2 text-xs md:text-sm">
-                                            {item?.navn}
-                                          </h4>
-                                          <div className="text-black font-medium text-xs md:text-sm">
-                                            {product?.IncludingOffer
-                                              ? "Standard"
-                                              : formatCurrency(product?.pris)}
-                                          </div>
-                                        </div>
-                                      )
-                                    )}
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-center py-3 text-lg">
-                          Ingen tilpasning.
-                        </p>
-                      )}
-                      <div className="w-full border-t border-[#DCDFEA]"></div> */}
                       <div className="flex gap-2 w-full justify-between">
                         <h4 className="text-secondary2 text-xs md:text-sm">
                           Totalt tilpassing

@@ -21,7 +21,6 @@ import Tilpass from "./Tilpass";
 import Tilbud from "./Tilbud";
 import Finansiering from "./Finansiering";
 import Verdivurdering from "./Verdivurdering";
-// import Oppsummering from "./Oppsummering";
 
 const HusmodellPlot = () => {
   const [currIndex, setCurrIndex] = useState<number | null>(null);
@@ -239,30 +238,6 @@ const HusmodellPlot = () => {
       }
     }
   }, [propertyId, userUID, db, user, husmodellId, isCall]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-
-  //     try {
-  //       const husmodellDocRef = doc(db, "house_model", String(husmodellId));
-  //       const husmodellDocSnap = await getDoc(husmodellDocRef);
-
-  //       if (husmodellDocSnap.exists()) {
-  //         setHouseModelData(husmodellDocSnap.data());
-  //       } else {
-  //         console.error("No document found for plot or husmodell ID.");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   if (husmodellId) {
-  //     fetchData();
-  //   }
-  // }, [husmodellId, isCall]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
@@ -532,22 +507,6 @@ const HusmodellPlot = () => {
         />
       ),
     },
-    // {
-    //   name: "Oppsummering",
-    //   component: (
-    //     <Oppsummering
-    //       handleNext={handleNext}
-    //       lamdaDataFromApi={lamdaDataFromApi}
-    //       loadingLamdaData={loading}
-    //       CadastreDataFromApi={CadastreDataFromApi}
-    //       askData={askData}
-    //       HouseModelData={HouseModelData}
-    //       handlePrevious={handlePrevious}
-    //       supplierData={supplierData}
-    //       pris={pris}
-    //     />
-    //   ),
-    // },
   ];
 
   return (
@@ -556,7 +515,6 @@ const HusmodellPlot = () => {
         steps={steps}
         currIndex={currIndex}
         setCurrIndex={setCurrIndex}
-        // total={true}
       />
       {showErrorPopup && <ErrorPopup />}
     </>

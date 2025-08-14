@@ -42,7 +42,6 @@ const Verdivurdering: React.FC<{
   supplierData,
 }) => {
   const router = useRouter();
-  // const Husdetaljer = HouseModelData?.Husdetaljer;
 
   const { noPlot } = router.query;
 

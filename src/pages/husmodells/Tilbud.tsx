@@ -51,7 +51,6 @@ const Tilbud: React.FC<{
     HouseModelData?.Huskonfigurator?.hovedkategorinavn || [];
   const Husdetaljer = HouseModelData?.Husdetaljer;
 
-  // const [user, setUser] = useState<any>(null);
   const { husmodellId, noPlot } = router.query;
   const plotId = router.query["plotId"];
   const [finalData, setFinalData] = useState<any>(null);
@@ -59,14 +58,11 @@ const Tilbud: React.FC<{
   const husmodellData = finalData?.husmodell?.Husdetaljer;
   useEffect(() => {
     if (!router.query["plotId"]) {
-      // router.query;
       router.push(`${router.asPath}&noPlot=true`);
     }
   }, []);
 
   useEffect(() => {
-    // if (!husmodellId || !plotId) return;
-
     const fetchData = async () => {
       try {
         let plotData = null;
@@ -86,7 +82,6 @@ const Tilbud: React.FC<{
         const husmodellDocSnap = await getDoc(husmodellDocRef);
 
         if (husmodellDocSnap.exists()) {
-          // let plotData = plotDocSnap.data();
           let husmodellData = husmodellDocSnap.data();
           setFinalData({
             plot: plotData,
@@ -206,9 +201,6 @@ const Tilbud: React.FC<{
 
         if (!leadsQuerySnapshot.empty) {
           const existingLeadId = leadsQuerySnapshot.docs[0].id;
-          // await updateDoc(doc(db, "leads", existingLeadId), {
-          //   updatedAt: new Date(),
-          // });
           if (currentLeadId !== existingLeadId) {
             queryParams.set("leadId", existingLeadId);
             const data = leadsQuerySnapshot.docs[0].data();
@@ -478,11 +470,6 @@ const Tilbud: React.FC<{
                         <div className="w-[37%] h-full rounded-lg custom-shimmer"></div>
                       ) : (
                         <div className="w-[37%] rounded-[8px] overflow-hidden h-full">
-                          {/* <GoogleMapComponent
-                          coordinates={
-                            lamdaDataFromApi?.coordinates?.convertedCoordinates
-                          }
-                        /> */}
                           {lamdaDataFromApi?.coordinates
                             ?.convertedCoordinates && (
                             <NorkartMap
@@ -665,53 +652,6 @@ const Tilbud: React.FC<{
                       </h5>
                     )}
                     <div className="flex flex-col gap-2 md:gap-3">
-                      {/* {updatedArray?.length > 0 ? (
-                        <div className="flex flex-col gap-2 md:gap-3">
-                          {updatedArray.map((item: any, index: number) => (
-                            <div
-                              key={index}
-                              className="flex-col flex gap-2 md:gap-3"
-                            >
-                              {item?.Kategorinavn?.map(
-                                (cat: any, catIndex: number) => (
-                                  <div key={catIndex}>
-                                    {cat?.produkter?.map(
-                                      (product: any, proIndex: number) => (
-                                        <div
-                                          key={proIndex}
-                                          className="flex gap-2 w-full justify-between"
-                                        >
-                                          {loading ? (
-                                            <div className="w-[200px] h-[20px] rounded-lg custom-shimmer"></div>
-                                          ) : (
-                                            <h4 className="text-secondary2 text-xs md:text-sm">
-                                              {item?.navn}
-                                            </h4>
-                                          )}
-                                          {loading ? (
-                                            <div className="w-[200px] h-[20px] rounded-lg custom-shimmer"></div>
-                                          ) : (
-                                            <div className="text-black font-medium text-xs md:text-sm">
-                                              {product?.IncludingOffer
-                                                ? "Standard"
-                                                : formatCurrency(product?.pris)}
-                                            </div>
-                                          )}
-                                        </div>
-                                      )
-                                    )}
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-center py-3 text-lg">
-                          Ingen tilpasning.
-                        </p>
-                      )}
-                      <div className="w-full border-t border-[#DCDFEA]"></div> */}
                       <div className="flex gap-2 w-full justify-between">
                         {loading ? (
                           <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>

@@ -69,10 +69,6 @@ const index = () => {
                   href={`/regulations?propertyId=${property?.propertyId}`}
                   className="relative"
                   onClick={() => {
-                    // localStorage.setItem(
-                    //   "IPlot_Address",
-                    //   JSON.stringify(property?.getAddress)
-                    // );
                     setStoreAddress(property?.getAddress);
                     const currIndex = 0;
                     localStorage.setItem("currIndex", currIndex.toString());

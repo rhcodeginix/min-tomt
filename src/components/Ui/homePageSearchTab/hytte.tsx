@@ -42,7 +42,6 @@ const HytteTab = () => {
           ))}
         </div>
       </div>
-      {/* Search Button */}
       <button
         type="submit"
         disabled={!selectedCategory}

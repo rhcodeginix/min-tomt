@@ -182,9 +182,8 @@ const PropertyDetails: React.FC<{
                   <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>
                 ) : (
                   <p className="text-black text-sm lg:text-base font-semibold">
-                    Grunnflate på{" "}
-                    {/* {askData?.bya_calculations?.results?.available_building_area}{" "} */}
-                    {HouseModelData?.Husdetaljer?.BebygdAreal}m<sup>2</sup>
+                    Grunnflate på {HouseModelData?.Husdetaljer?.BebygdAreal}m
+                    <sup>2</sup>
                   </p>
                 )}
                 {loading ? (

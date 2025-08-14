@@ -93,7 +93,6 @@ const index = () => {
               }
               await signInWithEmailAndPassword(auth, userEmail, userUid);
               localStorage.setItem("min_tomt_login", "true");
-              // const userDocRef = doc(db, "users", userEmail);
 
               await updateDoc(userDocRef, {
                 updatedAt: new Date(),
@@ -103,11 +102,10 @@ const index = () => {
                 position: "top-right",
               });
               localStorage.setItem("I_plot_email", userEmail);
-              // router.push("/");
               const redirectPath = Cookies.get("vipps_redirect_old_path");
               if (redirectPath) {
                 Cookies.remove("vipps_redirect_old_path");
-                window.location.assign(redirectPath); // full reload to the original route
+                window.location.assign(redirectPath);
               } else {
                 router.push("/");
               }
@@ -152,11 +150,10 @@ const index = () => {
                   updatedAt: new Date(),
                   loginCount: increment(1),
                 });
-                // router.push("/");
                 const redirectPath = Cookies.get("vipps_redirect_old_path");
                 if (redirectPath) {
                   Cookies.remove("vipps_redirect_old_path");
-                  window.location.assign(redirectPath); // full reload to the original route
+                  window.location.assign(redirectPath);
                 } else {
                   router.push("/");
                 }
@@ -187,15 +184,13 @@ const index = () => {
                   toast.success("Vipps login successfully", {
                     position: "top-right",
                   });
-                  // router.push("/");
                   const redirectPath = Cookies.get("vipps_redirect_old_path");
                   if (redirectPath) {
                     Cookies.remove("vipps_redirect_old_path");
-                    window.location.assign(redirectPath); // full reload to the original route
+                    window.location.assign(redirectPath);
                   } else {
                     router.push("/");
                   }
-                  // const userDocRef = doc(db, "users", userEmail);
 
                   await updateDoc(userDocRef, {
                     updatedAt: new Date(),

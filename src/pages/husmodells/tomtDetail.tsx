@@ -8,7 +8,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import PropertyHouseDetails from "@/components/Ui/husmodellPlot/PropertyHouseDetails";
 import PropertyDetails from "@/components/Ui/husmodellPlot/properyDetails";
-// import LeadsBox from "@/components/Ui/husmodellPlot/leadsBox";
 import { Building2, House } from "lucide-react";
 import HouseDetailPage from "@/components/Ui/houseDetail";
 import {
@@ -103,9 +102,7 @@ const TomtHouseDetails: React.FC<{
 
         if (!leadsQuerySnapshot.empty) {
           const existingLeadId = leadsQuerySnapshot.docs[0].id;
-          // await updateDoc(doc(db, "leads", existingLeadId), {
-          //   updatedAt: new Date(),
-          // });
+
           if (currentLeadId !== existingLeadId) {
             queryParams.set("leadId", existingLeadId);
             router.replace({
@@ -199,7 +196,6 @@ const TomtHouseDetails: React.FC<{
                     if (updatedQuery.kommunenavn)
                       delete updatedQuery.kommunenavn;
                     if (updatedQuery.empty) delete updatedQuery.empty;
-                    // if (updatedQuery.leadId) delete updatedQuery.leadId;
                     delete updatedQuery.plotId;
                     router
                       .replace({ pathname, query: updatedQuery }, undefined, {
@@ -233,9 +229,6 @@ const TomtHouseDetails: React.FC<{
         HouseModelData={HouseModelData}
         loading={loadingLamdaData}
       />
-      {/* <SideSpaceContainer>
-        <LeadsBox />
-      </SideSpaceContainer> */}
       <div id="regulationDocument">
         <div
           className="border-b border-gray3 py-6 pb-8"
@@ -308,18 +301,6 @@ const TomtHouseDetails: React.FC<{
       >
         <SideSpaceContainer>
           <div className="flex justify-end gap-4 items-center">
-            {/* <Button
-              text="Tilbake"
-              className="border-2 border-primary text-primary sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-medium desktop:px-[46px] relative desktop:py-[16px]"
-              onClick={() => {
-                delete updatedQuery.plotId;
-
-                router.replace({ pathname, query: updatedQuery }, undefined, {
-                  shallow: true,
-                });
-                // handlePrevious();
-              }}
-            /> */}
             <Button
               text="Tilbake"
               className="border-2 border-primary text-primary sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-medium desktop:px-[46px] relative desktop:py-[16px]"
@@ -330,14 +311,10 @@ const TomtHouseDetails: React.FC<{
                 if (updatedQuery.gardsnummer) delete updatedQuery.gardsnummer;
                 if (updatedQuery.kommunenavn) delete updatedQuery.kommunenavn;
                 if (updatedQuery.empty) delete updatedQuery.empty;
-                // if (updatedQuery.leadId) delete updatedQuery.leadId;
                 delete updatedQuery.plotId;
                 router.replace({ pathname, query: updatedQuery }, undefined, {
                   shallow: true,
                 });
-                // .then(() => {
-                //   handlePrevious();
-                // });
               }}
             />
             <Button

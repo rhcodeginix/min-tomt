@@ -125,10 +125,6 @@ const PlotProperty: React.FC<{
                   <div
                     key={index}
                     className="border border-gray3 rounded-[8px] p-3 laptop:p-5 cursor-pointer shadow-shadow4 hover:shadow-shadow1"
-                    // style={{
-                    //   boxShadow:
-                    //     "0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A",
-                    // }}
                     onClick={() => {
                       const router_query: any = { ...router.query };
 
@@ -149,8 +145,6 @@ const PlotProperty: React.FC<{
                         undefined,
                         { shallow: true }
                       );
-
-                      // handleNext();
                     }}
                   >
                     <div className="mb-2 md:mb-3 desktop:mb-4 flex items-start justify-between gap-3">
@@ -333,8 +327,6 @@ const PlotProperty: React.FC<{
                                 undefined,
                                 { shallow: true }
                               );
-
-                              // handleNext();
                             }}
                           />
                         </div>

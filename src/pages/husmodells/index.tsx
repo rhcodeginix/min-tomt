@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Tomt from "./Tomt";
 import Tilbud from "./Tilbud";
 import Finansiering from "./Finansiering";
-// import Oppsummering from "./Oppsummering";
 import ErrorPopup from "@/components/Ui/error";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/config/firebaseConfig";
@@ -24,7 +23,6 @@ import { useUserLayoutContext } from "@/context/userLayoutContext";
 import Tilpass from "./Tilpass";
 import ApiUtils from "@/api";
 import Verdivurdering from "./Verdivurdering";
-// import TomtHouseDetails from "./tomtDetail";
 
 const HusmodellDetail = () => {
   const [currIndex, setCurrIndex] = useState(0);
@@ -39,7 +37,6 @@ const HusmodellDetail = () => {
     }
   }, [currIndex]);
   const router = useRouter();
-  // const { plotId, husmodellId } = router.query;
   const {
     plotId,
     husmodellId,
@@ -307,13 +304,8 @@ const HusmodellDetail = () => {
             pathname: router.pathname,
             query: Object.fromEntries(queryParams),
           });
-          // if (additionalResponse) {
-          //   setLamdaDataFromApi(data);
-          //   if (CadastreDataResponse && CadastreDataResponse?.apis) {
-          //     setCadastreDataFromApi(CadastreDataResponse?.apis);
-          //   }
+
           setAdditionalData(additionalResponse);
-          // }
         } catch (error) {
           console.error("Error fetching additional data from askApi:", error);
           setShowErrorPopup(true);
@@ -438,24 +430,6 @@ const HusmodellDetail = () => {
         />
       ),
     },
-    // {
-    //   name: "Detaljer",
-    //   component: (
-    //     <TomtHouseDetails
-    //       handleNext={handleNext}
-    //       handlePrevious={handlePrevious}
-    //       loadingAdditionalData={loading}
-    //       loginUser={loginUser}
-    //       loadingLamdaData={loading}
-    //       supplierData={supplierData}
-    //       CadastreDataFromApi={CadastreDataFromApi}
-    //       HouseModelData={HouseModelData}
-    //       askData={askData}
-    //       lamdaDataFromApi={lamdaDataFromApi}
-    //       user={user}
-    //     />
-    //   ),
-    // },
     {
       name: "Tilbud",
       component: (
@@ -488,22 +462,6 @@ const HusmodellDetail = () => {
         />
       ),
     },
-    // {
-    //   name: "Oppsummering",
-    //   component: (
-    //     <Oppsummering
-    //       handleNext={handleNext}
-    //       lamdaDataFromApi={lamdaDataFromApi}
-    //       loading={loading}
-    //       CadastreDataFromApi={CadastreDataFromApi}
-    //       askData={askData}
-    //       HouseModelData={HouseModelData}
-    //       handlePrevious={handlePrevious}
-    //       supplierData={supplierData}
-    //       pris={pris}
-    //     />
-    //   ),
-    // },
     {
       name: "Verdivurdering",
       component: (

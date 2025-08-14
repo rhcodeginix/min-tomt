@@ -20,7 +20,6 @@ const HusmodellTab = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-      {/* Category Pills */}
       <div className="flex justify-start">
         <div className="flex items-center bg-white rounded-[40px] p-1 md:p-2 gap-[1px] overflow-x-auto overFlowScrollHidden">
           {categories.map((category) => (
@@ -43,7 +42,7 @@ const HusmodellTab = () => {
           ))}
         </div>
       </div>
-      {/* Search Button */}
+
       <button
         type="submit"
         disabled={!selectedCategory}

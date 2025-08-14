@@ -13,7 +13,6 @@ import Ic_cabin from "@/public/images/Ic_cabin.svg";
 import Button from "@/components/common/button";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
-// import Loader from "@/components/Loader";
 import LoginForm from "../login/loginForm";
 import { useRouter } from "next/router";
 import PropertyDetails from "@/components/Ui/husmodellPlot/properyDetails";
