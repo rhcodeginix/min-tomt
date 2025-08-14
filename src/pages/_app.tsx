@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { CustomizeHouseProvider } from "@/context/selectHouseContext";
 import { analytics } from "@/config/firebaseConfig";
 import { logEvent } from "firebase/analytics";
+import Head from "next/head";
 
 const publicRoutes = ["/login", "/register"];
 
@@ -39,6 +40,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (publicRoutes.includes(router.pathname)) {
     return (
       <>
+        <Head>
+          <title>Mintomt</title>
+          <meta name="description" content="Your app description here" />
+        </Head>
         <Component {...pageProps} />
         <Toaster
           toastOptions={{
@@ -53,6 +58,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <title>Mintomt</title>
+        <meta name="description" content="Your app description here" />
+      </Head>
       <CustomizeHouseProvider>
         <UserLayout>
           <Component {...pageProps} />
