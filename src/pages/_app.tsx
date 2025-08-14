@@ -41,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
       <>
         <Head>
-          <title>Mintomt</title>
+          <title>Mintomtttt</title>
           <meta name="description" content="Your app description here" />
         </Head>
         <Component {...pageProps} />
@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Mintomt</title>
+        <title>Mintomtttt</title>
         <meta name="description" content="Your app description here" />
       </Head>
       <CustomizeHouseProvider>
