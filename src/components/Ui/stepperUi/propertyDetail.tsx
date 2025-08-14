@@ -13,7 +13,7 @@ const PropertyDetail: React.FC<any> = ({
 
   return (
     <>
-      <div className="bg-lightPurple flex flex-col laptop:flex-row laptop:items-center gap-4 laptop:justify-between">
+      <div className="flex flex-col laptop:flex-row laptop:items-center gap-4 laptop:justify-between">
         <div className="flex flex-col sm:flex-row gap-3 md:gap-5 sm:items-center">
           <div className="rounded-[12px] overflow-hidden w-full sm:w-[132px] h-[200px] sm:h-[100px]">
             {loading ? (

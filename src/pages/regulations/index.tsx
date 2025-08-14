@@ -530,7 +530,6 @@ const Regulations = () => {
 
       try {
         const response = await ApiUtils.LamdaApi(lamdaApiData);
-        console.log("response----------", response);
 
         const cleanAnswer = response.body.replace(/```json|```/g, "").trim();
         const data = JSON.parse(cleanAnswer);
@@ -540,7 +539,6 @@ const Regulations = () => {
         setLamdaDataFromApi(data);
         setCadastreDataFromApi(CadastreDataResponse.apis);
         setLoadingLamdaData(false);
-        console.log("data----------", data);
 
         if (
           !cleanAnswer ||
