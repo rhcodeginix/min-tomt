@@ -145,7 +145,7 @@ const TomtHusmodell: React.FC<{
             </h2>
             <p className="text-black text-xs md:text-sm desktop:text-base text-center mb-4">
               Logg inn for å få tilgang til alt{" "}
-              <span className="font-bold">MinTomt x Fjellheimhytta</span> har å
+              <span className="font-bold">MinTomt</span> har å
               by på.
             </p>
             <Formik
