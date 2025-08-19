@@ -57,8 +57,12 @@ const Oppsummering: React.FC<{
       setCusHouse(JSON.parse(customizeHouse));
     }
   }, []);
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   const totalCustPris = custHouse?.reduce(
     (sum: any, item: any) =>
       sum + Number(item?.product?.pris.replace(/\s/g, "")),
@@ -92,7 +96,8 @@ const Oppsummering: React.FC<{
         await updateDoc(doc(db, "leads", String(leadId)), {
           IsoptForBank: true,
           updatedAt: new Date(),
-          bankValue,stored
+          bankValue,
+          stored,
         });
         toast.success("Update Lead successfully.", { position: "top-right" });
       } else {

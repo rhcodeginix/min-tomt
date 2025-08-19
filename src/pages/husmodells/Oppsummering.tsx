@@ -46,8 +46,12 @@ const Oppsummering: React.FC<{
   supplierData,
 }) => {
   const Husdetaljer = HouseModelData?.Husdetaljer;
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   const [custHouse, setCusHouse] = useState<any>(null);
   useEffect(() => {
     const customizeHouse = localStorage.getItem("customizeHouse");

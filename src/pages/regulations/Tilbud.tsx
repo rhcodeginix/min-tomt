@@ -87,8 +87,12 @@ const Tilbud: React.FC<{
   );
 
   const [updatedArray, setUpdatedArray] = useState([]);
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   useEffect(() => {
     if (Huskonfigurator?.length > 0 && custHouse?.length > 0) {
       const mergedArray = Huskonfigurator.map(

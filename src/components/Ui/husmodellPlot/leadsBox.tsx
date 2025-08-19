@@ -37,8 +37,12 @@ const LeadsBox: React.FC<{ col?: any; isShow?: any }> = ({ col, isShow }) => {
   useEffect(() => {
     setLeadId(router.query["leadId"]);
   }, [router.query["leadId"]]);
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       if (user) {

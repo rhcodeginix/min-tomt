@@ -42,8 +42,12 @@ const Husmodell: React.FC<any> = ({
   const validationLoginSchema = Yup.object().shape({
     terms_condition: Yup.boolean().oneOf([true], "Påkrevd").required("Påkrevd"),
   });
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   const handleLoginSubmit = async () => {
     setIsPopupOpen(false);
     setLoginPopup(true);

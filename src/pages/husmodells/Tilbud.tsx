@@ -61,8 +61,12 @@ const Tilbud: React.FC<{
       router.push(`${router.asPath}&noPlot=true`);
     }
   }, []);
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {

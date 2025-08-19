@@ -74,8 +74,12 @@ const Tilbud: React.FC<{
       sum + Number(item?.product?.pris.replace(/\s/g, "")),
     0
   );
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   const [updatedArray, setUpdatedArray] = useState([]);
 
   useEffect(() => {

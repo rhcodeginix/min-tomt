@@ -11,8 +11,12 @@ const ContactForm: React.FC<{ leadId?: any }> = ({ leadId }) => {
   const router = useRouter();
   const [isChecked, setIsChecked] = useState(false);
   const [isShow, setIsShow] = useState(true);
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };

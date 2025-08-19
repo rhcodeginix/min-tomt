@@ -52,8 +52,12 @@ const TomtHouseDetails: React.FC<{
   const { homePage } = router.query;
   const { pathname, query: routequery } = router;
   const updatedQuery = { ...routequery };
-  const stored = localStorage.getItem("customizeHouse");
+  const [stored, setStored] = useState<any>();
 
+  useEffect(() => {
+    const store = localStorage.getItem("customizeHouse");
+    setStored(store);
+  }, []);
   const tabs: any = [
     {
       id: "Eiendomsinformasjon",
