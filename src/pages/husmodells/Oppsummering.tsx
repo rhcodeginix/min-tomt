@@ -46,6 +46,7 @@ const Oppsummering: React.FC<{
   supplierData,
 }) => {
   const Husdetaljer = HouseModelData?.Husdetaljer;
+  const stored = localStorage.getItem("customizeHouse");
 
   const [custHouse, setCusHouse] = useState<any>(null);
   useEffect(() => {
@@ -90,6 +91,7 @@ const Oppsummering: React.FC<{
           IsoptForBank: true,
           updatedAt: new Date(),
           bankValue,
+          stored,
         });
         toast.success("Update Lead successfully.", { position: "top-right" });
       } else {

@@ -74,6 +74,7 @@ const Tilbud: React.FC<{
       sum + Number(item?.product?.pris.replace(/\s/g, "")),
     0
   );
+  const stored = localStorage.getItem("customizeHouse");
 
   const [updatedArray, setUpdatedArray] = useState([]);
 
@@ -480,6 +481,7 @@ const Tilbud: React.FC<{
                         Isopt: true,
                         EstimertByggestart: ByggestartDate,
                         EstimertInnflytting: addDaysToDate(date, totalDays),
+                        stored,
                       });
                       setDate(new Date());
 

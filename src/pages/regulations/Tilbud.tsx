@@ -87,6 +87,7 @@ const Tilbud: React.FC<{
   );
 
   const [updatedArray, setUpdatedArray] = useState([]);
+  const stored = localStorage.getItem("customizeHouse");
 
   useEffect(() => {
     if (Huskonfigurator?.length > 0 && custHouse?.length > 0) {
@@ -178,6 +179,7 @@ const Tilbud: React.FC<{
             createdAt: new Date(),
             updatedAt: new Date(),
             IsEmptyPlot: isEmptyPlot === "true",
+            stored,
           });
           leadIdToSet = docRef.id;
         }
@@ -585,6 +587,7 @@ const Tilbud: React.FC<{
                         Isopt: true,
                         EstimertByggestart: ByggestartDate,
                         EstimertInnflytting: addDaysToDate(date, totalDays),
+                        stored,
                       });
                       toast.success("Lead sendt.", {
                         position: "top-right",

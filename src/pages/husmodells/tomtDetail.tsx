@@ -52,6 +52,7 @@ const TomtHouseDetails: React.FC<{
   const { homePage } = router.query;
   const { pathname, query: routequery } = router;
   const updatedQuery = { ...routequery };
+  const stored = localStorage.getItem("customizeHouse");
 
   const tabs: any = [
     {
@@ -143,6 +144,7 @@ const TomtHouseDetails: React.FC<{
           createdAt: new Date(),
           updatedAt: new Date(),
           IsEmptyPlot: isEmptyPlot === "true",
+          stored,
         });
 
         queryParams.set("leadId", newDocRef.id);

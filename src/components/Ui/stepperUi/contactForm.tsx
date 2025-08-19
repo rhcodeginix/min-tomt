@@ -11,6 +11,8 @@ const ContactForm: React.FC<{ leadId?: any }> = ({ leadId }) => {
   const router = useRouter();
   const [isChecked, setIsChecked] = useState(false);
   const [isShow, setIsShow] = useState(true);
+  const stored = localStorage.getItem("customizeHouse");
+
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
@@ -39,6 +41,7 @@ const ContactForm: React.FC<{ leadId?: any }> = ({ leadId }) => {
         await updateDoc(doc(db, "leads", leadId), {
           Isopt: true,
           updatedAt: new Date(),
+          stored,
         });
         toast.success("Added successfully.", { position: "top-right" });
       } else {

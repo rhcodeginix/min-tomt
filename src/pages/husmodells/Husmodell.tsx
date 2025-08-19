@@ -42,6 +42,7 @@ const Husmodell: React.FC<any> = ({
   const validationLoginSchema = Yup.object().shape({
     terms_condition: Yup.boolean().oneOf([true], "Påkrevd").required("Påkrevd"),
   });
+  const stored = localStorage.getItem("customizeHouse");
 
   const handleLoginSubmit = async () => {
     setIsPopupOpen(false);
@@ -122,6 +123,7 @@ const Husmodell: React.FC<any> = ({
           IsoptForBank: false,
           createdAt: new Date(),
           updatedAt: new Date(),
+          stored,
         });
 
         queryParams.set("leadId", newDocRef.id);
@@ -187,8 +189,7 @@ const Husmodell: React.FC<any> = ({
             </h2>
             <p className="text-black text-xs md:text-sm desktop:text-base text-center mb-4">
               Logg inn for å få tilgang til alt{" "}
-              <span className="font-bold">MinTomt</span> har å
-              by på.
+              <span className="font-bold">MinTomt</span> har å by på.
             </p>
             <Formik
               initialValues={{ terms_condition: false }}
