@@ -14,13 +14,13 @@ const FåInnsiktI = () => {
               Utforsk ferdighusprodusenter
             </h3>
             <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 laptop:px-14 big:px-40 big:w-[1300px]">
-              <div className="bg-lightBrown py-2 px-3 rounded-[50px] text-lightYellow2 font-medium text-xs md:text-sm lg:text-base">
+              {/* <div className="bg-lightBrown py-2 px-3 rounded-[50px] text-lightYellow2 font-medium text-xs md:text-sm lg:text-base">
                 ABCHUS (62)
-              </div>
+              </div> */}
               <div className="bg-lightBrown py-2 px-3 rounded-[50px] text-lightYellow2 font-medium text-xs md:text-sm lg:text-base">
-                BoligPartner (56)
+                BoligPartner (54)
               </div>
-              <div className="bg-lightBrown py-2 px-3 rounded-[50px] text-lightYellow2 font-medium text-xs md:text-sm lg:text-base">
+              {/* <div className="bg-lightBrown py-2 px-3 rounded-[50px] text-lightYellow2 font-medium text-xs md:text-sm lg:text-base">
                 Blink-hus (19)
               </div>
               <div className="bg-lightBrown py-2 px-3 rounded-[50px] text-lightYellow2 font-medium text-xs md:text-sm lg:text-base">
@@ -49,7 +49,7 @@ const FåInnsiktI = () => {
               </div>
               <div className="bg-lightBrown py-2 px-3 rounded-[50px] text-lightYellow2 font-medium text-xs md:text-sm lg:text-base">
                 Systemhus (57)
-              </div>
+              </div> */}
             </div>
           </div>
         </SideSpaceContainer>
