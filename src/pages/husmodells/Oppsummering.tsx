@@ -121,13 +121,13 @@ const Oppsummering: React.FC<{
           <div className="flex items-center flex-wrap gap-1 mb-4 md:mb-6">
             <Link
               href={"/"}
-              className="text-green text-xs md:text-sm font-medium"
+              className="text-primary text-xs md:text-sm font-medium"
             >
               Hjem
             </Link>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 0;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -138,7 +138,7 @@ const Oppsummering: React.FC<{
             </div>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 1;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -149,7 +149,7 @@ const Oppsummering: React.FC<{
             </div>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 2;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -160,7 +160,7 @@ const Oppsummering: React.FC<{
             </div>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 3;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -170,7 +170,7 @@ const Oppsummering: React.FC<{
               Tilbud
             </div>
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 4;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -338,7 +338,7 @@ const Oppsummering: React.FC<{
 
                                 <div className="text-secondary2 text-xs md:text-sm">
                                   Jeg samtykker til
-                                  <span className="text-green font-medium">
+                                  <span className="text-primary font-medium">
                                     {" "}
                                     deling av data
                                   </span>{" "}
@@ -527,7 +527,7 @@ const Oppsummering: React.FC<{
 
                                   <div className="text-secondary2 text-xs md:text-sm">
                                     Jeg samtykker til{" "}
-                                    <span className="text-green font-bold">
+                                    <span className="text-primary font-bold">
                                       deling av data
                                     </span>{" "}
                                     med{" "}
@@ -620,7 +620,7 @@ const Oppsummering: React.FC<{
                           ></span>
                           <div className="text-secondary2 text-xs md:text-sm">
                             Jeg samtykker i å{" "}
-                            <span className="font-bold text-green">
+                            <span className="font-bold text-primary">
                               dele data
                             </span>{" "}
                             med{" "}

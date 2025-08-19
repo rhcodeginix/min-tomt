@@ -259,7 +259,7 @@ const Plots: React.FC<{
                 className="sticky top-[56px] w-max left-0 right-0 z-50 bg-white border rounded-lg border-[#DADDE8] p-2 gap-2 flex items-center justify-between lg:hidden"
                 onClick={toggleDrawer(true)}
               >
-                <Settings2 className="text-green h-5 w-5" />
+                <Settings2 className="text-primary h-5 w-5" />
                 <h4 className="text-sm">Filter</h4>
               </div>
               <div className="hidden lg:block w-full">

@@ -309,13 +309,13 @@ const Tilpass: React.FC<any> = ({
             <div className="flex items-center flex-wrap gap-1 mb-4 md:mb-6">
               <Link
                 href={"/"}
-                className="text-green text-xs md:text-sm font-medium"
+                className="text-primary text-xs md:text-sm font-medium"
               >
                 Hjem
               </Link>
               <Image src={Ic_breadcrumb_arrow} alt="arrow" />
               <div
-                className="text-green text-xs md:text-sm font-medium cursor-pointer"
+                className="text-primary text-xs md:text-sm font-medium cursor-pointer"
                 onClick={() => {
                   const currIndex = 0;
                   localStorage.setItem("currIndex", currIndex.toString());
@@ -424,7 +424,7 @@ const Tilpass: React.FC<any> = ({
                     {selectedTab < Huskonfigurator.length - 1 && (
                       <Button
                         text="Hopp over steget"
-                        className={`border-2 border-green text-green text-xs sm:text-sm md:text-sm rounded-[40px] w-max h-[36px] md:h-[36px] lg:h-[36px] font-semibold relative`}
+                        className={`border-2 border-primary text-primary text-xs sm:text-sm md:text-sm rounded-[40px] w-max h-[36px] md:h-[36px] lg:h-[36px] font-semibold relative`}
                         onClick={() => {
                           setSelectedTab(selectedTab + 1);
                         }}
@@ -441,7 +441,7 @@ const Tilpass: React.FC<any> = ({
                                 key={catIndex}
                                 className={`py-2 px-3 text-xs md:text-sm rounded-lg cursor-pointer whitespace-nowrap ${
                                   selectedCategory === catIndex
-                                    ? "bg-white text-green font-medium shadow-shadow4"
+                                    ? "bg-white text-primary font-medium shadow-shadow4"
                                     : "bg-transparent text-black"
                                 }`}
                                 onClick={() => setSelectedCategory(catIndex)}
@@ -552,7 +552,7 @@ const Tilpass: React.FC<any> = ({
                                   </div>
                                   <Button
                                     text={isSelected ? "Valgt" : "Velg"}
-                                    className={`border-2 text-green ${
+                                    className={`border-2 text-primary ${
                                       isSelected
                                         ? "border-green bg-lightGreen2"
                                         : "border-[#B9C0D4]"

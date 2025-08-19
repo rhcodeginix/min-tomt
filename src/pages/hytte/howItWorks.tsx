@@ -6,22 +6,22 @@ import { House, Building2, HandCoins, Bolt } from "lucide-react";
 const HowItWorks = () => {
   const steps = [
     {
-      icon: <House className="w-5 desktop:w-6 h-5 desktop:h-6 text-blue" />,
+      icon: <House className="w-5 desktop:w-6 h-5 desktop:h-6 text-primary" />,
       title: "Utforsk husmodeller",
       description: "Vi har samlet de fleste ferdighusmodellene på ett sted.",
     },
     {
-      icon: <Bolt className="w-5 desktop:w-6 h-5 desktop:h-6 text-blue" />,
+      icon: <Bolt className="w-5 desktop:w-6 h-5 desktop:h-6 text-primary" />,
       title: "Konfigurer huset og se kostnad",
       description: "Du får en komplett økonomisk plan som deles med banken.",
     },
     {
-      icon: <Building2 className="w-5 desktop:w-6 h-5 desktop:h-6 text-blue" />,
+      icon: <Building2 className="w-5 desktop:w-6 h-5 desktop:h-6 text-primary" />,
       title: "Søk på ønsket tomt",
       description: "Finne tomten du ønsker å bygge på.",
     },
     {
-      icon: <HandCoins className="w-5 desktop:w-6 h-5 desktop:h-6 text-blue" />,
+      icon: <HandCoins className="w-5 desktop:w-6 h-5 desktop:h-6 text-primary" />,
       title: "Få finansiering",
       description:
         "Vi hjelper deg med markedets beste byggelån fra SpareBank 1.",

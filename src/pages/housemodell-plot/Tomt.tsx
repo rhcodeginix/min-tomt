@@ -109,7 +109,7 @@ const Tomt: React.FC<{
           <div className="flex flex-wrap items-center gap-1 mb-6">
             <Link
               href={"/"}
-              className="text-green text-xs md:text-sm font-medium"
+              className="text-primary text-xs md:text-sm font-medium"
             >
               Hjem
             </Link>
@@ -118,7 +118,7 @@ const Tomt: React.FC<{
               <>
                 <Link
                   href={"/"}
-                  className="text-green text-xs md:text-sm font-medium"
+                  className="text-primary text-xs md:text-sm font-medium"
                   onClick={() => {
                     delete updatedQuery.propertyId;
                     delete updatedQuery.husmodellId;
@@ -190,7 +190,7 @@ const Tomt: React.FC<{
                     onClick={() => setActiveTab(tab.id)}
                     className={`min-w-max whitespace-nowrap px-2 lg:px-4 py-2 text-sm lg:text-base transition-colors duration-300 flex items-center gap-2 ${
                       activeTab === tab.id
-                        ? "bg-white font-medium text-green"
+                        ? "bg-white font-medium text-primary"
                         : "text-black"
                     }`}
                   >

@@ -76,9 +76,9 @@ const MainSection = () => {
                   </p>
                 </div>
               </div>
-              <div className="text-blue text-xs md:text-sm lg:text-base font-semibold flex items-center gap-2">
+              <div className="text-primary text-xs md:text-sm lg:text-base font-semibold flex items-center gap-2">
                 Jeg vil heller snakke med en rådgiver
-                <MoveRight className="text-blue" />
+                <MoveRight className="text-primary" />
               </div>
             </div>
           </div>

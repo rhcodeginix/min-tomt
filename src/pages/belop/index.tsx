@@ -327,7 +327,7 @@ const Belop: React.FC<{
           <div className="flex items-center gap-1">
             <Link
               href={"/"}
-              className="text-green text-xs md:text-sm font-medium"
+              className="text-primary text-xs md:text-sm font-medium"
             >
               Hjem
             </Link>
@@ -347,7 +347,7 @@ const Belop: React.FC<{
               {formData?.Område.length > 1 ? null : (
                 <>
                   i{" "}
-                  <span className="font-bold text-blue">
+                  <span className="font-bold text-primary">
                     {formData?.Område[0]}
                   </span>
                 </>
@@ -368,7 +368,7 @@ const Belop: React.FC<{
                 className="sticky top-[56px] w-max left-0 right-0 z-50 bg-white border rounded-lg border-[#DADDE8] p-2 gap-2 flex items-center justify-between lg:hidden"
                 onClick={toggleDrawer(true)}
               >
-                <Settings2 className="text-green h-5 w-5" />
+                <Settings2 className="text-primary h-5 w-5" />
                 <h4 className="text-sm">Filter</h4>
               </div>
 

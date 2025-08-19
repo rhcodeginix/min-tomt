@@ -120,6 +120,89 @@ const Regulations = () => {
       const lamdaApiData = { kommunenummer, gardsnummer, bruksnummer };
 
       try {
+        const emptyPlotRef = collection(db, "empty_plot");
+        const emptyPlotQuery = query(
+          emptyPlotRef,
+          where(
+            "lamdaDataFromApi.searchParameters.kommunenummer",
+            "==",
+            kommunenummer
+          ),
+          where(
+            "lamdaDataFromApi.searchParameters.gardsnummer",
+            "==",
+            gardsnummer
+          ),
+          where(
+            "lamdaDataFromApi.searchParameters.bruksnummer",
+            "==",
+            bruksnummer
+          )
+        );
+        const emptyPlotSnap = await getDocs(emptyPlotQuery);
+
+        if (!emptyPlotSnap.empty) {
+          const docSnap: any = emptyPlotSnap.docs[0];
+          const plotData = docSnap.data();
+          setLamdaDataFromApi(plotData.lamdaDataFromApi);
+          setAdditionalData(plotData.additionalData);
+          setCadastreDataFromApi(plotData.CadastreDataFromApi);
+          setLoadingLamdaData(false);
+          setLoadingAdditionalData(false);
+          const queryParams = new URLSearchParams(window.location.search);
+
+          queryParams.set("plotId", plotData?.lamdaDataFromApi?.propertyId);
+          queryParams.delete("empty");
+
+          queryParams.set("empty", "true");
+          router.replace({
+            pathname: router.pathname,
+            query: Object.fromEntries(queryParams),
+          });
+          return;
+        }
+
+        const plotBuildingRef = collection(db, "plot_building");
+        const plotBuildingQuery = query(
+          plotBuildingRef,
+          where(
+            "lamdaDataFromApi.searchParameters.kommunenummer",
+            "==",
+            kommunenummer
+          ),
+          where(
+            "lamdaDataFromApi.searchParameters.gardsnummer",
+            "==",
+            gardsnummer
+          ),
+          where(
+            "lamdaDataFromApi.searchParameters.bruksnummer",
+            "==",
+            bruksnummer
+          )
+        );
+        const plotBuildingSnap = await getDocs(plotBuildingQuery);
+
+        if (!plotBuildingSnap.empty) {
+          const docSnap: any = plotBuildingSnap.docs[0];
+          const plotData = docSnap.data();
+          setLamdaDataFromApi(plotData.lamdaDataFromApi);
+          setAdditionalData(plotData.additionalData);
+          setCadastreDataFromApi(plotData.CadastreDataFromApi);
+          setLoadingLamdaData(false);
+          setLoadingAdditionalData(false);
+          const queryParams = new URLSearchParams(window.location.search);
+          queryParams.set("plotId", plotData?.lamdaDataFromApi?.propertyId);
+          queryParams.delete("empty");
+
+          queryParams.set("empty", "false");
+          router.replace({
+            pathname: router.pathname,
+            query: Object.fromEntries(queryParams),
+          });
+          return;
+        }
+
         const response = await ApiUtils.LamdaApi(lamdaApiData);
 
         const cleanAnswer = response.body.replace(/```json|```/g, "").trim();
@@ -575,6 +658,7 @@ const Regulations = () => {
         setLoading(false);
       }
     };
+
     if (husmodellId && isCall) {
       fetchData();
     }

@@ -204,7 +204,7 @@ const Property: React.FC = () => {
                       </div>
                       <Button
                         text="Se detaljer"
-                        className="border-2 border-blue bg-white text-blue sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-semibold relative desktop:px-[28px] desktop:py-[16px]"
+                        className="border-2 border-primary bg-white text-primary sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-semibold relative desktop:px-[28px] desktop:py-[16px]"
                         onClick={() => {
                           router.push(
                             `husmodells?husmodellId=${property?.id}&city=Akershus`

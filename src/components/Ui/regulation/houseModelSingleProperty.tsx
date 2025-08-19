@@ -166,13 +166,13 @@ const HouseModelSingleProperty: React.FC<{
           <div className="flex items-center flex-wrap gap-1 mb-4 md:mb-6">
             <Link
               href={"/"}
-              className="text-green text-xs md:text-sm font-medium"
+              className="text-primary text-xs md:text-sm font-medium"
             >
               Hjem
             </Link>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 0;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -184,7 +184,7 @@ const HouseModelSingleProperty: React.FC<{
             {!homePage && (
               <>
                 <div
-                  className="text-green text-xs md:text-sm font-medium cursor-pointer"
+                  className="text-primary text-xs md:text-sm font-medium cursor-pointer"
                   onClick={() => {
                     delete updatedQuery.propertyId;
                     delete updatedQuery.husmodellId;
@@ -255,7 +255,7 @@ const HouseModelSingleProperty: React.FC<{
                     onClick={() => setActiveTab(tab.id)}
                     className={`min-w-max whitespace-nowrap px-2 lg:px-4 py-2 text-sm lg:text-base transition-colors duration-300 flex items-center gap-2 ${
                       activeTab === tab.id
-                        ? "bg-white font-medium text-green"
+                        ? "bg-white font-medium text-primary"
                         : "text-black"
                     }`}
                   >

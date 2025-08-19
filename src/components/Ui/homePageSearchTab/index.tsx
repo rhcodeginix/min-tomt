@@ -203,7 +203,7 @@ const HomePageSearchTab: React.FC = () => {
                     <div
                       className={`h-6 w-6 ${
                         activeTab === tab.id
-                          ? "text-blue bg-white"
+                          ? "text-primary bg-white"
                           : "text-[#30374F]"
                       }`}
                     >
@@ -213,7 +213,7 @@ const HomePageSearchTab: React.FC = () => {
                       <div
                         className={`text-xs md:text-sm whitespace-nowrap font-base ${
                           activeTab === tab.id
-                            ? "text-blue bg-white"
+                            ? "text-primary bg-white"
                             : "text-[#30374F]"
                         }`}
                       >

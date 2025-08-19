@@ -213,13 +213,13 @@ const Tilbud: React.FC<{
           <div className="flex items-center flex-wrap gap-1 mb-4 md:mb-6">
             <Link
               href={"/"}
-              className="text-green text-xs md:text-sm font-medium"
+              className="text-primary text-xs md:text-sm font-medium"
             >
               Hjem
             </Link>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 0;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -232,7 +232,7 @@ const Tilbud: React.FC<{
             {!homePage && (
               <>
                 <div
-                  className="text-green text-xs md:text-sm font-medium cursor-pointer"
+                  className="text-primary text-xs md:text-sm font-medium cursor-pointer"
                   onClick={() => {
                     delete updatedQuery.propertyId;
                     delete updatedQuery.husmodellId;
@@ -258,7 +258,7 @@ const Tilbud: React.FC<{
               </>
             )}
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 2;
                 localStorage.setItem("currIndex", currIndex.toString());
@@ -269,7 +269,7 @@ const Tilbud: React.FC<{
             </div>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 const currIndex = 3;
                 localStorage.setItem("currIndex", currIndex.toString());

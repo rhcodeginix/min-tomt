@@ -116,7 +116,7 @@ const Expected: React.FC = () => {
         <div className="px-4 pt-8 md:p-10 md:pb-0 pb-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 big:gap-12">
           <div className="flex gap-4 lg:gap-6 items-start">
             <div className="bg-lightBlue h-[48px] md:h-[56px] lg:h-[72px] w-[48px] md:w-[56px] lg:w-[72px] rounded-full flex items-center justify-center">
-              <ChartPie className="text-blue" />
+              <ChartPie className="text-primary" />
             </div>
             <div className="flex-1">
               <h4 className="text-black font-semibold font-base md:font-lg lg:font-xl mb-2">
@@ -130,7 +130,7 @@ const Expected: React.FC = () => {
           </div>
           <div className="flex gap-4 lg:gap-6 items-start">
             <div className="bg-lightBlue h-[48px] md:h-[56px] lg:h-[72px] w-[48px] md:w-[56px] lg:w-[72px] rounded-full flex items-center justify-center">
-              <Clock4 className="text-blue" />
+              <Clock4 className="text-primary" />
             </div>
             <div className="flex-1">
               <h4 className="text-black font-semibold font-base md:font-lg lg:font-xl mb-2">
@@ -144,7 +144,7 @@ const Expected: React.FC = () => {
           </div>
           <div className="flex gap-4 lg:gap-6 items-start">
             <div className="bg-lightBlue h-[48px] md:h-[56px] lg:h-[72px] w-[48px] md:w-[56px] lg:w-[72px] rounded-full flex items-center justify-center">
-              <Banknote className="text-blue" />
+              <Banknote className="text-primary" />
             </div>
             <div className="flex-1">
               <h4 className="text-black font-semibold font-base md:font-lg lg:font-xl mb-2">

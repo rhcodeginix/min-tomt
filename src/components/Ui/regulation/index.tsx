@@ -203,13 +203,13 @@ const HusmodellPropertyPage: React.FC<{
           <div className="flex items-center flex-wrap gap-1 mb-4 md:mb-6">
             <Link
               href={"/"}
-              className="text-green text-xs md:text-sm font-medium"
+              className="text-primary text-xs md:text-sm font-medium"
             >
               Hjem
             </Link>
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <div
-              className="text-green text-xs md:text-sm font-medium cursor-pointer"
+              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
               onClick={() => {
                 handlePrevious();
                 const currIndex = 0;
@@ -239,7 +239,7 @@ const HusmodellPropertyPage: React.FC<{
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-2 md:gap-3 lg:gap-4 mb-6 lg:mb-[40px]">
             <h3 className="text-darkBlack text-lg md:text-xl lg:text-2xl desktop:leading-[44.8px]">
               <span className="font-bold">Husmodeller</span> du kan bygge i{" "}
-              <span className="font-bold text-blue">
+              <span className="font-bold text-primary">
                 {
                   CadastreDataFromApi?.presentationAddressApi?.response?.item
                     ?.municipality?.municipalityName
@@ -260,7 +260,7 @@ const HusmodellPropertyPage: React.FC<{
                 className="sticky top-[56px] w-max left-0 right-0 z-50 bg-white border rounded-lg border-[#DADDE8] p-2 gap-2 flex items-center justify-between lg:hidden"
                 onClick={toggleDrawer(true)}
               >
-                <Settings2 className="text-green h-5 w-5" />
+                <Settings2 className="text-primary h-5 w-5" />
                 <h4 className="text-sm">Filter</h4>
               </div>
 
