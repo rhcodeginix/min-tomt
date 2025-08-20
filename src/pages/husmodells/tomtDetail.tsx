@@ -121,7 +121,6 @@ const TomtHouseDetails: React.FC<{
           const leadSnapshot = await getDoc(oldLeadRef);
           if (leadSnapshot.exists()) {
             const existingLead = leadSnapshot.data();
-            console.log(currentLeadId);
 
             queryParams.set("leadId", currentLeadId);
 
@@ -152,7 +151,6 @@ const TomtHouseDetails: React.FC<{
           IsEmptyPlot: isEmptyPlot === "true",
           stored,
         });
-        console.log(newDocRef);
 
         queryParams.set("leadId", newDocRef.id);
         router.replace({
