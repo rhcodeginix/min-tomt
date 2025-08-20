@@ -1,6 +1,6 @@
 import React from "react";
 import Img_main_bg from "@/public/images/Img_main_bg.png";
-import Ic_boligpartner from "@/public/images/Ic_boligpartner.png";
+import Ic_boligpartner from "@/public/images/Ic_boligpartner.svg";
 import Ic_fjellheimhytta from "@/public/images/Ic_fjellheimhytta.svg";
 import Ic_check_true from "@/public/images/Ic_check_true.svg";
 import SideSpaceContainer from "@/components/common/sideSpace";
