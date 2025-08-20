@@ -78,7 +78,7 @@ const TomtHouseDetails: React.FC<{
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user || !plotId || !id) return;
+      if (!user || !plotId || !id || !stored) return;
 
       const queryParams = new URLSearchParams(window.location.search);
       const isEmptyPlot = queryParams.get("empty");
@@ -121,6 +121,8 @@ const TomtHouseDetails: React.FC<{
           const leadSnapshot = await getDoc(oldLeadRef);
           if (leadSnapshot.exists()) {
             const existingLead = leadSnapshot.data();
+            console.log(currentLeadId);
+
             queryParams.set("leadId", currentLeadId);
 
             if (existingLead.finalData.plot === null) {
@@ -150,6 +152,7 @@ const TomtHouseDetails: React.FC<{
           IsEmptyPlot: isEmptyPlot === "true",
           stored,
         });
+        console.log(newDocRef);
 
         queryParams.set("leadId", newDocRef.id);
         router.replace({
@@ -161,10 +164,10 @@ const TomtHouseDetails: React.FC<{
       }
     };
 
-    if (plotId && id && user) {
+    if (plotId && id && user && stored) {
       fetchData();
     }
-  }, [plotId, id, user]);
+  }, [plotId, id, user, stored]);
 
   return (
     <div className="relative">
