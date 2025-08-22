@@ -137,7 +137,7 @@ const AdresseTab = () => {
         <div className="border-t border-gray3 w-full lg:hidden"></div>
 
         <button
-          className={`px-3 lg:px-4 lg:py-2.5 cursor-pointer flex justify-center items-center bg-darkGreen     rounded-[40px] transition-all duration-300 ease-out h-[40px] m-2 gap-2 ${
+          className={`px-3 lg:px-4 lg:py-2.5 cursor-pointer flex justify-center items-center bg-darkGreen rounded-[40px] transition-all duration-300 ease-out h-[40px] m-1.5 md:m-2 gap-2 ${
             !formData?.address ? "opacity-50 cursor-not-allowed" : ""
           }`}
           type="submit"
@@ -149,7 +149,9 @@ const AdresseTab = () => {
             className="w-5 h-5"
             fetchPriority="auto"
           />
-          <span className="text-white font-semibold text-sm md:text-base">Søk</span>
+          <span className="text-white font-semibold text-sm md:text-base">
+            Søk
+          </span>
         </button>
       </div>
     </form>

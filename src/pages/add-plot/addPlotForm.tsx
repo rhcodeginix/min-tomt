@@ -636,7 +636,7 @@ const AddPlotForm = () => {
                         )}
 
                       <div
-                        className={`p-3 lg:p-5 cursor-pointer flex justify-center items-center bg-primary     rounded-full gap-[10px] transition-all duration-300 ease-out h-[48px] w-[48px] lg:h-[64px] lg:w-[64px] m-2`}
+                        className={`p-3 lg:p-5 cursor-pointer flex justify-center items-center bg-primary rounded-full gap-[10px] transition-all duration-300 ease-out h-[48px] w-[48px] lg:h-[64px] lg:w-[64px] m-2`}
                       >
                         <Image
                           src={Ic_search}
@@ -840,7 +840,7 @@ const AddPlotForm = () => {
                           </div>
                         </div>
                         <div
-                          className={`p-3 lg:p-5 cursor-pointer flex justify-center items-center bg-primary     rounded-full gap-[10px] transition-all duration-300 ease-out h-[48px] w-[48px] lg:h-[64px] lg:w-[64px] m-2 ${
+                          className={`p-3 lg:p-5 cursor-pointer flex justify-center items-center bg-primary rounded-full gap-[10px] transition-all duration-300 ease-out h-[48px] w-[48px] lg:h-[64px] lg:w-[64px] m-2 ${
                             !values.address2.Gårsnummer ||
                             !values.address2.kommune ||
                             !values.address2.Bruksnummer
