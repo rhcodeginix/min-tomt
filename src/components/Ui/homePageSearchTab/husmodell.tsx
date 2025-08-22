@@ -17,13 +17,13 @@ const HusmodellTab = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // const currIndex = 0;
-    // localStorage.setItem("currIndex", currIndex.toString());
-    // if (selectedCategory === "Boliger med utleiedel") {
-    //   router.push(`husmodells?TypeHusmodell=Med utleiedel`);
-    //   return;
-    // }
-    // router.push(`husmodells?TypeHusmodell=${selectedCategory}`);
+    const currIndex = 0;
+    localStorage.setItem("currIndex", currIndex.toString());
+    if (selectedCategory === "Boliger med utleiedel") {
+      router.push(`husmodells?TypeHusmodell=Med utleiedel`);
+      return;
+    }
+    router.push(`husmodells?TypeHusmodell=${selectedCategory}`);
   };
 
   return (
