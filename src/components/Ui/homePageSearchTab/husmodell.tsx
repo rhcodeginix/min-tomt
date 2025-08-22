@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Ic_search from "@/public/images/Ic_search.svg";
+import { useRouter } from "next/router";
 
 const HusmodellTab = () => {
+  const router = useRouter();
   const categories = [
     "Funkis",
     "Moderne",
@@ -15,7 +17,13 @@ const HusmodellTab = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Selected category:", selectedCategory);
+    const currIndex = 0;
+    localStorage.setItem("currIndex", currIndex.toString());
+    if (selectedCategory === "Boliger med utleiedel") {
+      router.push(`husmodells?TypeHusmodell=Med utleiedel`);
+      return;
+    }
+    router.push(`husmodells?TypeHusmodell=${selectedCategory}`);
   };
 
   return (
