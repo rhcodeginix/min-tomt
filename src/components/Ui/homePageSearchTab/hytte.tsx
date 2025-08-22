@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Ic_search from "@/public/images/Ic_search.svg";
+import { useRouter } from "next/router";
 
 const HytteTab = () => {
+  const router = useRouter();
   const categories = [
     { label: "Liten", area: "(30-60 m2)" },
     { label: "Medium", area: "(61-100 m2)" },
@@ -15,6 +17,11 @@ const HytteTab = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Selected category:", selectedCategory);
+
+    const currIndex = 0;
+    localStorage.setItem("currIndex", currIndex.toString());
+
+    router.push(`husmodells`);
   };
 
   return (
