@@ -80,7 +80,8 @@ const HusmodellPropertyPage: React.FC = () => {
               b?.Husdetaljer?.pris?.replace(/\s/g, "") || "0"
             );
             return priceA - priceB;
-          });
+          })
+          .filter((item: any) => item?.is_live === true);
 
         const maxHousePrice = Math.max(
           ...data?.map((house: any) =>
