@@ -135,8 +135,11 @@ const HusmodellProperty: React.FC<{
                     key={index}
                     className="border border-gray3 rounded-[8px] p-3 md:p-5 cursor-pointer shadow-shadow4 hover:shadow-shadow1"
                     onClick={() => {
+                      const hasQuery = router.asPath.includes("?");
+                      const separator = hasQuery ? "&" : "?";
+
                       router.push(
-                        `${router.asPath}&husmodellId=${property?.id}`
+                        `${router.asPath}${separator}husmodellId=${property?.id}`
                       );
                     }}
                   >
@@ -231,8 +234,11 @@ const HusmodellProperty: React.FC<{
                             text="Utforsk"
                             className="border border-primary bg-primary text-white sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-semibold relative desktop:px-[28px] desktop:py-[16px]"
                             onClick={() => {
+                              const hasQuery = router.asPath.includes("?");
+                              const separator = hasQuery ? "&" : "?";
+
                               router.push(
-                                `${router.asPath}&husmodellId=${property?.id}`
+                                `${router.asPath}${separator}husmodellId=${property?.id}`
                               );
                             }}
                           />
