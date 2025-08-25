@@ -57,6 +57,7 @@ const SelectPlot: React.FC<{
     if (updatedQuery.kommunenavn) delete updatedQuery.kommunenavn;
     if (updatedQuery.empty) delete updatedQuery.empty;
     if (updatedQuery.plotId) delete updatedQuery.plotId;
+    if (updatedQuery.crmLead) delete updatedQuery.crmLead;
     if (updatedQuery.omrade) delete updatedQuery.omrade;
     if (updatedQuery.hasReload) delete updatedQuery.hasReload;
     if (updatedQuery.noPlot) delete updatedQuery.noPlot;

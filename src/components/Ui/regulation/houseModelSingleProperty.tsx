@@ -85,6 +85,26 @@ const HouseModelSingleProperty: React.FC<{
       const isEmptyPlot = queryParams.get("empty");
       const currentLeadId = queryParams.get("leadId");
       queryParams.delete("leadId");
+      queryParams.delete("crmLead");
+
+      const leadsSupplierQuery: any = await getDocs(
+        query(
+          collection(db, "leads_from_supplier"),
+          where("plotId", "==", String(plotId)),
+          where("husmodellId", "==", id),
+          where("created_by", "==", user.id)
+        )
+      );
+      if (!leadsSupplierQuery.empty) {
+        const existingLeadId = leadsSupplierQuery.docs[0].id;
+        if (existingLeadId) {
+          queryParams.set("crmLead", existingLeadId);
+          router.replace({
+            pathname: router.pathname,
+            query: Object.fromEntries(queryParams),
+          });
+        }
+      }
 
       try {
         let plotCollectionRef = collection(

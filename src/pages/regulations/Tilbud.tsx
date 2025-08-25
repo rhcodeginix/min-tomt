@@ -10,22 +10,26 @@ import { formatCurrency } from "@/components/Ui/RegulationHusmodell/Illustrasjon
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { v4 as uuidv4 } from "uuid";
 import LeadsBox from "@/components/Ui/husmodellPlot/leadsBox";
 import { useRouter } from "next/router";
 import NorkartMap from "@/components/map";
 import {
+  Timestamp,
   addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
-import { db } from "@/config/firebaseConfig";
+import { auth, db } from "@/config/firebaseConfig";
 import { toast } from "react-hot-toast";
 import { addDaysToDate } from "@/components/Ui/husmodellPlot/Tilbudsdetaljer";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Tilbud: React.FC<{
   handleNext: any;
@@ -51,7 +55,7 @@ const Tilbud: React.FC<{
   const router = useRouter();
   const { query: queryy } = router;
   const updatedQuery = { ...queryy };
-  const { husmodellId, homePage } = router.query;
+  const { husmodellId, homePage, crmLead } = router.query;
   const plotId = router.query["plotId"];
 
   const Huskonfigurator =
@@ -211,6 +215,35 @@ const Tilbud: React.FC<{
   ].reduce((acc, curr) => acc + (curr || 0), 0);
 
   const ByggestartDate = addDaysToDate(date, totalByggestartDays);
+
+  const [createData, setCreateData] = useState<any>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
+      if (user) {
+        try {
+          const userDocRef = doc(db, "users", user.uid);
+          const userDocSnapshot = await getDoc(userDocRef);
+
+          if (userDocSnapshot.exists()) {
+            const userData = userDocSnapshot.data();
+            setCreateData({
+              id: userDocSnapshot.id,
+              ...userData,
+            });
+          } else {
+            console.error("No such document in Firestore!");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        setCreateData(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="relative">
@@ -582,7 +615,6 @@ const Tilbud: React.FC<{
                 text="Send til Fjellheimhytta"
                 className="border border-primary bg-primary text-white sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-semibold relative desktop:px-[28px] desktop:py-[16px]"
                 onClick={async () => {
-                  handleNext();
                   try {
                     if (leadId) {
                       await updateDoc(doc(db, "leads", String(leadId)), {
@@ -593,9 +625,72 @@ const Tilbud: React.FC<{
                         EstimertInnflytting: addDaysToDate(date, totalDays),
                         stored,
                       });
+
+                      const uniqueId = crmLead ? String(crmLead) : uuidv4();
+                      const crm_leadRef = doc(
+                        db,
+                        "leads_from_supplier",
+                        uniqueId
+                      );
+
+                      if (crmLead) {
+                        return;
+                      } else {
+                        await setDoc(crm_leadRef, {
+                          husmodellId,
+                          plotId,
+                          leadId,
+                          updatedAt: Timestamp.now(),
+                          createdAt: Timestamp.now(),
+                          supplierId: "065f9498-6cdb-469b-8601-bb31114d7c95",
+                          created_by: createData?.id,
+                          id: uniqueId,
+                          lead_id: uniqueId,
+                          leadData: {
+                            epost: createData?.email,
+                            name: createData?.name,
+                            ...(createData?.phone
+                              ? { telefon: createData.phone }
+                              : {}),
+                          },
+                        });
+                        const followupsRef = collection(
+                          crm_leadRef,
+                          "followups"
+                        );
+                        const followupDocRef = doc(followupsRef);
+
+                        await setDoc(followupDocRef, {
+                          id: followupDocRef.id,
+                          followup_id: followupDocRef.id,
+                          lead_id: uniqueId,
+                          createdAt: Timestamp.now(),
+                          updatedAt: Timestamp.now(),
+                          created_by: createData?.id,
+                          Hurtigvalg: "initial",
+                          date: Timestamp.now(),
+                        });
+
+                        const houseModellDocRef = doc(
+                          crm_leadRef,
+                          "preferred_house_model",
+                          uniqueId
+                        );
+
+                        await setDoc(houseModellDocRef, {
+                          id: houseModellDocRef.id,
+                          lead_id: uniqueId,
+                          createdAt: Timestamp.now(),
+                          updatedAt: Timestamp.now(),
+                          created_by: createData?.id,
+                          Husmodell: [husmodellId],
+                        });
+                      }
+
                       toast.success("Lead sendt.", {
                         position: "top-right",
                       });
+                      handleNext();
                     } else {
                       toast.error("Lead id not found.", {
                         position: "top-right",

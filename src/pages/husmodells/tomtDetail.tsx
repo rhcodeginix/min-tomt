@@ -81,9 +81,10 @@ const TomtHouseDetails: React.FC<{
       if (!user || !plotId || !id || !stored) return;
 
       const queryParams = new URLSearchParams(window.location.search);
-      const isEmptyPlot = queryParams.get("empty");
+      const isEmptyPlot = queryParams.get("empty") === "true";
       const currentLeadId = queryParams.get("leadId");
       queryParams.delete("leadId");
+      queryParams.delete("crmLead");
 
       try {
         const [plotDocSnap, husmodellDocSnap] = await Promise.all([
@@ -96,63 +97,66 @@ const TomtHouseDetails: React.FC<{
           husmodell: { id: String(id), ...husmodellDocSnap.data() },
         };
 
-        const leadsQuerySnapshot: any = await getDocs(
-          query(
-            collection(db, "leads"),
-            where("finalData.plot.id", "==", String(plotId)),
-            where("finalData.husmodell.id", "==", id),
-            where("user.id", "==", user.id)
-          )
+        const [leadsSupplierQuery, leadsQuerySnapshot]: any = await Promise.all(
+          [
+            getDocs(
+              query(
+                collection(db, "leads_from_supplier"),
+                where("plotId", "==", String(plotId)),
+                where("husmodellId", "==", id),
+                where("created_by", "==", user.id)
+              )
+            ),
+            getDocs(
+              query(
+                collection(db, "leads"),
+                where("finalData.plot.id", "==", String(plotId)),
+                where("finalData.husmodell.id", "==", id),
+                where("user.id", "==", user.id)
+              )
+            ),
+          ]
         );
+
+        if (!leadsSupplierQuery.empty) {
+          queryParams.set("crmLead", leadsSupplierQuery.docs[0].id);
+        }
 
         if (!leadsQuerySnapshot.empty) {
           const existingLeadId = leadsQuerySnapshot.docs[0].id;
-
           if (currentLeadId !== existingLeadId) {
             queryParams.set("leadId", existingLeadId);
-            router.replace({
-              pathname: router.pathname,
-              query: Object.fromEntries(queryParams),
-            });
           }
-          return;
         } else if (currentLeadId) {
           const oldLeadRef = doc(db, "leads", currentLeadId);
           const leadSnapshot = await getDoc(oldLeadRef);
+
           if (leadSnapshot.exists()) {
             const existingLead = leadSnapshot.data();
-
-            queryParams.set("leadId", currentLeadId);
-
             if (existingLead.finalData.plot === null) {
               await updateDoc(oldLeadRef, {
                 finalData,
                 user,
                 updatedAt: new Date(),
-                IsEmptyPlot: isEmptyPlot === "true",
+                IsEmptyPlot: isEmptyPlot,
               });
             }
+            queryParams.set("leadId", currentLeadId);
           }
-
-          router.replace({
-            pathname: router.pathname,
-            query: Object.fromEntries(queryParams),
+        } else {
+          const newDocRef = await addDoc(collection(db, "leads"), {
+            finalData,
+            user,
+            Isopt: false,
+            IsoptForBank: false,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            IsEmptyPlot: isEmptyPlot,
+            stored,
           });
-          return;
+          queryParams.set("leadId", newDocRef.id);
         }
 
-        const newDocRef = await addDoc(collection(db, "leads"), {
-          finalData,
-          user,
-          Isopt: false,
-          IsoptForBank: false,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          IsEmptyPlot: isEmptyPlot === "true",
-          stored,
-        });
-
-        queryParams.set("leadId", newDocRef.id);
         router.replace({
           pathname: router.pathname,
           query: Object.fromEntries(queryParams),

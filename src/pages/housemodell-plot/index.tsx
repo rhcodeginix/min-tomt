@@ -324,6 +324,7 @@ const HusmodellPlot = () => {
       const queryParams = new URLSearchParams(window.location.search);
       const isEmptyPlot = queryParams.get("empty");
       queryParams.delete("leadId");
+      queryParams.delete("crmLead");
 
       try {
         let plotCollectionRef = collection(db, "empty_plot");
@@ -337,6 +338,25 @@ const HusmodellPlot = () => {
           plot: { id: propertyId, ...plotDocSnap.data() },
           husmodell: { id: husmodellId, ...husmodellDocSnap.data() },
         };
+
+        const leadsSupplierQuery: any = await getDocs(
+          query(
+            collection(db, "leads_from_supplier"),
+            where("plotId", "==", String(propertyId)),
+            where("husmodellId", "==", husmodellId),
+            where("created_by", "==", user.id)
+          )
+        );
+        if (!leadsSupplierQuery.empty) {
+          const existingLeadId = leadsSupplierQuery.docs[0].id;
+          if (existingLeadId) {
+            queryParams.set("crmLead", existingLeadId);
+            router.replace({
+              pathname: router.pathname,
+              query: Object.fromEntries(queryParams),
+            });
+          }
+        }
 
         const leadsCollectionRef = collection(db, "leads");
         const querySnapshot: any = await getDocs(

@@ -1,17 +1,20 @@
 import Image from "next/image";
 import Ic_spareBank from "@/public/images/Ic_spareBank.svg";
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import Button from "@/components/common/button";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import { useRouter } from "next/router";
 import {
+  Timestamp,
   addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -29,8 +32,7 @@ const LeadsBox: React.FC<{ col?: any; isShow?: any }> = ({ col, isShow }) => {
     checkbox: Yup.boolean().oneOf([true], "Påkrevd").required("Påkrevd"),
   });
   const router = useRouter();
-  const { propertyId, husmodellId } = router.query;
-
+  const { propertyId, husmodellId, crmLead } = router.query;
   const [leadId, setLeadId] = useState(router.query["leadId"]);
 
   const [user, setUser] = useState<any>(null);
@@ -43,6 +45,9 @@ const LeadsBox: React.FC<{ col?: any; isShow?: any }> = ({ col, isShow }) => {
     const store = localStorage.getItem("customizeHouse");
     setStored(store);
   }, []);
+
+  const [createData, setCreateData] = useState<any>(null);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       if (user) {
@@ -56,6 +61,10 @@ const LeadsBox: React.FC<{ col?: any; isShow?: any }> = ({ col, isShow }) => {
               id: userDocSnapshot.id,
               ...userData,
             });
+            setCreateData({
+              id: userDocSnapshot.id,
+              ...userData,
+            });
           } else {
             console.error("No such document in Firestore!");
           }
@@ -64,6 +73,7 @@ const LeadsBox: React.FC<{ col?: any; isShow?: any }> = ({ col, isShow }) => {
         }
       } else {
         setUser(null);
+        setCreateData(null);
       }
     });
 
@@ -164,6 +174,59 @@ const LeadsBox: React.FC<{ col?: any; isShow?: any }> = ({ col, isShow }) => {
           bankValue,
           stored,
         });
+
+        const uniqueId = crmLead ? String(crmLead) : uuidv4();
+        const crm_leadRef = doc(db, "leads_from_supplier", uniqueId);
+
+        if (crmLead) {
+          return;
+        } else {
+          await setDoc(crm_leadRef, {
+            husmodellId,
+            propertyId,
+            leadId,
+            updatedAt: Timestamp.now(),
+            createdAt: Timestamp.now(),
+            supplierId: "065f9498-6cdb-469b-8601-bb31114d7c95",
+            created_by: createData?.id,
+            id: uniqueId,
+            lead_id: uniqueId,
+            leadData: {
+              epost: createData?.email,
+              name: createData?.name,
+              ...(createData?.phone ? { telefon: createData.phone } : {}),
+            },
+          });
+          const followupsRef = collection(crm_leadRef, "followups");
+          const followupDocRef = doc(followupsRef);
+
+          await setDoc(followupDocRef, {
+            id: followupDocRef.id,
+            followup_id: followupDocRef.id,
+            lead_id: uniqueId,
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now(),
+            created_by: createData?.id,
+            Hurtigvalg: "initial",
+            date: Timestamp.now(),
+          });
+
+          const houseModellDocRef = doc(
+            crm_leadRef,
+            "preferred_house_model",
+            uniqueId
+          );
+
+          await setDoc(houseModellDocRef, {
+            id: houseModellDocRef.id,
+            lead_id: uniqueId,
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now(),
+            created_by: createData?.id,
+            Husmodell: [husmodellId],
+          });
+        }
+
         toast.success("Update Bank Lead successfully.", {
           position: "top-right",
         });
