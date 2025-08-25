@@ -6,7 +6,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit,
   query,
   where,
 } from "firebase/firestore";
@@ -31,8 +30,7 @@ const Property: React.FC = () => {
         const houseModelSnapshot = await getDocs(
           query(
             collection(db, "house_model"),
-            where("Husdetaljer.TilgjengeligBolig", "==", "Ja"),
-            limit(3)
+            where("Husdetaljer.TilgjengeligBolig", "==", "Ja")
           )
         );
         const houseModels = houseModelSnapshot.docs
@@ -57,7 +55,7 @@ const Property: React.FC = () => {
           });
 
         setData({
-          houseModels: houseModels,
+          houseModels: houseModels.slice(0, 3),
           supplierData: {},
         });
       } catch (error) {
