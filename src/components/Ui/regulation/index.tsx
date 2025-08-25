@@ -72,6 +72,10 @@ const HusmodellPropertyPage: React.FC<{
               10
             );
             return priceA - priceB;
+          })
+          .filter((item: any) => {
+            if (!item.hasOwnProperty("is_live")) return true;
+            return item.is_live === true;
           });
 
         const maxHousePrice = Math.max(
@@ -117,6 +121,10 @@ const HusmodellPropertyPage: React.FC<{
               10
             );
             return priceA - priceB;
+          })
+          .filter((item: any) => {
+            if (!item.hasOwnProperty("is_live")) return true;
+            return item.is_live === true;
           });
         setTotal(data.length);
         const soveromValues = formData?.AntallSoverom.flatMap((item: any) => {

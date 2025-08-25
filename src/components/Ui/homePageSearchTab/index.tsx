@@ -95,6 +95,10 @@ const HomePageSearchTab: React.FC = () => {
               10
             );
             return priceA - priceB;
+          })
+          .filter((item: any) => {
+            if (!item.hasOwnProperty("is_live")) return true;
+            return item.is_live === true;
           });
 
         const filteredHouseModels = houseModels.filter((house: any) =>

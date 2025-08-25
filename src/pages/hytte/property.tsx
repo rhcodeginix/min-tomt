@@ -50,6 +50,10 @@ const Property: React.FC = () => {
               10
             );
             return priceA - priceB;
+          })
+          .filter((item: any) => {
+            if (!item.hasOwnProperty("is_live")) return true;
+            return item.is_live === true;
           });
 
         setData({
