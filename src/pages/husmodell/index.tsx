@@ -81,7 +81,13 @@ const HusmodellPropertyPage: React.FC = () => {
             );
             return priceA - priceB;
           })
-          .filter((item: any) => item?.is_live === true);
+          // .filter(
+          //   (item: any) => item?.is_live === true || item?.is_live === undefined
+          // );
+          .filter((item: any) => {
+            if (!item.hasOwnProperty("is_live")) return true;
+            return item.is_live === true;
+          });
 
         const maxHousePrice = Math.max(
           ...data?.map((house: any) =>
