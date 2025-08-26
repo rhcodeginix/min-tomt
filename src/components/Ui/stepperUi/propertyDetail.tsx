@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAddress } from "@/context/addressContext";
 import Ic_Step_icon from "@/public/images/Ic_Step_icon.svg";
 import Image from "next/image";
 import NorkartMap from "@/components/map";
+import { useRouter } from "next/router";
 
 export function toCamelCase(str: any) {
   if (!str) return "";
@@ -19,6 +20,30 @@ const PropertyDetail: React.FC<any> = ({
   loading,
 }) => {
   const { getAddress } = useAddress();
+  const router = useRouter();
+
+  const { kommunenummer, gardsnummer, bruksnummer } = router.query;
+
+  const [address, setAddress] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://ws.geonorge.no/adresser/v1/sok?gardsnummer=${gardsnummer}&kommunenummer=${kommunenummer}&bruksnummer=${bruksnummer}`
+        );
+        const result = await response.json();
+
+        setAddress(result?.adresser[0]);
+      } catch (error: any) {
+        console.error("API error:", error);
+      }
+    };
+
+    if (kommunenummer && gardsnummer && bruksnummer) {
+      fetchData();
+    }
+  }, [kommunenummer, gardsnummer, bruksnummer]);
 
   return (
     <>
@@ -45,15 +70,13 @@ const PropertyDetail: React.FC<any> = ({
               <div className="w-[250px] h-[20px] rounded-lg custom-shimmer mb-1 md:mb-2"></div>
             ) : (
               <h2 className="text-darkBlack font-medium text-base md:text-xl lg:text-2xl lg:leading-[30px] mb-1 md:mb-2 one_line_elipse">
-                {
-                  CadastreDataFromApi?.presentationAddressApi?.response?.item
-                    ?.formatted?.line1
-                }{" "}
+                {CadastreDataFromApi?.presentationAddressApi?.response?.item
+                  ?.formatted?.line1 ?? address?.adressetekst}{" "}
                 <span className="font-medium">
                   (
                   {toCamelCase(
                     CadastreDataFromApi?.presentationAddressApi?.response?.item
-                      ?.municipality?.municipalityName
+                      ?.municipality?.municipalityName ?? address?.poststed
                   )}{" "}
                   Kommune)
                 </span>
@@ -63,10 +86,9 @@ const PropertyDetail: React.FC<any> = ({
               <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
             ) : (
               <p className="text-secondary2 text-sm md:text-base desktop:text-lg">
-                {
-                  CadastreDataFromApi?.presentationAddressApi?.response?.item
-                    ?.formatted?.line2
-                }
+                {CadastreDataFromApi?.presentationAddressApi?.response?.item
+                  ?.formatted?.line2 ??
+                  `${address?.postnummer} ${address?.poststed}`}
               </p>
             )}
           </div>

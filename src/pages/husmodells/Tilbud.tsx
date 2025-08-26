@@ -369,6 +369,29 @@ const Tilbud: React.FC<{
     return () => unsubscribe();
   }, []);
 
+  const { kommunenummer, gardsnummer, bruksnummer } = router.query;
+
+  const [address, setAddress] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://ws.geonorge.no/adresser/v1/sok?gardsnummer=${gardsnummer}&kommunenummer=${kommunenummer}&bruksnummer=${bruksnummer}`
+        );
+        const result = await response.json();
+
+        setAddress(result?.adresser[0]);
+      } catch (error: any) {
+        console.error("API error:", error);
+      }
+    };
+
+    if (kommunenummer && gardsnummer && bruksnummer) {
+      fetchData();
+    }
+  }, [kommunenummer, gardsnummer, bruksnummer]);
+
   return (
     <>
       <div className="bg-lightGreen2 py-2 md:py-4">
@@ -453,17 +476,14 @@ const Tilbud: React.FC<{
                     {plotId && (
                       <>
                         bygget i{" "}
-                        {
-                          CadastreDataFromApi?.presentationAddressApi?.response
-                            ?.item?.formatted?.line1
-                        }{" "}
+                        {CadastreDataFromApi?.presentationAddressApi?.response
+                          ?.item?.formatted?.line1 ??
+                          address?.adressetekst}{" "}
                         <span className="text-secondary2">
                           (
-                          {
-                            CadastreDataFromApi?.presentationAddressApi
-                              ?.response?.item?.street?.municipality
-                              ?.municipalityName
-                          }
+                          {CadastreDataFromApi?.presentationAddressApi?.response
+                            ?.item?.street?.municipality?.municipalityName ??
+                            address?.poststed}
                           )
                         </span>
                       </>
@@ -474,10 +494,9 @@ const Tilbud: React.FC<{
                   <div className="w-[200px] h-[20px] rounded-lg custom-shimmer mb-1"></div>
                 ) : (
                   <p className="text-secondary2 text-xs md:text-sm">
-                    {
-                      CadastreDataFromApi?.presentationAddressApi?.response
-                        ?.item?.formatted?.line2
-                    }
+                    {CadastreDataFromApi?.presentationAddressApi?.response?.item
+                      ?.formatted?.line2 ??
+                      `${address?.postnummer} ${address?.poststed}`}
                   </p>
                 )}
                 <div

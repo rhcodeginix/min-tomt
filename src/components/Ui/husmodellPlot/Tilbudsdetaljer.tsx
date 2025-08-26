@@ -189,6 +189,30 @@ const Tilbudsdetaljer: React.FC<{ isRemove?: any }> = ({ isRemove }) => {
       sum + Number(item?.product?.pris.replace(/\s/g, "")),
     0
   );
+
+  const { kommunenummer, gardsnummer, bruksnummer } = router.query;
+
+  const [address, setAddress] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://ws.geonorge.no/adresser/v1/sok?gardsnummer=${gardsnummer}&kommunenummer=${kommunenummer}&bruksnummer=${bruksnummer}`
+        );
+        const result = await response.json();
+
+        setAddress(result?.adresser[0]);
+      } catch (error: any) {
+        console.error("API error:", error);
+      }
+    };
+
+    if (kommunenummer && gardsnummer && bruksnummer) {
+      fetchData();
+    }
+  }, [kommunenummer, gardsnummer, bruksnummer]);
+
   return (
     <>
       {loading ? (
@@ -201,24 +225,21 @@ const Tilbudsdetaljer: React.FC<{ isRemove?: any }> = ({ isRemove }) => {
                 {husmodellData?.husmodell_name}
               </span>{" "}
               bygget i{" "}
-              {
-                finalData?.plot?.CadastreDataFromApi?.presentationAddressApi
-                  ?.response?.item?.formatted?.line1
-              }{" "}
+              {finalData?.plot?.CadastreDataFromApi?.presentationAddressApi
+                ?.response?.item?.formatted?.line1 ??
+                address?.adressetekst}{" "}
               <span className="text-secondary2">
                 (
-                {
-                  finalData?.plot?.CadastreDataFromApi?.presentationAddressApi
-                    ?.response?.item?.street?.municipality?.municipalityName
-                }
+                {finalData?.plot?.CadastreDataFromApi?.presentationAddressApi
+                  ?.response?.item?.street?.municipality?.municipalityName ??
+                  address?.poststed}
                 )
               </span>
             </h4>
             <p className="text-secondary2 text-xs md:text-sm whitespace-nowrap">
-              {
-                finalData?.plot?.CadastreDataFromApi?.presentationAddressApi
-                  ?.response?.item?.formatted?.line2
-              }
+              {finalData?.plot?.CadastreDataFromApi?.presentationAddressApi
+                ?.response?.item?.formatted?.line2 ??
+                `${address?.postnummer} ${address?.poststed}`}
             </p>
           </div>
           <div className="flex flex-col lg:flex-row lg:items-center gap-3 sm:gap-4 desktop:gap-6">
