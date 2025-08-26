@@ -4,6 +4,15 @@ import Ic_Step_icon from "@/public/images/Ic_Step_icon.svg";
 import Image from "next/image";
 import NorkartMap from "@/components/map";
 
+export function toCamelCase(str: any) {
+  if (!str) return "";
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word: any) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 const PropertyDetail: React.FC<any> = ({
   CadastreDataFromApi,
   lamdaDataFromApi,
@@ -42,11 +51,11 @@ const PropertyDetail: React.FC<any> = ({
                 }{" "}
                 <span className="font-medium">
                   (
-                  {
+                  {toCamelCase(
                     CadastreDataFromApi?.presentationAddressApi?.response?.item
                       ?.municipality?.municipalityName
-                  }
-                  ) Kommune
+                  )}{" "}
+                  Kommune)
                 </span>
               </h2>
             )}
