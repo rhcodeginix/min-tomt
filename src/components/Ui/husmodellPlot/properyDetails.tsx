@@ -192,7 +192,8 @@ const PropertyDetails: React.FC<{
                         const formattedResult: any = result.toFixed(2);
 
                         return `${(
-                          askData?.bya_calculations?.input?.bya_percentage -
+                          (BoxData?.bya_percentage ??
+                            askData?.bya_calculations?.input?.bya_percentage) -
                           formattedResult
                         ).toFixed(2)} %`;
                       } else {

@@ -6,6 +6,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   query,
   where,
 } from "firebase/firestore";
@@ -30,7 +31,9 @@ const Property: React.FC = () => {
         const houseModelSnapshot = await getDocs(
           query(
             collection(db, "house_model"),
-            where("Husdetaljer.TilgjengeligBolig", "==", "Ja")
+            where("Husdetaljer.TilgjengeligBolig", "==", "Ja"),
+            where("Husdetaljer.TypeObjekt", "==", "hytte"),
+            limit(3)
           )
         );
         const houseModels = houseModelSnapshot.docs
@@ -48,14 +51,10 @@ const Property: React.FC = () => {
               10
             );
             return priceA - priceB;
-          })
-          .filter((item: any) => {
-            if (!item.hasOwnProperty("is_live")) return true;
-            return item.is_live === true;
           });
 
         setData({
-          houseModels: houseModels.slice(0, 3),
+          houseModels: houseModels,
           supplierData: {},
         });
       } catch (error) {
