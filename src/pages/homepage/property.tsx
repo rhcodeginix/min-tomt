@@ -53,6 +53,52 @@ const Property: React.FC = () => {
     fetchProperty();
   }, []);
 
+  const [boxDataList, setBoxDataList] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!data?.houseModelProperty) return;
+
+    const fetchAll = async () => {
+      const results: any[] = [];
+
+      for (const property of data.houseModelProperty) {
+        const BBOXData =
+          property?.CadastreDataFromApi?.cadastreApi?.response?.item?.geojson
+            ?.bbox;
+
+        if (!BBOXData) {
+          results.push(null);
+          continue;
+        }
+
+        try {
+          const response = await fetch(
+            "https://d8t0z35n2l.execute-api.eu-north-1.amazonaws.com/prod/bya",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                url: `https://wms.geonorge.no/skwms1/wms.reguleringsplaner?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&QUERY_LAYERS=Planomrade_02,Arealformal_02&LAYERS=Planomrade_02,Arealformal_02&INFO_FORMAT=text/html&CRS=EPSG:25833&BBOX=${BBOXData[0]},${BBOXData[1]},${BBOXData[2]},${BBOXData[3]}&WIDTH=800&HEIGHT=600&I=400&J=300`,
+                plot_size_m2:
+                  property?.lamdaDataFromApi?.eiendomsInformasjon
+                    ?.basisInformasjon?.areal_beregnet ?? 0,
+              }),
+            }
+          );
+          const json = await response.json();
+          results.push(json);
+        } catch (e) {
+          console.error("Error fetching data:", e);
+          results.push(null);
+        }
+      }
+
+      setBoxDataList(results);
+    };
+
+    fetchAll();
+  }, [data?.houseModelProperty]);
+
   return (
     <>
       <div className="py-[44px] md:py-[58px] desktop:py-[120px]">
@@ -108,6 +154,8 @@ const Property: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               {data?.houseModelProperty.map((property: any, index: number) => {
+                const BoxData = boxDataList[index];
+
                 return (
                   <div
                     key={index}
@@ -174,10 +222,9 @@ const Property: React.FC = () => {
                       <div className="flex flex-col gap-2 items-center">
                         <Image src={Ic_Bya} alt="area" fetchPriority="auto" />
                         <p className="text-darkBlack text-xs md:text-sm font-semibold">
-                          {
+                          {BoxData?.bya_percentage ??
                             property?.additionalData?.answer?.bya_calculations
-                              ?.input?.bya_percentage
-                          }{" "}
+                              ?.input?.bya_percentage}{" "}
                           %
                         </p>
                       </div>
@@ -189,10 +236,9 @@ const Property: React.FC = () => {
                           fetchPriority="auto"
                         />
                         <p className="text-darkBlack text-xs md:text-sm font-semibold">
-                          {
+                          {BoxData?.bya_area_m2 ??
                             property?.additionalData?.answer?.bya_calculations
-                              ?.results?.total_allowed_bya
-                          }{" "}
+                              ?.results?.total_allowed_bya}{" "}
                           <span className="text-secondary font-normal">
                             m<sup>2</sup>
                           </span>
