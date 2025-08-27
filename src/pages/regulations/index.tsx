@@ -7,7 +7,6 @@ import Tilbud from "./Tilbud";
 import Finansiering from "./Finansiering";
 import { useRouter } from "next/router";
 import ApiUtils from "@/api";
-import ErrorPopup from "@/components/Ui/error";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/config/firebaseConfig";
 import {
@@ -25,6 +24,7 @@ import toast from "react-hot-toast";
 import Tilpass from "./Tilpass";
 import HouseModelSingleProperty from "@/components/Ui/regulation/houseModelSingleProperty";
 import Verdivurdering from "./Verdivurdering";
+import NotFound from "../page-not-found";
 
 const Regulations = () => {
   const [currIndex, setCurrIndex] = useState<number | null>(null);
@@ -58,6 +58,7 @@ const Regulations = () => {
   const [loadingAdditionalData, setLoadingAdditionalData] = useState(false);
   const [loadingLamdaData, setLoadingLamdaData] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [additionalData, setAdditionalData] = useState<any | undefined>(null);
   const hasFetchedData = useRef(false);
   const [userUID, setUserUID] = useState(null);
@@ -221,6 +222,7 @@ const Regulations = () => {
         ) {
           setLoadingAdditionalData(false);
           setShowErrorPopup(true);
+          setErrorMessage(data.message);
           return;
         }
 
@@ -309,15 +311,17 @@ const Regulations = () => {
             pathname: router.pathname,
             query: Object.fromEntries(queryParams),
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error fetching additional data from askApi:", error);
           setShowErrorPopup(true);
+          setErrorMessage(error);
         } finally {
           setLoadingAdditionalData(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching data:", error);
         setShowErrorPopup(true);
+        setErrorMessage(error);
       }
     };
 
@@ -805,13 +809,21 @@ const Regulations = () => {
 
   return (
     <>
-      <Stepper
-        steps={steps}
-        currIndex={currIndex}
-        setCurrIndex={setCurrIndex}
-        Style="true"
-      />
-      {showErrorPopup && <ErrorPopup />}
+      {showErrorPopup ? (
+        <div
+          className="fixed top-0 left-0 flex justify-center items-center h-screen w-full bg-white overflow-hidden"
+          style={{ zIndex: 999 }}
+        >
+          <NotFound error={errorMessage} />
+        </div>
+      ) : (
+        <Stepper
+          steps={steps}
+          currIndex={currIndex}
+          setCurrIndex={setCurrIndex}
+          Style="true"
+        />
+      )}
     </>
   );
 };

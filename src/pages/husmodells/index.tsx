@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import Tomt from "./Tomt";
 import Tilbud from "./Tilbud";
 import Finansiering from "./Finansiering";
-import ErrorPopup from "@/components/Ui/error";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/config/firebaseConfig";
 import {
@@ -23,6 +22,7 @@ import { useUserLayoutContext } from "@/context/userLayoutContext";
 import Tilpass from "./Tilpass";
 import ApiUtils from "@/api";
 import Verdivurdering from "./Verdivurdering";
+import NotFound from "../page-not-found";
 
 const HusmodellDetail = () => {
   const [currIndex, setCurrIndex] = useState(0);
@@ -48,6 +48,7 @@ const HusmodellDetail = () => {
   const [lamdaDataFromApi, setLamdaDataFromApi] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [additionalData, setAdditionalData] = useState<any | undefined>(null);
   const [CadastreDataFromApi, setCadastreDataFromApi] = useState<any | null>(
     null
@@ -181,8 +182,9 @@ const HusmodellDetail = () => {
               console.error("No property found with the given ID.");
             }
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error fetching user's properties:", error);
+          setErrorMessage(error);
           setShowErrorPopup(true);
         } finally {
           setLoading(false);
@@ -213,6 +215,7 @@ const HusmodellDetail = () => {
           !data.propertyId
         ) {
           setLoading(false);
+          setErrorMessage(data.message);
           setShowErrorPopup(true);
           return;
         }
@@ -306,14 +309,16 @@ const HusmodellDetail = () => {
           });
 
           setAdditionalData(additionalResponse);
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error fetching additional data from askApi:", error);
+          setErrorMessage(error);
           setShowErrorPopup(true);
         } finally {
           setLoading(false);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching data:", error);
+        setErrorMessage(error);
         setShowErrorPopup(true);
       }
     };
@@ -481,13 +486,21 @@ const HusmodellDetail = () => {
   ];
   return (
     <>
-      <Stepper
-        steps={steps}
-        currIndex={currIndex}
-        setCurrIndex={setCurrIndex}
-        Style="true"
-      />
-      {showErrorPopup && <ErrorPopup />}
+      {showErrorPopup ? (
+        <div
+          className="fixed top-0 left-0 flex justify-center items-center h-screen w-full bg-white overflow-hidden"
+          style={{ zIndex: 999 }}
+        >
+          <NotFound error={errorMessage} />
+        </div>
+      ) : (
+        <Stepper
+          steps={steps}
+          currIndex={currIndex}
+          setCurrIndex={setCurrIndex}
+          Style="true"
+        />
+      )}
     </>
   );
 };

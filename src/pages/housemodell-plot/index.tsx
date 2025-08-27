@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import TomtHusmodell from "./TomtHusmodell";
 import { useRouter } from "next/router";
-import ErrorPopup from "@/components/Ui/error";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "@/config/firebaseConfig";
 import {
@@ -21,6 +20,7 @@ import Tilpass from "./Tilpass";
 import Tilbud from "./Tilbud";
 import Finansiering from "./Finansiering";
 import Verdivurdering from "./Verdivurdering";
+import NotFound from "../page-not-found";
 
 const HusmodellPlot = () => {
   const [currIndex, setCurrIndex] = useState<number | null>(null);
@@ -50,6 +50,7 @@ const HusmodellPlot = () => {
   const [userUID, setUserUID] = useState(null);
   const [pris, setPris] = useState(0);
   const [isCall, setIsCall] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { loginUser, setLoginUser } = useUserLayoutContext();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -223,9 +224,10 @@ const HusmodellPlot = () => {
         } else {
           console.error("No property found with the given ID.");
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching user's properties:", error);
         setShowErrorPopup(true);
+        setErrorMessage(error);
       } finally {
         setLoading(false);
       }
@@ -537,12 +539,20 @@ const HusmodellPlot = () => {
 
   return (
     <>
-      <Stepper
-        steps={steps}
-        currIndex={currIndex}
-        setCurrIndex={setCurrIndex}
-      />
-      {showErrorPopup && <ErrorPopup />}
+      {showErrorPopup ? (
+        <div
+          className="fixed top-0 left-0 flex justify-center items-center h-screen w-full bg-white overflow-hidden"
+          style={{ zIndex: 999 }}
+        >
+          <NotFound error={errorMessage} />
+        </div>
+      ) : (
+        <Stepper
+          steps={steps}
+          currIndex={currIndex}
+          setCurrIndex={setCurrIndex}
+        />
+      )}
     </>
   );
 };

@@ -1441,7 +1441,7 @@ const PlotDetailPage: React.FC<{
                         <div
                           className={`absolute bottom-0 right-[4px] flex items-center justify-center h-full`}
                           style={{
-                            zIndex: 99999,
+                            zIndex: 999,
                           }}
                         >
                           <div
