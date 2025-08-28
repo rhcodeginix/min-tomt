@@ -98,6 +98,10 @@ const BelopFilterSection: React.FC<{
     { name: "Med utleiedel", value: "Med utleiedel" },
     { name: "Ett plan", value: "Ett plan" },
     { name: "Med garasje", value: "Med garasje" },
+    { name: "Nostalgi", value: "Nostalgi" },
+    { name: "Tur", value: "Tur" },
+    { name: "Karakter", value: "Karakter" },
+    { name: "V-serien", value: "V-serien" },
   ];
   const AntallSoveromArray: any = [
     { name: "1 Soverom", value: "1 Soverom" },

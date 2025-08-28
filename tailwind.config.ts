@@ -55,6 +55,7 @@ const config: Config = {
       darkGray: "#B9C0D4",
       darkGreen: "#006555",
       greenBtn: "#099250",
+      lightGreen: "#D8FFF9",
       gray2: "#EBEBEB",
       gray3: "#E0E0E0",
       white: "#fff",

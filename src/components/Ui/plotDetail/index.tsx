@@ -9,7 +9,15 @@ import Ic_chevron_up from "@/public/images/Ic_chevron_up.svg";
 import Ic_chevron_right from "@/public/images/Ic_chevron_right.svg";
 import GoogleMapNearByComponent from "@/components/Ui/map/nearbyBuiildingMap";
 import Eierinformasjon from "@/components/Ui/regulationChart/Eierinformasjon";
-import { Building, ClipboardList, FileText, FileUser } from "lucide-react";
+import Ic_file from "@/public/images/Ic_file.svg";
+import Ic_download_primary from "@/public/images/Ic_download_primary.svg";
+import {
+  Building,
+  ClipboardList,
+  FileText,
+  FileUser,
+  Files,
+} from "lucide-react";
 import NorkartMap from "@/components/map";
 
 const PlotDetailPage: React.FC<{
@@ -184,8 +192,110 @@ const PlotDetailPage: React.FC<{
     { id: "Eierinformasjon", label: "Eierinformasjon", icon: <FileUser /> },
     { id: "Bygninger", label: "Bygninger", icon: <Building /> },
     { id: "Plandokumenter", label: "Plandokumenter", icon: <ClipboardList /> },
+    { id: "Dokumenter", label: "Dokumenter", icon: <Files /> },
   ];
   const [PlotActiveTab, setPlotActiveTab] = useState<string>(plotTabs[0].id);
+
+  const [Documents, setDocuments] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchPlotData = async () => {
+      try {
+        const response = await fetch(
+          "https://d8t0z35n2l.execute-api.eu-north-1.amazonaws.com/prod/bya",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              url: `https://wms.geonorge.no/skwms1/wms.reguleringsplaner?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&QUERY_LAYERS=Planomrade_02,Arealformal_02&LAYERS=Planomrade_02,Arealformal_02&INFO_FORMAT=text/html&CRS=EPSG:25833&BBOX=${BBOXData[0]},${BBOXData[1]},${BBOXData[2]},${BBOXData[3]}&WIDTH=800&HEIGHT=600&I=400&J=300`,
+              plot_size_m2:
+                lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
+                  ?.areal_beregnet ?? 0,
+            }),
+          }
+        );
+
+        const json = await response.json();
+
+        if (json && json?.plan_link) {
+          const res = await fetch(
+            "https://iplotnor-areaplanner.hf.space/resolve",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                step1_url: json?.plan_link,
+                api_token: "D7D7FFB4-1A4A-44EA-BD15-BCDB6CEF8CA5",
+              }),
+            }
+          );
+
+          if (!res.ok) throw new Error("Request failed");
+
+          const data = await res.json();
+          setDocuments(data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (CadastreDataFromApi) {
+      fetchPlotData();
+    }
+  }, [CadastreDataFromApi]);
+
+  const handleDownload = async (filePath: any) => {
+    try {
+      if (!filePath) {
+        console.error("File path is missing!");
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.href = filePath?.link;
+      link.download = filePath?.name;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
+  };
+
+  const DocumentCard = ({
+    doc,
+    handleDownload,
+  }: {
+    doc: any;
+    handleDownload: (doc: any) => void;
+  }) => (
+    <div className="border border-gray2 rounded-lg p-2 md:p-3 bg-[#F9FAFB] flex items-center justify-between relative w-full">
+      <div className="flex items-center gap-2.5 md:gap-4 truncate w-[calc(100%-60px)] md:w-[calc(100%-65px)]">
+        <div className="border-[4px] border-lightGreen rounded-full flex items-center justify-center">
+          <div className="bg-lightGreen w-7 h-7 rounded-full flex justify-center items-center">
+            <Image src={Ic_file} alt="file" />
+          </div>
+        </div>
+        <h5 className="text-darkBlack text-xs md:text-sm font-medium truncate">
+          {doc?.name || "Loading..."}
+        </h5>
+      </div>
+      <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 w-[52px] sm:w-[56px] md:w-auto">
+        <Image
+          src={Ic_download_primary}
+          alt="download"
+          className="cursor-pointer w-5 h-5 md:w-6 md:h-6"
+          onClick={() => handleDownload(doc)}
+        />
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -1782,6 +1892,26 @@ const PlotDetailPage: React.FC<{
                     />
                   )}
                 </div>
+              )}
+            </>
+          )}
+          {PlotActiveTab === "Dokumenter" && (
+            <>
+              {Documents ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[
+                    Documents?.rule_book,
+                    ...(Documents?.planning_documents || []),
+                  ].map((doc, index) => (
+                    <DocumentCard
+                      key={index}
+                      doc={doc}
+                      handleDownload={handleDownload}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div>Ingen dokumenter funnet!</div>
               )}
             </>
           )}
