@@ -329,7 +329,12 @@ const TomtHouseDetails: React.FC<{
               }}
             />
             <Button
-              text="Neste: Tilbud"
+              text={
+                HouseModelData?.Husdetaljer?.Leverandører ===
+                "9f523136-72ca-4bde-88e5-de175bc2fc71"
+                  ? "Neste: Finansiering"
+                  : "Neste: Tilbud"
+              }
               className="border border-primary bg-primary hover:bg-[#1E5F5C] hover:border-[#1E5F5C] focus:bg-[#003A37] focus:border-[#003A37] text-white sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-semibold relative desktop:px-[28px] desktop:py-[16px]"
               onClick={() => {
                 if (!loadingLamdaData && !loadingAdditionalData) {

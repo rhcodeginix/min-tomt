@@ -32,6 +32,7 @@ const Husmodell: React.FC<any> = ({
   lamdaDataFromApi,
   user,
   supplierData,
+  setHouseModelData,
 }) => {
   const [hasMounted, setHasMounted] = useState(false);
   const router = useRouter();
@@ -159,6 +160,7 @@ const Husmodell: React.FC<any> = ({
           pris={pris}
           lamdaDataFromApi={lamdaDataFromApi}
           supplierData={supplierData}
+          setHouseModelData={setHouseModelData}
         />
       )}
 

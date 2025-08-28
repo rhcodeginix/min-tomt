@@ -116,7 +116,7 @@ const HusmodellDetail = () => {
     window.scrollTo(0, 0);
   }, [currIndex]);
   useEffect(() => {
-    if (currIndex < 2) {
+    if (HouseModelData?.Husdetaljer?.Leverandører !== "9f523136-72ca-4bde-88e5-de175bc2fc71" && currIndex < 2) {
       const { plotId, ...restQuery } = router.query;
 
       if (plotId) {
@@ -380,6 +380,7 @@ const HusmodellDetail = () => {
       getData();
     }
   }, [husmodellData?.Leverandører]);
+
   const steps = [
     {
       name: "Husmodell",
@@ -396,24 +397,29 @@ const HusmodellDetail = () => {
           lamdaDataFromApi={lamdaDataFromApi}
           supplierData={supplierData}
           user={user}
+          setHouseModelData={setHouseModelData}
         />
       ),
     },
-    {
-      name: "Tilpass",
-      component: (
-        <Tilpass
-          handleNext={handleNext}
-          handlePrevious={handlePrevious}
-          loading={loading}
-          HouseModelData={HouseModelData}
-          lamdaDataFromApi={lamdaDataFromApi}
-          supplierData={supplierData}
-          pris={pris}
-          user={user}
-        />
-      ),
-    },
+    ...(husmodellData?.Leverandører !== "9f523136-72ca-4bde-88e5-de175bc2fc71"
+      ? [
+          {
+            name: "Tilpass",
+            component: (
+              <Tilpass
+                handleNext={handleNext}
+                handlePrevious={handlePrevious}
+                loading={loading}
+                HouseModelData={HouseModelData}
+                lamdaDataFromApi={lamdaDataFromApi}
+                supplierData={supplierData}
+                pris={pris}
+                user={user}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       name: "Tomt",
       component: (
@@ -435,6 +441,8 @@ const HusmodellDetail = () => {
         />
       ),
     },
+    ...(husmodellData?.Leverandører !== "9f523136-72ca-4bde-88e5-de175bc2fc71"
+      ? [
     {
       name: "Tilbud",
       component: (
@@ -451,6 +459,8 @@ const HusmodellDetail = () => {
         />
       ),
     },
+        ]
+      : []),
     {
       name: "Finansiering",
       component: (
@@ -498,7 +508,20 @@ const HusmodellDetail = () => {
           steps={steps}
           currIndex={currIndex}
           setCurrIndex={setCurrIndex}
-          Style="true"
+          // Style={
+          //   husmodellData?.Leverandører !==
+          //   "9f523136-72ca-4bde-88e5-de175bc2fc71"
+          //     ? "true"
+          //     : undefined
+          // }
+          Style={
+            husmodellData?.Leverandører !==
+            "9f523136-72ca-4bde-88e5-de175bc2fc71"
+          }
+          total={
+            husmodellData?.Leverandører ===
+            "9f523136-72ca-4bde-88e5-de175bc2fc71"
+          }
         />
       )}
     </>

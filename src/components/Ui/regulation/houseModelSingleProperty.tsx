@@ -35,6 +35,7 @@ const HouseModelSingleProperty: React.FC<{
   askData: any;
   lamdaDataFromApi: any;
   user: any;
+  setHouseModelData: any;
 }> = ({
   handleNext,
   HouseModelData,
@@ -47,6 +48,7 @@ const HouseModelSingleProperty: React.FC<{
   askData,
   user,
   handlePrevious,
+  setHouseModelData,
 }) => {
   const router = useRouter();
   const { homePage } = router.query;
@@ -344,10 +346,16 @@ const HouseModelSingleProperty: React.FC<{
                 const currIndex = 0;
                 localStorage.setItem("currIndex", currIndex.toString());
                 handlePrevious();
+                setHouseModelData(null);
               }}
             />
             <Button
-              text={`Tilpass ${HouseModelData?.Husdetaljer?.husmodell_name} her`}
+              text={
+                HouseModelData?.Husdetaljer?.Leverandører ===
+                "9f523136-72ca-4bde-88e5-de175bc2fc71"
+                  ? "Neste: Finansiering"
+                  : `Tilpass ${HouseModelData?.Husdetaljer?.husmodell_name} her`
+              }
               className="border border-primary bg-primary text-white sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-semibold relative desktop:px-[28px] desktop:py-[16px]"
               onClick={() => {
                 if (!loadingLamdaData && !loadingAdditionalData) {

@@ -184,28 +184,40 @@ const Finansiering: React.FC<{
             >
               Detaljer
             </div>
-            <Image src={Ic_breadcrumb_arrow} alt="arrow" />
-            <div
-              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
-              onClick={() => {
-                const currIndex = 3;
-                localStorage.setItem("currIndex", currIndex.toString());
-                handlePrevious();
-              }}
-            >
-              Tilpass
-            </div>
-            <Image src={Ic_breadcrumb_arrow} alt="arrow" />
-            <div
-              className="text-primary text-xs md:text-sm font-medium cursor-pointer"
-              onClick={() => {
-                const currIndex = 4;
-                localStorage.setItem("currIndex", currIndex.toString());
-                handlePrevious();
-              }}
-            >
-              Tilbud
-            </div>
+            {HouseModelData &&
+              HouseModelData?.Husdetaljer?.Leverandører !==
+                "9f523136-72ca-4bde-88e5-de175bc2fc71" && (
+                <>
+                  <Image src={Ic_breadcrumb_arrow} alt="arrow" />
+                  <div
+                    className="text-primary text-xs md:text-sm font-medium cursor-pointer"
+                    onClick={() => {
+                      const currIndex = 3;
+                      localStorage.setItem("currIndex", currIndex.toString());
+                      handlePrevious();
+                    }}
+                  >
+                    Tilpass
+                  </div>
+                </>
+              )}
+            {HouseModelData &&
+              HouseModelData?.Husdetaljer?.Leverandører !==
+                "9f523136-72ca-4bde-88e5-de175bc2fc71" && (
+                <>
+                  <Image src={Ic_breadcrumb_arrow} alt="arrow" />
+                  <div
+                    className="text-primary text-xs md:text-sm font-medium cursor-pointer"
+                    onClick={() => {
+                      const currIndex = 4;
+                      localStorage.setItem("currIndex", currIndex.toString());
+                      handlePrevious();
+                    }}
+                  >
+                    Tilbud
+                  </div>
+                </>
+              )}
             <Image src={Ic_breadcrumb_arrow} alt="arrow" />
             <span className="text-secondary2 text-xs md:text-sm">
               Finansiering
@@ -475,12 +487,14 @@ const Finansiering: React.FC<{
               }}
             </Formik>
           </div>
-          <div className="mb-4 md:mb-8">
-            <Prisliste
-              husmodellData={HouseModelData?.Prisliste}
-              loading={loadingLamdaData}
-            />
-          </div>
+          {HouseModelData?.Prisliste && (
+            <div className="mb-4 md:mb-8">
+              <Prisliste
+                husmodellData={HouseModelData?.Prisliste}
+                loading={loadingLamdaData}
+              />
+            </div>
+          )}
           <span className="mb-4 md:mb-8 text-xs md:text-sm text-center">
             📄 Dette er et estimat basert på dagens priser og forutsetter
             standard leveranse fra {supplierData?.company_name}. Eventuelle

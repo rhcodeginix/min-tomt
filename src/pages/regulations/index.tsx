@@ -742,39 +742,48 @@ const Regulations = () => {
           askData={askData}
           lamdaDataFromApi={lamdaDataFromApi}
           user={user}
+          setHouseModelData={setHouseModelData}
         />
       ),
     },
-    {
-      name: "Tilpass",
-      component: (
-        <Tilpass
-          handleNext={handleNext}
-          lamdaDataFromApi={lamdaDataFromApi}
-          loadingLamdaData={loading}
-          HouseModelData={HouseModelData}
-          handlePrevious={handlePrevious}
-          supplierData={supplierData}
-          CadastreDataFromApi={CadastreDataFromApi}
-        />
-      ),
-    },
-    {
-      name: "Tilbud",
-      component: (
-        <Tilbud
-          user={user}
-          handleNext={handleNext}
-          lamdaDataFromApi={lamdaDataFromApi}
-          loadingLamdaData={loading}
-          CadastreDataFromApi={CadastreDataFromApi}
-          askData={askData}
-          HouseModelData={HouseModelData}
-          supplierData={supplierData}
-          handlePrevious={handlePrevious}
-        />
-      ),
-    },
+    ...(husmodellData?.Leverandører !== "9f523136-72ca-4bde-88e5-de175bc2fc71"
+      ? [
+          {
+            name: "Tilpass",
+            component: (
+              <Tilpass
+                handleNext={handleNext}
+                lamdaDataFromApi={lamdaDataFromApi}
+                loadingLamdaData={loading}
+                HouseModelData={HouseModelData}
+                handlePrevious={handlePrevious}
+                supplierData={supplierData}
+                CadastreDataFromApi={CadastreDataFromApi}
+              />
+            ),
+          },
+        ]
+      : []),
+    ...(husmodellData?.Leverandører !== "9f523136-72ca-4bde-88e5-de175bc2fc71"
+      ? [
+          {
+            name: "Tilbud",
+            component: (
+              <Tilbud
+                user={user}
+                handleNext={handleNext}
+                lamdaDataFromApi={lamdaDataFromApi}
+                loadingLamdaData={loading}
+                CadastreDataFromApi={CadastreDataFromApi}
+                askData={askData}
+                HouseModelData={HouseModelData}
+                supplierData={supplierData}
+                handlePrevious={handlePrevious}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       name: "Finansiering",
       component: (
@@ -821,7 +830,11 @@ const Regulations = () => {
           steps={steps}
           currIndex={currIndex}
           setCurrIndex={setCurrIndex}
-          Style="true"
+          // Style="true"
+          Style={
+            husmodellData?.Leverandører !==
+            "9f523136-72ca-4bde-88e5-de175bc2fc71"
+          }
         />
       )}
     </>

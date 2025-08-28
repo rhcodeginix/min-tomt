@@ -217,39 +217,48 @@ const PropertyHouseDetails: React.FC<{
 
         <div className={`${hidden ? "hidden md:block" : "block"}`}>
           <div className="flex gap-6 w-max">
-            {loading ? (
-              <div
-                className="w-[180px] h-[20px] rounded-lg custom-shimmer mb-2"
-                style={{ borderRadius: "8px" }}
-              ></div>
-            ) : (
-              <div>
-                <p className="text-secondary text-xs md:text-sm mb-2">
-                  Dine tillegg
-                </p>
-                <h4 className="text-darkBlack font-semibold text-base md:text-lg lg:text-xl">
-                  {totalCustPris ? formatCurrency(totalCustPris) : "kr 0"}
-                </h4>
-              </div>
+            {totalCustPris > 0 && (
+              <>
+                {loading ? (
+                  <div
+                    className="w-[180px] h-[20px] rounded-lg custom-shimmer mb-2"
+                    style={{ borderRadius: "8px" }}
+                  ></div>
+                ) : (
+                  <div>
+                    <p className="text-secondary text-xs md:text-sm mb-2">
+                      Dine tillegg
+                    </p>
+                    <h4 className="text-darkBlack font-semibold text-base md:text-lg lg:text-xl">
+                      {totalCustPris ? formatCurrency(totalCustPris) : "kr 0"}
+                    </h4>
+                  </div>
+                )}
+              </>
             )}
-            {loading ? (
-              <div
-                className="w-[180px] h-[20px] rounded-lg custom-shimmer mb-2"
-                style={{ borderRadius: "8px" }}
-              ></div>
-            ) : (
-              <div>
-                <p className="text-secondary text-xs md:text-sm mb-2">
-                  Din pris med tilvalg
-                </p>
-                <h4 className="text-darkBlack font-semibold text-base md:text-lg lg:text-xl">
-                  {formatCurrency(totalPrice)}
-                </h4>
-
-                <p className="text-secondary text-xs md:text-sm">
-                  Inkludert tomtepris ({formatCurrency(pris)})
-                </p>
-              </div>
+            {(totalPrice > 0 || pris > 0) && (
+              <>
+                {loading ? (
+                  <div
+                    className="w-[180px] h-[20px] rounded-lg custom-shimmer mb-2"
+                    style={{ borderRadius: "8px" }}
+                  ></div>
+                ) : (
+                  <div>
+                    <p className="text-secondary text-xs md:text-sm mb-2">
+                      Din pris med tilvalg
+                    </p>
+                    <h4 className="text-darkBlack font-semibold text-base md:text-lg lg:text-xl">
+                      {formatCurrency(totalPrice)}
+                    </h4>
+                    {pris > 0 && (
+                      <p className="text-secondary text-xs md:text-sm">
+                        Inkludert tomtepris ({formatCurrency(pris)})
+                      </p>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

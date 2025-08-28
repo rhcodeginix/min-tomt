@@ -104,15 +104,21 @@ const Tomt: React.FC<{
                 >
                   Hyttemodell
                 </div>
-                <Image src={Ic_breadcrumb_arrow} alt="arrow" />
-                <div
-                  className="text-primary text-xs md:text-sm font-bold cursor-pointer"
-                  onClick={() => {
-                    handlePrevious();
-                  }}
-                >
-                  Tilpass
-                </div>
+                {HouseModelData &&
+                  HouseModelData?.Husdetaljer?.Leverandører !==
+                    "9f523136-72ca-4bde-88e5-de175bc2fc71" && (
+                    <>
+                      <Image src={Ic_breadcrumb_arrow} alt="arrow" />
+                      <div
+                        className="text-primary text-xs md:text-sm font-bold cursor-pointer"
+                        onClick={() => {
+                          handlePrevious();
+                        }}
+                      >
+                        Tilpass
+                      </div>
+                    </>
+                  )}
                 <Image src={Ic_breadcrumb_arrow} alt="arrow" />
                 <span className="text-secondary2 text-xs md:text-sm">Tomt</span>
               </div>

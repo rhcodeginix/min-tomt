@@ -16,6 +16,7 @@ const HusmodellDetail: React.FC<{
   pris: any;
   lamdaDataFromApi: any;
   supplierData: any;
+  setHouseModelData: any;
 }> = ({
   handleNext,
   HouseModelData,
@@ -23,6 +24,7 @@ const HusmodellDetail: React.FC<{
   pris,
   lamdaDataFromApi,
   supplierData,
+  setHouseModelData,
 }) => {
   const router = useRouter();
 
@@ -83,6 +85,7 @@ const HusmodellDetail: React.FC<{
                     undefined,
                     { shallow: true }
                   );
+                  setHouseModelData(null);
                 }}
               />
               <Button

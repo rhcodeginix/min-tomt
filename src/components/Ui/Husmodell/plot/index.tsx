@@ -73,6 +73,7 @@ const Plots: React.FC<{
     setCadastreDataFromApi(null);
     setAdditionalData(null);
   }, []);
+
   useEffect(() => {
     const fetchProperty = async () => {
       setIsLoading(true);
@@ -95,8 +96,15 @@ const Plots: React.FC<{
           localStorage.getItem("subcity") || "[]"
         );
 
-        const cleanedCities =
-          cityQuery?.split(",").map((city) => city.trim()) || [];
+        const citiesSnapshot = await getDocs(citiesCollectionRef);
+        const allCities = citiesSnapshot.docs.map((doc) => ({
+          propertyId: doc.id,
+          ...doc.data(),
+        }));
+
+        const cleanedCities = cityQuery
+          ? cityQuery.split(",").map((city) => city.trim())
+          : allCities.map((c: any) => c.name);
 
         const citiesToUse =
           cityFormLocalStorage.length > 0
@@ -105,15 +113,9 @@ const Plots: React.FC<{
 
         setFormData((prev) => ({
           ...prev,
-          // Område: citiesToUse,
           Område: citiesToUse.length > 0 ? citiesToUse : prev.Område,
           SubOmråde:
             subCityFormLocalStorage.length > 0 ? subCityFormLocalStorage : [],
-        }));
-        const citiesSnapshot = await getDocs(citiesCollectionRef);
-        const allCities = citiesSnapshot.docs.map((doc) => ({
-          propertyId: doc.id,
-          ...doc.data(),
         }));
 
         const matchedCities = allCities.filter((property: any) =>
@@ -124,6 +126,7 @@ const Plots: React.FC<{
           setHouseModelProperty([]);
           return;
         }
+
         let kommuneNumbers: number[] = [];
 
         matchedCities.forEach((property: any) => {
@@ -213,6 +216,7 @@ const Plots: React.FC<{
 
     fetchProperty();
   }, [router.asPath]);
+
   const [openDrawer, setOpenDrawer] = useState(false);
   const toggleDrawer = (open: boolean) => () => {
     setOpenDrawer(open);

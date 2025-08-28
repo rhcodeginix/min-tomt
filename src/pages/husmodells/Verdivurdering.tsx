@@ -92,13 +92,13 @@ const Verdivurdering: React.FC<{
             <div className="flex items-center flex-wrap gap-1">
               <Link
                 href={"/"}
-                className="text-primary text-xs md:text-sm font-bold"
+                className="text-primary text-xs md:text-sm font-medium"
               >
                 Hjem
               </Link>
               <Image src={Ic_breadcrumb_arrow} alt="arrow" />
               <div
-                className="text-primary text-xs md:text-sm font-bold cursor-pointer"
+                className="text-primary text-xs md:text-sm font-medium cursor-pointer"
                 onClick={() => {
                   const currIndex = 0;
                   localStorage.setItem("currIndex", currIndex.toString());
@@ -107,44 +107,65 @@ const Verdivurdering: React.FC<{
               >
                 Hyttemodell
               </div>
+              {HouseModelData &&
+                HouseModelData?.Husdetaljer?.Leverandører !==
+                  "9f523136-72ca-4bde-88e5-de175bc2fc71" && (
+                  <>
+                    <Image src={Ic_breadcrumb_arrow} alt="arrow" />
+                    <div
+                      className="text-primary text-xs md:text-sm font-medium cursor-pointer"
+                      onClick={() => {
+                        const currIndex = 1;
+                        localStorage.setItem("currIndex", currIndex.toString());
+                        handlePrevious();
+                      }}
+                    >
+                      Tilpass
+                    </div>
+                  </>
+                )}
               <Image src={Ic_breadcrumb_arrow} alt="arrow" />
               <div
-                className="text-primary text-xs md:text-sm font-bold cursor-pointer"
+                className="text-primary text-xs md:text-sm font-medium cursor-pointer"
                 onClick={() => {
-                  const currIndex = 1;
-                  localStorage.setItem("currIndex", currIndex.toString());
-                  handlePrevious();
-                }}
-              >
-                Tilpass
-              </div>
-              <Image src={Ic_breadcrumb_arrow} alt="arrow" />
-              <div
-                className="text-primary text-xs md:text-sm font-bold cursor-pointer"
-                onClick={() => {
-                  const currIndex = 2;
+                  const currIndex =
+                    HouseModelData &&
+                    HouseModelData?.Husdetaljer?.Leverandører ===
+                      "9f523136-72ca-4bde-88e5-de175bc2fc71"
+                      ? 1
+                      : 2;
                   localStorage.setItem("currIndex", currIndex.toString());
                   handlePrevious();
                 }}
               >
                 Tomt
               </div>
+              {HouseModelData &&
+                HouseModelData?.Husdetaljer?.Leverandører !==
+                  "9f523136-72ca-4bde-88e5-de175bc2fc71" && (
+                  <>
+                    <Image src={Ic_breadcrumb_arrow} alt="arrow" />
+                    <div
+                      className="text-primary text-xs md:text-sm font-medium cursor-pointer"
+                      onClick={() => {
+                        const currIndex = 3;
+                        localStorage.setItem("currIndex", currIndex.toString());
+                        handlePrevious();
+                      }}
+                    >
+                      Tilbud
+                    </div>
+                  </>
+                )}
               <Image src={Ic_breadcrumb_arrow} alt="arrow" />
               <div
-                className="text-primary text-xs md:text-sm font-bold cursor-pointer"
+                className="text-primary text-xs md:text-sm font-medium cursor-pointer"
                 onClick={() => {
-                  const currIndex = 3;
-                  localStorage.setItem("currIndex", currIndex.toString());
-                  handlePrevious();
-                }}
-              >
-                Tilbud
-              </div>
-              <Image src={Ic_breadcrumb_arrow} alt="arrow" />
-              <div
-                className="text-primary text-xs md:text-sm font-bold cursor-pointer"
-                onClick={() => {
-                  const currIndex = 4;
+                  const currIndex = HouseModelData &&
+                  HouseModelData?.Husdetaljer?.Leverandører ===
+                    "9f523136-72ca-4bde-88e5-de175bc2fc71"
+                    ? 2
+                    : 4;
                   localStorage.setItem("currIndex", currIndex.toString());
                   handlePrevious();
                 }}

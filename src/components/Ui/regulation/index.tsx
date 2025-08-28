@@ -126,43 +126,50 @@ const HusmodellPropertyPage: React.FC<{
         });
         const filterData =
           data.filter((house: any) => {
-            const housePrice = parseInt(
-              house?.Husdetaljer?.pris.replace(/\s/g, ""),
-              10
-            );
             const houseDetails = house?.Husdetaljer || {};
+            const housePrice = parseInt(
+              houseDetails?.pris?.replace(/\s/g, "") || "0"
+            );
 
             const boligtype = houseDetails?.VelgBoligtype;
             const egenskaper = houseDetails?.VelgEgenskaperBoligtype || [];
-            const hasEgenskaper = egenskaper.length > 0;
 
+            const hasBedroomFilter = formData.AntallSoverom.length > 0;
+            const hasMinPriceFilter = formData.minRangeForHusmodell !== 0;
+            const hasMaxPriceFilter = formData.maxRangeForHusmodell !== 0;
             const hasTypeFilter = formData.TypeHusmodell.length > 0;
 
+            const matchesBedrooms =
+              !hasBedroomFilter || soveromValues.includes(houseDetails.Soverom);
+            const matchesMinPrice =
+              !hasMinPriceFilter || housePrice >= formData.minRangeForHusmodell;
+            const matchesMaxPrice =
+              !hasMaxPriceFilter || housePrice <= formData.maxRangeForHusmodell;
+
             const matchesBoligtype =
-              (!hasTypeFilter || formData.TypeHusmodell.includes(boligtype)) &&
-              hasEgenskaper;
+              !hasTypeFilter ||
+              formData.TypeHusmodell.some(
+                (type: string) =>
+                  type.trim().toLowerCase() ===
+                  (boligtype || "").trim().toLowerCase()
+              );
+
             const matchesEgenskaper =
               !hasTypeFilter ||
               egenskaper.some((item: string) =>
-                formData.TypeHusmodell.includes(item)
+                formData.TypeHusmodell.some(
+                  (type: string) =>
+                    type.trim().toLowerCase() === item.trim().toLowerCase()
+                )
               );
+
             return (
-              (formData?.AntallSoverom.length > 0
-                ? soveromValues.includes(house?.Husdetaljer?.Soverom)
-                : true) &&
-              (formData?.minRangeForHusmodell !== 0
-                ? housePrice >= formData?.minRangeForHusmodell
-                : true) &&
-              housePrice <= Number(formData?.maxRangeForHusmodell) &&
-              (formData?.Hustype.length > 0
-                ? formData?.Hustype.map((item: any) =>
-                    item.toLowerCase()
-                  ).includes(house?.Husdetaljer?.TypeObjekt?.toLowerCase())
-                : true) &&
+              matchesBedrooms &&
+              matchesMinPrice &&
+              matchesMaxPrice &&
               (matchesBoligtype || matchesEgenskaper)
             );
           }) || data;
-
         setHouseModelProperty(filterData);
       } catch (error) {
         console.error("Error fetching properties:", error);
