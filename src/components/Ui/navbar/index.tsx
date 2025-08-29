@@ -10,7 +10,14 @@ import Image from "next/image";
 import { useUserLayoutContext } from "@/context/userLayoutContext";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "@/config/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useRouter } from "next/router";
 import { getVippsLoginUrl } from "@/utils/vippsAuth";
 import { toast } from "@/hooks/use-toast";
@@ -37,24 +44,58 @@ const Header = () => {
 
   const [userName, setUserName] = useState<any>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
-      if (user) {
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnapshot = await getDoc(userDocRef);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
+  //     if (user) {
+  //       try {
+  //         const userDocRef = doc(db, "users", user.uid);
+  //         const userDocSnapshot = await getDoc(userDocRef);
 
-          if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-            setUserName(userData.name);
-          } else {
-            console.error("No such document in Firestore!");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
+  //         if (userDocSnapshot.exists()) {
+  //           const userData = userDocSnapshot.data();
+  //           setUserName(userData.name);
+  //         } else {
+  //           console.error("No such document in Firestore!");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //       }
+  //     } else {
+  //       setUserName(null);
+  //     }
+  //   });
+
+  //   return () => unsubscribe();
+  // }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Normal Firebase Auth user
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUserName(userData.name);
         }
       } else {
-        setUserName(null);
+        // Check if it's a Vipps user via localStorage
+        const isVippsLogin = localStorage.getItem("min_tomt_login");
+        const userEmail = localStorage.getItem("I_plot_email");
+
+        if (isVippsLogin && userEmail) {
+          // Fetch Vipps user data
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("email", "==", userEmail));
+          const snapshot: any = await getDocs(q);
+
+          if (!snapshot.empty) {
+            const userData = snapshot.docs[0].data();
+            setUserName(userData.name);
+          }
+        } else {
+          setUserName(null);
+        }
       }
     });
 

@@ -91,7 +91,7 @@ const index = () => {
                 );
                 return;
               }
-              await signInWithEmailAndPassword(auth, userEmail, userUid);
+              // await signInWithEmailAndPassword(auth, userEmail, userUid);
               localStorage.setItem("min_tomt_login", "true");
 
               await updateDoc(userDocRef, {
