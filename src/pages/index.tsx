@@ -79,6 +79,8 @@ const index = () => {
               const userData = existingUserDoc.data();
               const userDocRef = existingUserDoc.ref;
 
+              console.log(userData);
+
               if (
                 userData.loginType === "form" ||
                 userData.loginType === "google"
