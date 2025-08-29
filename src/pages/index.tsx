@@ -93,9 +93,11 @@ const index = () => {
                 return;
               }
 
-              console.log(data);
+              console.log(auth, userEmail, userUid);
 
               await signInWithEmailAndPassword(auth, userEmail, userUid);
+              console.log("------");
+
               localStorage.setItem("min_tomt_login", "true");
 
               await updateDoc(userDocRef, {
