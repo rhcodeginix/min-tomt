@@ -73,10 +73,13 @@ const index = () => {
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
+            console.log("-----------1");
             try {
               const existingUserDoc: any = querySnapshot.docs[0];
               const userData = existingUserDoc.data();
               const userDocRef = existingUserDoc.ref;
+
+              console.log(userData);
 
               if (
                 userData.loginType === "form" ||
@@ -92,7 +95,8 @@ const index = () => {
                 return;
               }
 
-              await signInWithEmailAndPassword(auth, userEmail, userData?.uid);
+              await signInWithEmailAndPassword(auth, userEmail, userUid);
+              console.log("------");
 
               localStorage.setItem("min_tomt_login", "true");
 
@@ -120,6 +124,8 @@ const index = () => {
               setLoading(false);
             }
           } else {
+            console.log("-----------2", data);
+
             try {
               const userCredential = await createUserWithEmailAndPassword(
                 auth,
@@ -183,11 +189,7 @@ const index = () => {
                   return;
                 }
                 try {
-                  await signInWithEmailAndPassword(
-                    auth,
-                    userEmail,
-                    userData?.uid
-                  );
+                  await signInWithEmailAndPassword(auth, userEmail, userUid);
                   localStorage.setItem("min_tomt_login", "true");
                   toast.success("Vipps login successfully", {
                     position: "top-right",
