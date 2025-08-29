@@ -103,6 +103,8 @@ const index = () => {
                 );
                 return;
               }
+              console.log(auth);
+
               console.log(userData);
               const password = userData.password;
 
