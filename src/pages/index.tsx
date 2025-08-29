@@ -92,6 +92,8 @@ const index = () => {
                 );
                 return;
               }
+              console.log(userData);
+
               await signInWithEmailAndPassword(auth, userEmail, userUid);
               localStorage.setItem("min_tomt_login", "true");
 
