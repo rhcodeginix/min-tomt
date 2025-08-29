@@ -150,12 +150,12 @@ const Tilbud: React.FC<{
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
-        const userDocSnapshot = await getDoc(userDocRef);
+        const userDocSnapshot: any = await getDoc(userDocRef);
         if (userDocSnapshot.exists()) {
           const userData = userDocSnapshot.data();
 
           setCreateData({
-            id: userDocSnapshot.id,
+            id: userDocSnapshot.uid,
             ...userData,
           });
         }
@@ -172,7 +172,7 @@ const Tilbud: React.FC<{
             const userData = snapshot.docs[0].data();
 
             setCreateData({
-              id: userData.id,
+              id: userData.uid,
               ...userData,
             });
           }

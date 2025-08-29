@@ -104,11 +104,11 @@ const HusmodellPlot = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
-        const userDocSnapshot = await getDoc(userDocRef);
+        const userDocSnapshot: any = await getDoc(userDocRef);
         if (userDocSnapshot.exists()) {
           const userData = userDocSnapshot.data();
           setUser({
-            id: userDocSnapshot.id,
+            id: userDocSnapshot.uid,
             ...userData,
           });
           setUserUID(user.uid);
@@ -125,7 +125,7 @@ const HusmodellPlot = () => {
           if (!snapshot.empty) {
             const userData = snapshot.docs[0].data();
             setUser({
-              id: userData.id,
+              id: userData.uid,
               ...userData,
             });
             setUserUID(userData.uid);

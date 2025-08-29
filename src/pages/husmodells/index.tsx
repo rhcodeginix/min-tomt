@@ -158,14 +158,15 @@ const HusmodellDetail = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
-        const userDocSnapshot = await getDoc(userDocRef);
+        const userDocSnapshot: any = await getDoc(userDocRef);
         if (userDocSnapshot.exists()) {
           const userData = userDocSnapshot.data();
+
           setUser({
-            id: userDocSnapshot.id,
+            id: userDocSnapshot.uid,
             ...userData,
           });
-          setUserUID(user.uid);
+          setUserUID(userDocSnapshot.uid);
         }
       } else {
         const isVippsLogin = localStorage.getItem("min_tomt_login");
@@ -178,8 +179,9 @@ const HusmodellDetail = () => {
 
           if (!snapshot.empty) {
             const userData = snapshot.docs[0].data();
+            console.log(userData);
             setUser({
-              id: userData.id,
+              id: userData.uid,
               ...userData,
             });
             setUserUID(userData.uid);
