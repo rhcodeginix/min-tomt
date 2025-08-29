@@ -115,7 +115,7 @@ const Tilbud: React.FC<{
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user || !plotId || !husmodellId) return;
+      if (!user || !plotId || !husmodellId || !stored) return;
 
       const queryParams = new URLSearchParams(window.location.search);
       const isEmptyPlot = queryParams.get("empty");
@@ -261,7 +261,7 @@ const Tilbud: React.FC<{
     if (!plotId && husmodellId && user) {
       fetchWithoutPlotData();
     }
-  }, [husmodellId, user]);
+  }, [husmodellId, user, stored]);
 
   const [custHouse, setCusHouse] = useState<any>(null);
   useEffect(() => {
