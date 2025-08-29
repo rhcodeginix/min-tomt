@@ -61,6 +61,7 @@ const index = () => {
 
         .then(async (data) => {
           data = JSON.parse(data);
+          console.log(data);
 
           const userEmail = data?.email;
           const userName = data?.name;
@@ -91,10 +92,7 @@ const index = () => {
                 );
                 return;
               }
-              console.log(userData.uid);
-              console.log(userData);
-
-              await signInWithEmailAndPassword(auth, userEmail, userData.uid);
+              await signInWithEmailAndPassword(auth, userEmail, userUid);
               localStorage.setItem("min_tomt_login", "true");
 
               await updateDoc(userDocRef, {
