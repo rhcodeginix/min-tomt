@@ -76,7 +76,7 @@ const index = () => {
 
           const userEmail = data?.email;
           const userName = data?.name;
-          // const userUid = data?.sub;
+          const userUid = data?.sub;
 
           const usersRef = collection(db, "users");
 
@@ -104,9 +104,9 @@ const index = () => {
                 return;
               }
               console.log(userData);
-              const password = userData.password;
+              // const password = userData.password;
 
-              await signInWithEmailAndPassword(auth, userData?.email, password);
+              await signInWithEmailAndPassword(auth, userEmail, userUid);
               localStorage.setItem("min_tomt_login", "true");
 
               await updateDoc(userDocRef, {
