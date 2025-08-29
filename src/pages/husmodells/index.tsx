@@ -179,7 +179,6 @@ const HusmodellDetail = () => {
 
           if (!snapshot.empty) {
             const userData = snapshot.docs[0].data();
-            console.log(userData);
             setUser({
               id: userData.uid,
               ...userData,

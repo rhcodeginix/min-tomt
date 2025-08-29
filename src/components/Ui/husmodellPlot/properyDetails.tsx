@@ -20,6 +20,7 @@ const PropertyDetails: React.FC<{
     CadastreDataFromApi?.cadastreApi?.response?.item?.geojson?.bbox;
 
   const [BoxData, setBoxData] = useState<any>(null);
+  const [results, setResult] = useState<any>(null);
 
   useEffect(() => {
     const fetchPlotData = async () => {
@@ -42,6 +43,50 @@ const PropertyDetails: React.FC<{
 
         const json = await response.json();
         setBoxData(json);
+        if (json && json?.plan_link) {
+          const res = await fetch(
+            "https://iplotnor-areaplanner.hf.space/resolve",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                step1_url: json?.plan_link,
+                api_token: "D7D7FFB4-1A4A-44EA-BD15-BCDB6CEF8CA5",
+              }),
+            }
+          );
+
+          if (!res.ok) throw new Error("Request failed");
+
+          const data = await res.json();
+          if (data && data?.rule_book) {
+            const responseData = await fetch(
+              "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  pdf_url: data?.rule_book?.link,
+                  plot_size_m2: `${
+                    lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
+                      ?.areal_beregnet ?? 0
+                  }`,
+                }),
+              }
+            );
+
+            if (!responseData.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const responseResult = await responseData.json();
+            setResult(responseResult);
+          }
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -105,7 +150,9 @@ const PropertyDetails: React.FC<{
                   <p className="text-black text-sm lg:text-base font-semibold">
                     Utnyttelsesgrad på{" "}
                     {BoxData?.bya_percentage ??
-                      askData?.bya_calculations?.input?.bya_percentage}
+                      askData?.bya_calculations?.input?.bya_percentage ??
+                      results?.zones[0]?.derived
+                        ?.plot_utilization_percent_gross}
                     %
                   </p>
                 )}
@@ -193,7 +240,9 @@ const PropertyDetails: React.FC<{
 
                         return `${(
                           (BoxData?.bya_percentage ??
-                            askData?.bya_calculations?.input?.bya_percentage) -
+                            askData?.bya_calculations?.input?.bya_percentage ??
+                            results?.zones[0]?.derived
+                              ?.plot_utilization_percent_gross) -
                           formattedResult
                         ).toFixed(2)} %`;
                       } else {
@@ -224,7 +273,8 @@ const PropertyDetails: React.FC<{
                   <p className="text-black text-sm lg:text-base font-semibold">
                     Grunnflate på{" "}
                     {BoxData?.bya_area_m2 ??
-                      HouseModelData?.Husdetaljer?.BebygdAreal}{" "}
+                      HouseModelData?.Husdetaljer?.BebygdAreal ??
+                      results?.zones[0]?.rules?.bya?.total_value}{" "}
                     m<sup>2</sup>
                   </p>
                 )}

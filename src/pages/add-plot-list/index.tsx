@@ -95,12 +95,7 @@ const index = () => {
               );
 
               setUserAddPlot(fetchedProperties);
-              console.log(
-                "Fetched properties for Vipps user:",
-                fetchedProperties
-              );
             } else {
-              console.log("No user found with email:", userEmail);
               setUserAddPlot([]);
             }
           } catch (error) {

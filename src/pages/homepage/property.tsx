@@ -54,12 +54,14 @@ const Property: React.FC = () => {
   }, []);
 
   const [boxDataList, setBoxDataList] = useState<any[]>([]);
+  const [results, setResult] = useState<any>(null);
 
   useEffect(() => {
     if (!data?.houseModelProperty) return;
 
     const fetchAll = async () => {
       const results: any[] = [];
+      const finalResults: any[] = [];
 
       for (const property of data.houseModelProperty) {
         const BBOXData =
@@ -87,6 +89,51 @@ const Property: React.FC = () => {
           );
           const json = await response.json();
           results.push(json);
+
+          if (json && json?.plan_link) {
+            const res = await fetch(
+              "https://iplotnor-areaplanner.hf.space/resolve",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  step1_url: json?.plan_link,
+                  api_token: "D7D7FFB4-1A4A-44EA-BD15-BCDB6CEF8CA5",
+                }),
+              }
+            );
+
+            if (!res.ok) throw new Error("Request failed");
+
+            const data = await res.json();
+            if (data && data?.rule_book) {
+              const responseData = await fetch(
+                "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    pdf_url: data?.rule_book?.link,
+                    plot_size_m2: `${
+                      property?.lamdaDataFromApi?.eiendomsInformasjon
+                        ?.basisInformasjon?.areal_beregnet ?? 0
+                    }`,
+                  }),
+                }
+              );
+
+              if (!responseData.ok) {
+                throw new Error("Network response was not ok");
+              }
+
+              const responseResult = await responseData.json();
+              finalResults.push(responseResult);
+            }
+          }
         } catch (e) {
           console.error("Error fetching data:", e);
           results.push(null);
@@ -94,6 +141,7 @@ const Property: React.FC = () => {
       }
 
       setBoxDataList(results);
+      setResult(finalResults);
     };
 
     fetchAll();
@@ -224,7 +272,9 @@ const Property: React.FC = () => {
                         <p className="text-darkBlack text-xs md:text-sm font-semibold">
                           {BoxData?.bya_percentage ??
                             property?.additionalData?.answer?.bya_calculations
-                              ?.input?.bya_percentage}{" "}
+                              ?.input?.bya_percentage ??
+                            results?.zones[0]?.derived
+                              ?.plot_utilization_percent_gross}{" "}
                           %
                         </p>
                       </div>
@@ -238,7 +288,8 @@ const Property: React.FC = () => {
                         <p className="text-darkBlack text-xs md:text-sm font-semibold">
                           {BoxData?.bya_area_m2 ??
                             property?.additionalData?.answer?.bya_calculations
-                              ?.results?.total_allowed_bya}{" "}
+                              ?.results?.total_allowed_bya ??
+                            results?.zones[0]?.rules?.bya?.total_value}{" "}
                           <span className="text-secondary font-normal">
                             m<sup>2</sup>
                           </span>

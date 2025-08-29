@@ -197,6 +197,7 @@ const PlotDetailPage: React.FC<{
   const [PlotActiveTab, setPlotActiveTab] = useState<string>(plotTabs[0].id);
 
   const [Documents, setDocuments] = useState<any>(null);
+  const [results, setResult] = useState<any>(null);
 
   useEffect(() => {
     const fetchPlotData = async () => {
@@ -238,6 +239,31 @@ const PlotDetailPage: React.FC<{
 
           const data = await res.json();
           setDocuments(data);
+          if (data && data?.rule_book) {
+            const responseData = await fetch(
+              "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  pdf_url: data?.rule_book?.link,
+                  plot_size_m2: `${
+                    lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
+                      ?.areal_beregnet ?? 0
+                  }`,
+                }),
+              }
+            );
+
+            if (!responseData.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const responseResult = await responseData.json();
+            setResult(responseResult);
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -296,6 +322,16 @@ const PlotDetailPage: React.FC<{
       </div>
     </div>
   );
+
+  const allQuotes = [
+    ...(results?.zones?.[0]?.rules?.bya?.breakdown || []),
+    ...(results?.zones?.[0]?.rules?.areas?.rules || []),
+    ...(results?.zones?.[0]?.rules?.parking?.rules || []),
+    ...(results?.zones?.[0]?.rules?.heights?.rules || []),
+    ...(results?.zones?.[0]?.rules?.setbacks?.rules || []),
+  ]
+    .map((item) => item?.quote)
+    .filter(Boolean);
 
   return (
     <>
@@ -1475,22 +1511,22 @@ const PlotDetailPage: React.FC<{
                           </>
                         ) : (
                           <>
-                            {askData &&
-                              askData?.conclusion?.map(
-                                (a: any, index: number) => (
-                                  <div
-                                    className="flex items-start gap-2 md:gap-3 text-secondary text-sm lg:text-base"
-                                    key={index}
-                                  >
-                                    <Image
-                                      fetchPriority="auto"
-                                      src={Ic_check_true}
-                                      alt="image"
-                                    />
-                                    <span>{a}</span>
-                                  </div>
-                                )
-                              )}
+                            {(
+                              (askData && askData?.conclusion) ||
+                              allQuotes
+                            )?.map((a: any, index: number) => (
+                              <div
+                                className="flex items-start gap-2 md:gap-3 text-secondary text-sm lg:text-base"
+                                key={index}
+                              >
+                                <Image
+                                  fetchPriority="auto"
+                                  src={Ic_check_true}
+                                  alt="image"
+                                />
+                                <span>{a?.quote ? a?.quote : a}</span>
+                              </div>
+                            ))}
                           </>
                         )}
                       </>
