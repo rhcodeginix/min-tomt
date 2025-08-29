@@ -93,6 +93,7 @@ const index = () => {
                 return;
               }
               await createUserWithEmailAndPassword(auth, userEmail, userUid);
+              console.log("------111");
 
               await signInWithEmailAndPassword(auth, userEmail, userUid);
               console.log("------");
