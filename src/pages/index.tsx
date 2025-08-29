@@ -73,6 +73,7 @@ const index = () => {
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
+            console.log("-----------1");
             try {
               const existingUserDoc: any = querySnapshot.docs[0];
               const userData = existingUserDoc.data();
@@ -91,6 +92,9 @@ const index = () => {
                 );
                 return;
               }
+
+              console.log(data);
+
               await signInWithEmailAndPassword(auth, userEmail, userUid);
               localStorage.setItem("min_tomt_login", "true");
 
@@ -118,6 +122,8 @@ const index = () => {
               setLoading(false);
             }
           } else {
+            console.log("-----------2", data);
+
             try {
               const userCredential = await createUserWithEmailAndPassword(
                 auth,
@@ -161,6 +167,8 @@ const index = () => {
               }
             } catch (error: any) {
               if (error.code === "auth/email-already-in-use") {
+                console.log("-----------3", data);
+
                 const existingUserDoc: any = querySnapshot.docs[0];
                 const userData = existingUserDoc.data();
                 const userDocRef = existingUserDoc.ref;
