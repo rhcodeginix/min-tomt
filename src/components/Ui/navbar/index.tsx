@@ -105,7 +105,7 @@ const Header = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router.query]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
