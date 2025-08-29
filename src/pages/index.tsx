@@ -28,17 +28,6 @@ import Property from "./homepage/property";
 import AboutUs from "./homepage/aboutUs";
 import Expected from "./homepage/expected";
 
-function generateRandomPassword(length = 12) {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * chars.length);
-    password += chars[randomIndex];
-  }
-  return password;
-}
-
 const index = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -72,7 +61,6 @@ const index = () => {
 
         .then(async (data) => {
           data = JSON.parse(data);
-          console.log(data);
 
           const userEmail = data?.email;
           const userName = data?.name;
@@ -103,9 +91,6 @@ const index = () => {
                 );
                 return;
               }
-              console.log(userData);
-              // const password = userData.password;
-
               await signInWithEmailAndPassword(auth, userEmail, userUid);
               localStorage.setItem("min_tomt_login", "true");
 
@@ -134,11 +119,10 @@ const index = () => {
             }
           } else {
             try {
-              const password = generateRandomPassword();
               const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 userEmail,
-                password
+                userUid
               );
               const createdUser = userCredential.user;
 
@@ -155,9 +139,8 @@ const index = () => {
                   createdAt: new Date(),
                   address: data?.address,
                   data: data,
-                  password: password,
                 });
-                await signInWithEmailAndPassword(auth, userEmail, password);
+                await signInWithEmailAndPassword(auth, userEmail, userUid);
                 localStorage.setItem("min_tomt_login", "true");
                 toast.success("Vipps login successfully", {
                   position: "top-right",
@@ -196,11 +179,7 @@ const index = () => {
                   return;
                 }
                 try {
-                  await signInWithEmailAndPassword(
-                    auth,
-                    userEmail,
-                    userData?.password
-                  );
+                  await signInWithEmailAndPassword(auth, userEmail, userUid);
                   localStorage.setItem("min_tomt_login", "true");
                   toast.success("Vipps login successfully", {
                     position: "top-right",
