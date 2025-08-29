@@ -84,27 +84,66 @@ const Regulations = () => {
     }
   }, [loginUser]);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
-      if (user) {
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnapshot = await getDoc(userDocRef);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
+  //     if (user) {
+  //       try {
+  //         const userDocRef = doc(db, "users", user.uid);
+  //         const userDocSnapshot = await getDoc(userDocRef);
 
-          if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-            setUser({
-              id: userDocSnapshot.id,
-              ...userData,
-            });
-          } else {
-            console.error("No such document in Firestore!");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
+  //         if (userDocSnapshot.exists()) {
+  //           const userData = userDocSnapshot.data();
+  //           setUser({
+  //             id: userDocSnapshot.id,
+  //             ...userData,
+  //           });
+  //         } else {
+  //           console.error("No such document in Firestore!");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //       }
+  //     } else {
+  //       setUser(null);
+  //     }
+  //   });
+
+  //   return () => unsubscribe();
+  // }, [isCall]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+
+          setUser({
+            id: userDocSnapshot.id,
+            ...userData,
+          });
         }
       } else {
-        setUser(null);
+        const isVippsLogin = localStorage.getItem("min_tomt_login");
+        const userEmail = localStorage.getItem("I_plot_email");
+
+        if (isVippsLogin && userEmail) {
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("email", "==", userEmail));
+          const snapshot: any = await getDocs(q);
+
+          if (!snapshot.empty) {
+            const userData = snapshot.docs[0].data();
+
+            setUser({
+              id: userData.id,
+              ...userData,
+            });
+          }
+        } else {
+          setUser(null);
+        }
       }
     });
 

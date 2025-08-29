@@ -4,7 +4,7 @@ import NorkartMap from "@/components/map";
 import { auth, db } from "@/config/firebaseConfig";
 import { useAddress } from "@/context/addressContext";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -21,14 +21,15 @@ const index = () => {
           db,
           "users",
           userUID,
-          "property"
+          "add_plot"
         );
         try {
           const propertiesSnapshot = await getDocs(propertiesCollectionRef);
           const fetchedProperties: any = propertiesSnapshot.docs.map((doc) => ({
-            propertyId: doc.id,
+            id: doc.id,
             ...doc.data(),
           }));
+
           setUserProperties(fetchedProperties);
         } catch (error) {
           console.error("Error fetching user's properties:", error);
@@ -36,9 +37,57 @@ const index = () => {
           setLoading(false);
         }
       } else {
-        setLoading(false);
+        const isVippsLogin = localStorage.getItem("min_tomt_login");
+        const userEmail = localStorage.getItem("I_plot_email");
+
+        if (isVippsLogin && userEmail) {
+          try {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("email", "==", userEmail));
+            const userSnapshot = await getDocs(q);
+
+            if (!userSnapshot.empty) {
+              const userDoc: any = userSnapshot.docs[0];
+              const userData = userDoc.data();
+              const userUID = userData.uid;
+
+              const propertiesCollectionRef = collection(
+                db,
+                "users",
+                userUID,
+                "add_plot"
+              );
+
+              const propertiesSnapshot = await getDocs(propertiesCollectionRef);
+              const fetchedProperties: any = propertiesSnapshot.docs.map(
+                (doc) => ({
+                  id: doc.id,
+                  ...doc.data(),
+                })
+              );
+
+              setUserProperties(fetchedProperties);
+              console.log(
+                "Fetched properties for Vipps user:",
+                fetchedProperties
+              );
+            } else {
+              console.log("No user found with email:", userEmail);
+              setUserProperties([]);
+            }
+          } catch (error) {
+            console.error("Error fetching Vipps user's properties:", error);
+            setUserProperties([]);
+          } finally {
+            setLoading(false);
+          }
+        } else {
+          setUserProperties([]);
+          setLoading(false);
+        }
       }
     });
+
     return () => unsubscribe();
   }, []);
 

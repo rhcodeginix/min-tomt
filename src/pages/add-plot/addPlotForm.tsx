@@ -26,7 +26,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRouter } from "next/router";
@@ -356,23 +358,58 @@ const AddPlotForm = () => {
           setIsOpen(!isOpen);
         };
 
+        // useEffect(() => {
+        //   const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
+        //     if (user) {
+        //       try {
+        //         const userDocRef = doc(db, "users", user.uid);
+        //         const userDocSnapshot = await getDoc(userDocRef);
+
+        //         if (userDocSnapshot.exists()) {
+        //           const userData = userDocSnapshot.data();
+        //           setFieldValue("Kontaktperson", userData.name);
+        //           setFieldValue("EPostadresse", userData.email);
+        //           setUserUID(user.uid);
+        //         } else {
+        //           console.error("No such document in Firestore!");
+        //         }
+        //       } catch (error) {
+        //         console.error("Error fetching user data:", error);
+        //       }
+        //     }
+        //   });
+
+        //   return () => unsubscribe();
+        // }, []);
+
         useEffect(() => {
           const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
             if (user) {
-              try {
-                const userDocRef = doc(db, "users", user.uid);
-                const userDocSnapshot = await getDoc(userDocRef);
+              const userDocRef = doc(db, "users", user.uid);
+              const userDocSnapshot = await getDoc(userDocRef);
+              if (userDocSnapshot.exists()) {
+                const userData = userDocSnapshot.data();
+                setFieldValue("Kontaktperson", userData.name);
+                setFieldValue("EPostadresse", userData.email);
+                setUserUID(user.uid);
+              }
+            } else {
+              const isVippsLogin = localStorage.getItem("min_tomt_login");
+              const userEmail = localStorage.getItem("I_plot_email");
 
-                if (userDocSnapshot.exists()) {
-                  const userData = userDocSnapshot.data();
+              if (isVippsLogin && userEmail) {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("email", "==", userEmail));
+                const snapshot: any = await getDocs(q);
+
+                if (!snapshot.empty) {
+                  const userData = snapshot.docs[0].data();
                   setFieldValue("Kontaktperson", userData.name);
                   setFieldValue("EPostadresse", userData.email);
                   setUserUID(user.uid);
-                } else {
-                  console.error("No such document in Firestore!");
                 }
-              } catch (error) {
-                console.error("Error fetching user data:", error);
+              } else {
+                console.error("No such document in Firestore!");
               }
             }
           });

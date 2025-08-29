@@ -71,27 +71,69 @@ const HusmodellPlot = () => {
     }
   }, [loginUser]);
 
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
+  //     if (user) {
+  //       try {
+  //         const userDocRef = doc(db, "users", user.uid);
+  //         const userDocSnapshot = await getDoc(userDocRef);
+
+  //         if (userDocSnapshot.exists()) {
+  //           const userData = userDocSnapshot.data();
+  //           setUser({
+  //             id: userDocSnapshot.id,
+  //             ...userData,
+  //           });
+  //           setUserUID(user.uid);
+  //         } else {
+  //           console.error("No such document in Firestore!");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //       }
+  //     } else {
+  //       setUser(null);
+  //       setUserUID(null);
+  //     }
+  //   });
+
+  //   return () => unsubscribe();
+  // }, [isCall]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       if (user) {
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnapshot = await getDoc(userDocRef);
-
-          if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-            setUser({
-              id: userDocSnapshot.id,
-              ...userData,
-            });
-          } else {
-            console.error("No such document in Firestore!");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUser({
+            id: userDocSnapshot.id,
+            ...userData,
+          });
+          setUserUID(user.uid);
         }
       } else {
-        setUser(null);
+        const isVippsLogin = localStorage.getItem("min_tomt_login");
+        const userEmail = localStorage.getItem("I_plot_email");
+
+        if (isVippsLogin && userEmail) {
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("email", "==", userEmail));
+          const snapshot: any = await getDocs(q);
+
+          if (!snapshot.empty) {
+            const userData = snapshot.docs[0].data();
+            setUser({
+              id: userData.id,
+              ...userData,
+            });
+            setUserUID(userData.uid);
+          }
+        } else {
+          setUser(null);
+          setUserUID(null);
+        }
       }
     });
 
@@ -241,18 +283,6 @@ const HusmodellPlot = () => {
     }
   }, [propertyId, userUID, db, user, husmodellId, isCall]);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
-      if (user) {
-        setUserUID(user.uid);
-      } else {
-        setUserUID(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   const handleNext = () => {
     if (typeof currIndex === "number" && currIndex < steps.length - 1) {
       setCurrIndex(currIndex + 1);
@@ -288,17 +318,6 @@ const HusmodellPlot = () => {
     }
   }, [additionalData]);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
-      if (user) {
-        setUserUID(user.uid);
-      } else {
-        setUserUID(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
   const [leadId, setLeadId] = useState<any | null>(null);
 
   useEffect(() => {

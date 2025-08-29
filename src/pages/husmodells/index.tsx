@@ -79,17 +79,6 @@ const HusmodellDetail = () => {
   }, [loginUser]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
-      if (user) {
-        setUserUID(user.uid);
-      } else {
-        setUserUID(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-  useEffect(() => {
     if (additionalData?.answer) {
       try {
         const cleanAnswer = additionalData?.answer;
@@ -116,7 +105,11 @@ const HusmodellDetail = () => {
     window.scrollTo(0, 0);
   }, [currIndex]);
   useEffect(() => {
-    if (HouseModelData?.Husdetaljer?.Leverandører !== "9f523136-72ca-4bde-88e5-de175bc2fc71" && currIndex < 2) {
+    if (
+      HouseModelData?.Husdetaljer?.Leverandører !==
+        "9f523136-72ca-4bde-88e5-de175bc2fc71" &&
+      currIndex < 2
+    ) {
       const { plotId, ...restQuery } = router.query;
 
       if (plotId) {
@@ -132,32 +125,75 @@ const HusmodellDetail = () => {
       setPris(0);
     }
   }, [currIndex, router]);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
+  //     if (user) {
+  //       try {
+  //         const userDocRef = doc(db, "users", user.uid);
+  //         const userDocSnapshot = await getDoc(userDocRef);
+
+  //         if (userDocSnapshot.exists()) {
+  //           const userData = userDocSnapshot.data();
+  //           setUser({
+  //             id: userDocSnapshot.id,
+  //             ...userData,
+  //           });
+  //           setUserUID(user.uid);
+  //         } else {
+  //           console.error("No such document in Firestore!");
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //       }
+  //     } else {
+  //       setUser(null);
+  //       setUserUID(null);
+  //     }
+  //   });
+
+  //   return () => unsubscribe();
+  // }, [isCall]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
       if (user) {
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnapshot = await getDoc(userDocRef);
-
-          if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-            setUser({
-              id: userDocSnapshot.id,
-              ...userData,
-            });
-          } else {
-            console.error("No such document in Firestore!");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+        if (userDocSnapshot.exists()) {
+          const userData = userDocSnapshot.data();
+          setUser({
+            id: userDocSnapshot.id,
+            ...userData,
+          });
+          setUserUID(user.uid);
         }
       } else {
-        setUser(null);
+        const isVippsLogin = localStorage.getItem("min_tomt_login");
+        const userEmail = localStorage.getItem("I_plot_email");
+
+        if (isVippsLogin && userEmail) {
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("email", "==", userEmail));
+          const snapshot: any = await getDocs(q);
+
+          if (!snapshot.empty) {
+            const userData = snapshot.docs[0].data();
+            setUser({
+              id: userData.id,
+              ...userData,
+            });
+            setUserUID(userData.uid);
+          }
+        } else {
+          setUser(null);
+          setUserUID(null);
+        }
       }
     });
 
     return () => unsubscribe();
   }, [isCall]);
+
   useEffect(() => {
     if (plotId && userUID && !kommunenummer) {
       setLoading(true);
@@ -443,22 +479,22 @@ const HusmodellDetail = () => {
     },
     ...(husmodellData?.Leverandører !== "9f523136-72ca-4bde-88e5-de175bc2fc71"
       ? [
-    {
-      name: "Tilbud",
-      component: (
-        <Tilbud
-          handleNext={handleNext}
-          lamdaDataFromApi={lamdaDataFromApi}
-          CadastreDataFromApi={CadastreDataFromApi}
-          askData={askData}
-          HouseModelData={HouseModelData}
-          supplierData={supplierData}
-          handlePrevious={handlePrevious}
-          pris={pris}
-          user={user}
-        />
-      ),
-    },
+          {
+            name: "Tilbud",
+            component: (
+              <Tilbud
+                handleNext={handleNext}
+                lamdaDataFromApi={lamdaDataFromApi}
+                CadastreDataFromApi={CadastreDataFromApi}
+                askData={askData}
+                HouseModelData={HouseModelData}
+                supplierData={supplierData}
+                handlePrevious={handlePrevious}
+                pris={pris}
+                user={user}
+              />
+            ),
+          },
         ]
       : []),
     {

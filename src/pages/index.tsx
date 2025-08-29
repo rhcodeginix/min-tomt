@@ -18,7 +18,7 @@ import {
 import { auth, db } from "@/config/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  // signInWithEmailAndPassword,
 } from "firebase/auth";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
@@ -140,7 +140,7 @@ const index = () => {
                   address: data?.address,
                   data: data,
                 });
-                await signInWithEmailAndPassword(auth, userEmail, userUid);
+                // await signInWithEmailAndPassword(auth, userEmail, userUid);
                 localStorage.setItem("min_tomt_login", "true");
                 toast.success("Vipps login successfully", {
                   position: "top-right",
@@ -179,7 +179,7 @@ const index = () => {
                   return;
                 }
                 try {
-                  await signInWithEmailAndPassword(auth, userEmail, userUid);
+                  // await signInWithEmailAndPassword(auth, userEmail, userUid);
                   localStorage.setItem("min_tomt_login", "true");
                   toast.success("Vipps login successfully", {
                     position: "top-right",

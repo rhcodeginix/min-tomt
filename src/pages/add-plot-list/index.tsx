@@ -3,13 +3,43 @@ import SideSpaceContainer from "@/components/common/sideSpace";
 import NorkartMap from "@/components/map";
 import { auth, db } from "@/config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const index = () => {
   const [userAddPlot, setUserAddPlot] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     if (user) {
+  //       const userUID = user.uid;
+  //       const propertiesCollectionRef = collection(
+  //         db,
+  //         "users",
+  //         userUID,
+  //         "add_plot"
+  //       );
+  //       try {
+  //         const propertiesSnapshot = await getDocs(propertiesCollectionRef);
+  //         const fetchedProperties: any = propertiesSnapshot.docs.map((doc) => ({
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         }));
+
+  //         setUserAddPlot(fetchedProperties);
+  //       } catch (error) {
+  //         console.error("Error fetching user's properties:", error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     } else {
+  //       setLoading(false);
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -35,9 +65,57 @@ const index = () => {
           setLoading(false);
         }
       } else {
-        setLoading(false);
+        const isVippsLogin = localStorage.getItem("min_tomt_login");
+        const userEmail = localStorage.getItem("I_plot_email");
+
+        if (isVippsLogin && userEmail) {
+          try {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("email", "==", userEmail));
+            const userSnapshot = await getDocs(q);
+
+            if (!userSnapshot.empty) {
+              const userDoc: any = userSnapshot.docs[0];
+              const userData = userDoc.data();
+              const userUID = userData.uid;
+
+              const propertiesCollectionRef = collection(
+                db,
+                "users",
+                userUID,
+                "add_plot"
+              );
+
+              const propertiesSnapshot = await getDocs(propertiesCollectionRef);
+              const fetchedProperties: any = propertiesSnapshot.docs.map(
+                (doc) => ({
+                  id: doc.id,
+                  ...doc.data(),
+                })
+              );
+
+              setUserAddPlot(fetchedProperties);
+              console.log(
+                "Fetched properties for Vipps user:",
+                fetchedProperties
+              );
+            } else {
+              console.log("No user found with email:", userEmail);
+              setUserAddPlot([]);
+            }
+          } catch (error) {
+            console.error("Error fetching Vipps user's properties:", error);
+            setUserAddPlot([]);
+          } finally {
+            setLoading(false);
+          }
+        } else {
+          setUserAddPlot([]);
+          setLoading(false);
+        }
       }
     });
+
     return () => unsubscribe();
   }, []);
 

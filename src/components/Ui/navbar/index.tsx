@@ -67,14 +67,10 @@ const Header = () => {
 
   //   return () => unsubscribe();
   // }, []);
-  console.log(router);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log(user);
-
       if (user) {
-        // Normal Firebase Auth user
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnapshot = await getDoc(userDocRef);
         if (userDocSnapshot.exists()) {
@@ -82,14 +78,10 @@ const Header = () => {
           setUserName(userData.name);
         }
       } else {
-        // Check if it's a Vipps user via localStorage
         const isVippsLogin = localStorage.getItem("min_tomt_login");
         const userEmail = localStorage.getItem("I_plot_email");
 
-        console.log(userEmail);
-
         if (isVippsLogin && userEmail) {
-          // Fetch Vipps user data
           const usersRef = collection(db, "users");
           const q = query(usersRef, where("email", "==", userEmail));
           const snapshot: any = await getDocs(q);
