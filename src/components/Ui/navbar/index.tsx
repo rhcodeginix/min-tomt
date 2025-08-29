@@ -67,6 +67,7 @@ const Header = () => {
 
   //   return () => unsubscribe();
   // }, []);
+  console.log(router);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
