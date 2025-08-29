@@ -90,6 +90,7 @@ const index = () => {
               const userData = existingUserDoc.data();
               const userDocRef = existingUserDoc.ref;
 
+              // Block login if they used form/google login
               if (
                 userData.loginType === "form" ||
                 userData.loginType === "google"
@@ -97,26 +98,56 @@ const index = () => {
                 router.push("/login");
                 toast.error(
                   `Already have user with ${userData.loginType === "form" ? "form fill" : `${userData.loginType} login`}`,
-                  {
-                    position: "top-right",
-                  }
+                  { position: "top-right" }
                 );
                 return;
               }
-              console.log(userData);
-              const tempPassword = userData.tempPassword;
 
-              await signInWithEmailAndPassword(auth, userEmail, tempPassword);
+              let tempPassword = userData.tempPassword;
+
+              try {
+                // Try signing in with existing password
+                await signInWithEmailAndPassword(
+                  auth,
+                  userData.email,
+                  tempPassword
+                );
+              } catch (err) {
+                console.warn(
+                  "Existing password failed, generating new password...",
+                  err
+                );
+
+                // Generate a new temp password
+                tempPassword = generateRandomPassword();
+
+                // Update Firestore with new password
+                await updateDoc(userDocRef, { tempPassword });
+
+                // Force reset password in Firebase Auth (optional: update email credential)
+                // You can also use `updatePassword` if user is signed in via another method
+                // await updatePassword(auth.currentUser!, tempPassword);
+
+                // Sign in with the new password
+                await signInWithEmailAndPassword(
+                  auth,
+                  userData.email,
+                  tempPassword
+                );
+              }
+
               localStorage.setItem("min_tomt_login", "true");
 
               await updateDoc(userDocRef, {
                 updatedAt: new Date(),
                 loginCount: increment(1),
               });
+
               toast.success("Vipps login successfully", {
                 position: "top-right",
               });
-              localStorage.setItem("I_plot_email", userEmail);
+              localStorage.setItem("I_plot_email", userData.email);
+
               const redirectPath = Cookies.get("vipps_redirect_old_path");
               if (redirectPath) {
                 Cookies.remove("vipps_redirect_old_path");
@@ -126,9 +157,7 @@ const index = () => {
               }
             } catch (error) {
               console.error("Login error:", error);
-              toast.error("Login failed.", {
-                position: "top-right",
-              });
+              toast.error("Login failed.", { position: "top-right" });
             } finally {
               setLoading(false);
             }
@@ -155,6 +184,7 @@ const index = () => {
                   createdAt: new Date(),
                   address: data?.address,
                   data: data,
+                  tempPassword: tempPassword,
                 });
                 await signInWithEmailAndPassword(auth, userEmail, tempPassword);
                 localStorage.setItem("min_tomt_login", "true");
