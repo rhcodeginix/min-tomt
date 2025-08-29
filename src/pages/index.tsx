@@ -104,13 +104,9 @@ const index = () => {
                 return;
               }
               console.log(userData);
-              const tempPassword = userData.tempPassword;
+              const password = userData.password;
 
-              await signInWithEmailAndPassword(
-                auth,
-                userData?.email,
-                tempPassword
-              );
+              await signInWithEmailAndPassword(auth, userEmail, password);
               localStorage.setItem("min_tomt_login", "true");
 
               await updateDoc(userDocRef, {
@@ -138,11 +134,11 @@ const index = () => {
             }
           } else {
             try {
-              const tempPassword = generateRandomPassword();
+              const password = generateRandomPassword();
               const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 userEmail,
-                tempPassword
+                password
               );
               const createdUser = userCredential.user;
 
@@ -159,9 +155,9 @@ const index = () => {
                   createdAt: new Date(),
                   address: data?.address,
                   data: data,
-                  tempPassword: tempPassword,
+                  password: password,
                 });
-                await signInWithEmailAndPassword(auth, userEmail, tempPassword);
+                await signInWithEmailAndPassword(auth, userEmail, password);
                 localStorage.setItem("min_tomt_login", "true");
                 toast.success("Vipps login successfully", {
                   position: "top-right",
@@ -203,7 +199,7 @@ const index = () => {
                   await signInWithEmailAndPassword(
                     auth,
                     userEmail,
-                    userData?.tempPassword
+                    userData?.password
                   );
                   localStorage.setItem("min_tomt_login", "true");
                   toast.success("Vipps login successfully", {
