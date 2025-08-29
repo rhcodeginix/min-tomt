@@ -91,7 +91,10 @@ const index = () => {
                 );
                 return;
               }
-              // await signInWithEmailAndPassword(auth, userEmail, userUid);
+              console.log(userData.uid);
+              console.log(userData);
+
+              await signInWithEmailAndPassword(auth, userEmail, userData.uid);
               localStorage.setItem("min_tomt_login", "true");
 
               await updateDoc(userDocRef, {
