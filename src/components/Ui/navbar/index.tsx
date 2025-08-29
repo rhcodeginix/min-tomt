@@ -70,6 +70,8 @@ const Header = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log(user);
+
       if (user) {
         // Normal Firebase Auth user
         const userDocRef = doc(db, "users", user.uid);
@@ -82,6 +84,8 @@ const Header = () => {
         // Check if it's a Vipps user via localStorage
         const isVippsLogin = localStorage.getItem("min_tomt_login");
         const userEmail = localStorage.getItem("I_plot_email");
+
+        console.log(userEmail);
 
         if (isVippsLogin && userEmail) {
           // Fetch Vipps user data
