@@ -150,9 +150,7 @@ const Property: React.FC = () => {
                     key={index}
                     className="border border-gray3 rounded-[8px] p-3 cursor-pointer hover:shadow-[0px_4px_24px_0px_#0000001A]"
                     onClick={() => {
-                      router.push(
-                        `husmodells?husmodellId=${property?.id}&city=Akershus`
-                      );
+                      router.push(`husmodells?husmodellId=${property?.id}`);
                       const currIndex = 0;
                       localStorage.setItem("currIndex", currIndex.toString());
                     }}
@@ -212,9 +210,7 @@ const Property: React.FC = () => {
                         text="Se detaljer"
                         className="border-2 border-brown bg-white text-brown sm:text-base rounded-[40px] w-max h-[36px] md:h-[40px] lg:h-[48px] font-semibold relative desktop:px-[28px] desktop:py-[16px]"
                         onClick={() => {
-                          router.push(
-                            `husmodells?husmodellId=${property?.id}&city=Akershus`
-                          );
+                          router.push(`husmodells?husmodellId=${property?.id}`);
                           const currIndex = 0;
                           localStorage.setItem(
                             "currIndex",
