@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import SideSpaceContainer from "@/components/common/sideSpace";
 import Button from "@/components/common/button";
-import { collection, getDocs, limit, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  query,
+} from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import { useRouter } from "next/router";
 import { formatPrice } from "@/pages/belop/belopProperty";
@@ -108,6 +115,24 @@ const Property: React.FC = () => {
             if (!res.ok) throw new Error("Request failed");
 
             const data = await res.json();
+
+            if (data?.inputs?.internal_plan_id) {
+              const uniqueId = String(data?.inputs?.internal_plan_id);
+
+              if (!uniqueId) {
+                console.warn("No uniqueId found, skipping Firestore setDoc");
+                return;
+              }
+
+              const plansDocRef = doc(db, "mintomt_plans", uniqueId);
+
+              const existingDoc = await getDoc(plansDocRef);
+
+              if (existingDoc.exists()) {
+                setResult(existingDoc?.data()?.rule);
+                return;
+              }
+            }
             if (data && data?.rule_book) {
               const pdfResponse = await fetch(data?.rule_book?.link);
               const pdfBlob = await pdfResponse.blob();

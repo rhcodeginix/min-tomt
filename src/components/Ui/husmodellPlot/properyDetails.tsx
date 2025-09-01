@@ -2,6 +2,8 @@ import Image from "next/image";
 import Ic_check_green_icon from "@/public/images/Ic_check_green_icon.svg";
 import SideSpaceContainer from "@/components/common/sideSpace";
 import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/config/firebaseConfig";
 
 const PropertyDetails: React.FC<{
   CadastreDataFromApi: any;
@@ -67,6 +69,24 @@ const PropertyDetails: React.FC<{
           if (!res.ok) throw new Error("Request failed");
 
           const data = await res.json();
+
+          if (data?.inputs?.internal_plan_id) {
+            const uniqueId = String(data?.inputs?.internal_plan_id);
+
+            if (!uniqueId) {
+              console.warn("No uniqueId found, skipping Firestore setDoc");
+              return;
+            }
+
+            const plansDocRef = doc(db, "mintomt_plans", uniqueId);
+
+            const existingDoc = await getDoc(plansDocRef);
+
+            if (existingDoc.exists()) {
+              setResult(existingDoc?.data()?.rule);
+              return;
+            }
+          }
           if (data && data?.rule_book) {
             // const responseData = await fetch(
             //   "https://iplotnor-norwaypropertyagent.hf.space/extract_file",
