@@ -240,20 +240,17 @@ const PlotDetailPage: React.FC<{
           const data = await res.json();
           setDocuments(data);
           if (data && data?.rule_book) {
+            const pdfResponse = await fetch(data?.rule_book?.link);
+            const pdfBlob = await pdfResponse.blob();
+
+            const formData = new FormData();
+            formData.append("file", pdfBlob, "rule_book.pdf");
+
             const responseData = await fetch(
-              "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+              "https://iplotnor-norwaypropertyagent.hf.space/extract_file",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  pdf_url: data?.rule_book?.link,
-                  plot_size_m2: `${
-                    lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
-                      ?.areal_beregnet ?? 0
-                  }`,
-                }),
+                body: formData,
               }
             );
 
@@ -262,7 +259,7 @@ const PlotDetailPage: React.FC<{
             }
 
             const responseResult = await responseData.json();
-            setResult(responseResult);
+            setResult(responseResult?.data);
           }
         }
       } catch (error) {
@@ -282,13 +279,27 @@ const PlotDetailPage: React.FC<{
         return;
       }
 
+      // const link = document.createElement("a");
+      // link.href = filePath?.link;
+      // link.download = filePath?.name;
+      // link.target = "_blank";
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+
+      const response = await fetch(filePath.link);
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = filePath?.link;
-      link.download = filePath?.name;
-      link.target = "_blank";
+      link.href = url;
+      link.download = filePath.name || "download.pdf";
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading file:", error);
     }
@@ -322,16 +333,6 @@ const PlotDetailPage: React.FC<{
       </div>
     </div>
   );
-
-  const allQuotes = [
-    ...(results?.zones?.[0]?.rules?.bya?.breakdown || []),
-    ...(results?.zones?.[0]?.rules?.areas?.rules || []),
-    ...(results?.zones?.[0]?.rules?.parking?.rules || []),
-    ...(results?.zones?.[0]?.rules?.heights?.rules || []),
-    ...(results?.zones?.[0]?.rules?.setbacks?.rules || []),
-  ]
-    .map((item) => item?.quote)
-    .filter(Boolean);
 
   return (
     <>
@@ -1484,9 +1485,78 @@ const PlotDetailPage: React.FC<{
         <div>
           {PlotActiveTab === "Regulering" && (
             <>
-              <div className="flex flex-col md:flex-row gap-5 lg:gap-9 desktop:gap-[60px]">
+              {/* <div className="flex flex-col md:flex-row gap-5 lg:gap-9 desktop:gap-[60px]"> */}
+              <div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-9">
+                  {results ? (
+                    Object.entries(results)
+                      .filter(([_, value]: any) => value?.rules)
+                      .map((item: any, index: number) => {
+                        return (
+                          <div key={index}>
+                            <div className="flex justify-between items-center mb-4 lg:mb-6">
+                              <h2 className="text-black text-base md:text-lg lg:text-xl desktop:text-2xl font-semibold">
+                                {item[0]}
+                              </h2>
+
+                              <Image
+                                fetchPriority="auto"
+                                src={Ic_generelt}
+                                alt="image"
+                              />
+                            </div>
+
+                            <div className="flex flex-col gap-2 md:gap-3">
+                              {item?.[1]?.rules?.map(
+                                (rule: any, idx: number) => (
+                                  <div
+                                    className="flex items-start gap-2 md:gap-3 text-secondary text-sm lg:text-base"
+                                    key={idx}
+                                  >
+                                    <Image
+                                      fetchPriority="auto"
+                                      src={Ic_check_true}
+                                      alt="image"
+                                    />
+                                    <span>
+                                      {rule?.norwegian_text
+                                        ? rule.norwegian_text
+                                        : rule.rule_name}
+                                    </span>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })
+                  ) : (
+                    <div>
+                      {Array.from({ length: 4 }).map(
+                        (_: any, index: number) => (
+                          <div key={index}>
+                            <div className="flex justify-between items-center mb-4 lg:mb-6">
+                              <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
+                              <Image
+                                fetchPriority="auto"
+                                src={Ic_generelt}
+                                alt="image"
+                              />
+                            </div>
+
+                            <div className="flex flex-col gap-2 md:gap-3">
+                              <div className="w-full h-[25px] rounded-lg custom-shimmer"></div>
+                              <div className="w-full h-[25px] rounded-lg custom-shimmer"></div>
+                              <div className="w-full h-[25px] rounded-lg custom-shimmer"></div>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
                 <div className="relative w-full md:w-1/2">
-                  <div>
+                  {/* <div>
                     <div className="flex justify-between items-center mb-4 lg:mb-6">
                       {loadingLamdaData ? (
                         <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
@@ -1511,27 +1581,28 @@ const PlotDetailPage: React.FC<{
                           </>
                         ) : (
                           <>
-                            {(
-                              (askData && askData?.conclusion) ||
-                              allQuotes
-                            )?.map((a: any, index: number) => (
-                              <div
-                                className="flex items-start gap-2 md:gap-3 text-secondary text-sm lg:text-base"
-                                key={index}
-                              >
-                                <Image
-                                  fetchPriority="auto"
-                                  src={Ic_check_true}
-                                  alt="image"
-                                />
-                                <span>{a?.quote ? a?.quote : a}</span>
-                              </div>
-                            ))}
+                            {(askData && askData?.conclusion)
+                              ?.map((a: any, index: number) => (
+                                <div
+                                  className="flex items-start gap-2 md:gap-3 text-secondary text-sm lg:text-base"
+                                  key={index}
+                                >
+                                  <Image
+                                    fetchPriority="auto"
+                                    src={Ic_check_true}
+                                    alt="image"
+                                  />
+                                  <span>
+                                    {a?.norwegian_text ? a?.norwegian_text : a}
+                                  </span>
+                                </div>
+                              ))}
                           </>
                         )}
                       </>
                     </div>
-                  </div>
+                  </div> */}
+
                   {loadingAdditionalData ? (
                     <div className="w-full h-[400px] lg:h-[590px] rounded-lg custom-shimmer mt-[36px] md:mt-[46px] lg:mt-[55px]"></div>
                   ) : (
@@ -1730,7 +1801,7 @@ const PlotDetailPage: React.FC<{
                     </div>
                   )}
                 </div>
-                <div className="relative w-full md:w-1/2">
+                {/* <div className="relative w-full md:w-1/2">
                   <div className="flex justify-between items-center mb-4 lg:mb-6">
                     {loadingLamdaData ? (
                       <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
@@ -1779,7 +1850,7 @@ const PlotDetailPage: React.FC<{
                       </>
                     )}
                   </div>
-                </div>
+                </div> */}
               </div>
             </>
           )}

@@ -166,20 +166,17 @@ const Tomt: React.FC<{
 
           const data = await res.json();
           if (data && data?.rule_book) {
+            const pdfResponse = await fetch(data?.rule_book?.link);
+            const pdfBlob = await pdfResponse.blob();
+
+            const formData = new FormData();
+            formData.append("file", pdfBlob, "rule_book.pdf");
+
             const responseData = await fetch(
-              "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+              "https://iplotnor-norwaypropertyagent.hf.space/extract_file",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  pdf_url: data?.rule_book?.link,
-                  plot_size_m2: `${
-                    lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
-                      ?.areal_beregnet ?? 0
-                  }`,
-                }),
+                body: formData,
               }
             );
 
@@ -188,7 +185,7 @@ const Tomt: React.FC<{
             }
 
             const responseResult = await responseData.json();
-            setResult(responseResult);
+            setResult(responseResult?.data);
           }
         }
       } catch (error) {
@@ -492,11 +489,16 @@ const Tomt: React.FC<{
 
                             return `${(
                               (BoxData?.bya_percentage ??
-                                askData?.bya_calculations?.input
-                                  ?.bya_percentage ??
-                                results?.zones[0]?.derived
-                                  ?.plot_utilization_percent_gross) -
-                              formattedResult
+                                (BoxData?.bya_percentage
+                                  ? BoxData?.bya_percentage
+                                  : results?.BYA?.rules?.[0]?.unit === "%"
+                                    ? results?.BYA?.rules?.[0]?.value
+                                    : (
+                                        (results?.BYA?.rules?.[0]?.value ?? 0) /
+                                          lamdaDataFromApi?.eiendomsInformasjon
+                                            ?.basisInformasjon
+                                            ?.areal_beregnet ?? 0 * 100
+                                      ).toFixed(2))) - formattedResult
                             ).toFixed(2)} %`;
                           } else {
                             return "0";

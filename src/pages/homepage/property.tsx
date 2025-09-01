@@ -109,20 +109,17 @@ const Property: React.FC = () => {
 
             const data = await res.json();
             if (data && data?.rule_book) {
+              const pdfResponse = await fetch(data?.rule_book?.link);
+              const pdfBlob = await pdfResponse.blob();
+
+              const formData = new FormData();
+              formData.append("file", pdfBlob, "rule_book.pdf");
+
               const responseData = await fetch(
-                "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+                "https://iplotnor-norwaypropertyagent.hf.space/extract_file",
                 {
                   method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    pdf_url: data?.rule_book?.link,
-                    plot_size_m2: `${
-                      property?.lamdaDataFromApi?.eiendomsInformasjon
-                        ?.basisInformasjon?.areal_beregnet ?? 0
-                    }`,
-                  }),
+                  body: formData,
                 }
               );
 
@@ -131,7 +128,7 @@ const Property: React.FC = () => {
               }
 
               const responseResult = await responseData.json();
-              finalResults.push(responseResult);
+              finalResults.push(responseResult?.data);
             }
           }
         } catch (e) {
@@ -270,11 +267,16 @@ const Property: React.FC = () => {
                       <div className="flex flex-col gap-2 items-center">
                         <Image src={Ic_Bya} alt="area" fetchPriority="auto" />
                         <p className="text-darkBlack text-xs md:text-sm font-semibold">
-                          {BoxData?.bya_percentage ??
-                            property?.additionalData?.answer?.bya_calculations
-                              ?.input?.bya_percentage ??
-                            results?.zones[0]?.derived
-                              ?.plot_utilization_percent_gross}{" "}
+                          {BoxData?.bya_percentage
+                            ? BoxData?.bya_percentage
+                            : results?.BYA?.rules?.[0]?.unit === "%"
+                              ? results?.BYA?.rules?.[0]?.value
+                              : (
+                                  (results?.BYA?.rules?.[0]?.value ?? 0) /
+                                    property?.lamdaDataFromApi
+                                      ?.eiendomsInformasjon?.basisInformasjon
+                                      ?.areal_beregnet ?? 0 * 100
+                                ).toFixed(2)}{" "}
                           %
                         </p>
                       </div>
@@ -286,10 +288,17 @@ const Property: React.FC = () => {
                           fetchPriority="auto"
                         />
                         <p className="text-darkBlack text-xs md:text-sm font-semibold">
-                          {BoxData?.bya_area_m2 ??
-                            property?.additionalData?.answer?.bya_calculations
-                              ?.results?.total_allowed_bya ??
-                            results?.zones[0]?.rules?.bya?.total_value}{" "}
+                          {BoxData?.bya_area_m2 ?? BoxData?.bya_area_m2
+                            ? BoxData?.bya_area_m2
+                            : results?.BYA?.rules?.[0]?.unit === "%"
+                              ? (
+                                  ((property?.lamdaDataFromApi
+                                    ?.eiendomsInformasjon?.basisInformasjon
+                                    ?.areal_beregnet ?? 0) *
+                                    (results?.BYA?.rules?.[0]?.value ?? 0)) /
+                                  100
+                                ).toFixed(2)
+                              : results?.BYA?.rules?.[0]?.value}{" "}
                           <span className="text-secondary font-normal">
                             m<sup>2</sup>
                           </span>

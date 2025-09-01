@@ -12,8 +12,8 @@ const PropertyDetails: React.FC<{
 }> = ({
   CadastreDataFromApi,
   lamdaDataFromApi,
-  askData,
-  HouseModelData,
+  // askData,
+  // HouseModelData,
   loading,
 }) => {
   const BBOXData =
@@ -21,6 +21,7 @@ const PropertyDetails: React.FC<{
 
   const [BoxData, setBoxData] = useState<any>(null);
   const [results, setResult] = useState<any>(null);
+  const [resultsLoading, setResultLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlotData = async () => {
@@ -43,6 +44,11 @@ const PropertyDetails: React.FC<{
 
         const json = await response.json();
         setBoxData(json);
+
+        if (json?.bya_percentage) {
+          setResultLoading(false);
+        }
+
         if (json && json?.plan_link) {
           const res = await fetch(
             "https://iplotnor-areaplanner.hf.space/resolve",
@@ -62,20 +68,34 @@ const PropertyDetails: React.FC<{
 
           const data = await res.json();
           if (data && data?.rule_book) {
+            // const responseData = await fetch(
+            //   "https://iplotnor-norwaypropertyagent.hf.space/extract_file",
+            //   {
+            //     method: "POST",
+            //     headers: {
+            //       "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify({
+            //       pdf_url: data?.rule_book?.link,
+            //       // plot_size_m2: `${
+            //       //   lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
+            //       //     ?.areal_beregnet ?? 0
+            //       // }`,
+            //     }),
+            //   }
+            // );
+
+            const pdfResponse = await fetch(data?.rule_book?.link);
+            const pdfBlob = await pdfResponse.blob();
+
+            const formData = new FormData();
+            formData.append("file", pdfBlob, "rule_book.pdf");
+
             const responseData = await fetch(
-              "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+              "https://iplotnor-norwaypropertyagent.hf.space/extract_file",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  pdf_url: data?.rule_book?.link,
-                  plot_size_m2: `${
-                    lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
-                      ?.areal_beregnet ?? 0
-                  }`,
-                }),
+                body: formData,
               }
             );
 
@@ -84,11 +104,13 @@ const PropertyDetails: React.FC<{
             }
 
             const responseResult = await responseData.json();
-            setResult(responseResult);
+            setResult(responseResult?.data);
           }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setResultLoading(false);
       }
     };
 
@@ -137,22 +159,27 @@ const PropertyDetails: React.FC<{
                 alt="check"
               />
               <div className="flex flex-col gap-1">
-                {loading ? (
+                {resultsLoading ? (
                   <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>
                 ) : (
                   <p className="text-secondary2 text-xs lg:text-sm">
                     Eiendommen har en
                   </p>
                 )}
-                {loading ? (
+                {resultsLoading ? (
                   <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>
                 ) : (
                   <p className="text-black text-sm lg:text-base font-semibold">
                     Utnyttelsesgrad på{" "}
-                    {BoxData?.bya_percentage ??
-                      askData?.bya_calculations?.input?.bya_percentage ??
-                      results?.zones[0]?.derived
-                        ?.plot_utilization_percent_gross}
+                    {BoxData?.bya_percentage
+                      ? BoxData?.bya_percentage
+                      : results?.BYA?.rules?.[0]?.unit === "%"
+                        ? results?.BYA?.rules?.[0]?.value
+                        : (
+                            (results?.BYA?.rules?.[0]?.value ?? 0) /
+                              lamdaDataFromApi?.eiendomsInformasjon
+                                ?.basisInformasjon?.areal_beregnet ?? 0 * 100
+                          ).toFixed(2)}
                     %
                   </p>
                 )}
@@ -202,14 +229,14 @@ const PropertyDetails: React.FC<{
                           100;
                         const formattedResult = result.toFixed(2);
 
-                        return `${formattedResult}  %`;
+                        return `${formattedResult} %`;
                       } else {
                         return "0";
                       }
                     })()}
                   </p>
                 )}
-                {loading ? (
+                {resultsLoading ? (
                   <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>
                 ) : (
                   <p className="text-black text-xs lg:text-sm">
@@ -220,9 +247,7 @@ const PropertyDetails: React.FC<{
                           (item: any) => item?.builtUpArea
                         ) ?? [];
 
-                      if (
-                        askData?.bya_calculations?.results?.total_allowed_bya
-                      ) {
+                      if (BoxData) {
                         const totalData = data
                           ? data.reduce(
                               (acc: number, currentValue: number) =>
@@ -239,11 +264,16 @@ const PropertyDetails: React.FC<{
                         const formattedResult: any = result.toFixed(2);
 
                         return `${(
-                          (BoxData?.bya_percentage ??
-                            askData?.bya_calculations?.input?.bya_percentage ??
-                            results?.zones[0]?.derived
-                              ?.plot_utilization_percent_gross) -
-                          formattedResult
+                          (BoxData?.bya_percentage
+                            ? BoxData?.bya_percentage
+                            : results?.BYA?.rules?.[0]?.unit === "%"
+                              ? results?.BYA?.rules?.[0]?.value
+                              : (
+                                  (results?.BYA?.rules?.[0]?.value ?? 0) /
+                                    lamdaDataFromApi?.eiendomsInformasjon
+                                      ?.basisInformasjon?.areal_beregnet ??
+                                  0 * 100
+                                ).toFixed(2)) - formattedResult
                         ).toFixed(2)} %`;
                       } else {
                         return "0";
@@ -260,25 +290,32 @@ const PropertyDetails: React.FC<{
                 alt="check"
               />
               <div className="flex flex-col gap-1">
-                {loading ? (
+                {resultsLoading ? (
                   <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>
                 ) : (
                   <p className="text-secondary2 text-xs lg:text-sm">
                     Boligen kan ha en
                   </p>
                 )}
-                {loading ? (
+                {resultsLoading ? (
                   <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>
                 ) : (
                   <p className="text-black text-sm lg:text-base font-semibold">
                     Grunnflate på{" "}
-                    {BoxData?.bya_area_m2 ??
-                      HouseModelData?.Husdetaljer?.BebygdAreal ??
-                      results?.zones[0]?.rules?.bya?.total_value}{" "}
+                    {BoxData?.bya_area_m2
+                      ? BoxData?.bya_area_m2
+                      : results?.BYA?.rules?.[0]?.unit === "%"
+                        ? (
+                            ((lamdaDataFromApi?.eiendomsInformasjon
+                              ?.basisInformasjon?.areal_beregnet ?? 0) *
+                              (results?.BYA?.rules?.[0]?.value ?? 0)) /
+                            100
+                          ).toFixed(2)
+                        : results?.BYA?.rules?.[0]?.value}{" "}
                     m<sup>2</sup>
                   </p>
                 )}
-                {loading ? (
+                {resultsLoading ? (
                   <div className="w-[180px] h-[20px] rounded-lg custom-shimmer"></div>
                 ) : (
                   <p className="text-black text-xs lg:text-sm">
@@ -290,7 +327,9 @@ const PropertyDetails: React.FC<{
                         ) ?? [];
 
                       if (
-                        askData?.bya_calculations?.results?.total_allowed_bya
+                        BoxData?.bya_area_m2
+                          ? BoxData?.bya_area_m2
+                          : results?.BYA?.rules?.[0]
                       ) {
                         const totalData = data
                           ? data.reduce(
@@ -303,8 +342,18 @@ const PropertyDetails: React.FC<{
                         return (
                           <>
                             {(
-                              askData?.bya_calculations?.results
-                                ?.total_allowed_bya - totalData
+                              (BoxData?.bya_area_m2
+                                ? BoxData?.bya_area_m2
+                                : results?.BYA?.rules?.[0]?.unit === "%"
+                                  ? (
+                                      ((lamdaDataFromApi?.eiendomsInformasjon
+                                        ?.basisInformasjon?.areal_beregnet ??
+                                        0) *
+                                        (results?.BYA?.rules?.[0]?.value ??
+                                          0)) /
+                                      100
+                                    ).toFixed(2)
+                                  : results?.BYA?.rules?.[0]?.value) - totalData
                             ).toFixed(2)}
                             m<sup>2</sup>
                           </>
