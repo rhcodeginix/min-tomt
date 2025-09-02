@@ -1427,7 +1427,7 @@ const PlotDetailPage: React.FC<{
                       .map((item: any, index: number) => {
                         return (
                           <div key={index}>
-                            <div className="flex justify-between items-center mb-4 lg:mb-6">
+                            <div className="flex gap-2 items-center mb-4 lg:mb-6">
                               <Image
                                 fetchPriority="auto"
                                 src={Ic_generelt}
