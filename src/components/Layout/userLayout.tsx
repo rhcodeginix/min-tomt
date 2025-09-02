@@ -47,7 +47,7 @@ const UserLayout = ({ children }: Props) => {
         router.pathname !== "/ferdighus" &&
         router.pathname !== "/hytte" &&
         router.pathname !== "/finansiering" &&
-        "mt-[62px] sm:mt-[66px] md:mt-[82px]"
+        "mt-[57px] md:mt-[80px] lg:mt-[82px]"
       }`}
     >
       <Chatbot />
