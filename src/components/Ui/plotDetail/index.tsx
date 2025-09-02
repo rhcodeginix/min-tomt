@@ -1427,7 +1427,7 @@ const PlotDetailPage: React.FC<{
 
       <div className="w-full mt-[44px]">
         <div className="w-full flex justify-start">
-          <div className="flex flex-nowrap border border-gray3 rounded-lg bg-gray3 p-[6px] mb-6 md:mb-[38px] overflow-x-auto overFlowScrollHidden">
+          <div className="flex flex-nowrap border border-gray3 rounded-lg bg-gray3 p-[6px] mb-6 md:mb-[38px] overflow-x-auto overFlowXAuto">
             {plotTabs.map((tab: any) => (
               <button
                 key={tab.id}
