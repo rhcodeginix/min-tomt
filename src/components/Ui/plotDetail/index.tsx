@@ -1984,13 +1984,15 @@ const PlotDetailPage: React.FC<{
                       {[
                         Documents?.rule_book,
                         ...(Documents?.planning_documents || []),
-                      ].map((doc, index) => (
-                        <DocumentCard
-                          key={index}
-                          doc={doc}
-                          handleDownload={handleDownload}
-                        />
-                      ))}
+                      ]
+                        .filter((doc: any) => doc && doc.link)
+                        .map((doc, index) => (
+                          <DocumentCard
+                            key={index}
+                            doc={doc}
+                            handleDownload={handleDownload}
+                          />
+                        ))}
                     </div>
                   ) : (
                     <div>Ingen dokumenter funnet!</div>
@@ -2018,13 +2020,15 @@ const PlotDetailPage: React.FC<{
                 <>
                   {PlanDocuments && PlanDocuments?.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {PlanDocuments.map((doc: any, index: number) => (
-                        <DocumentCard
-                          key={index}
-                          doc={doc}
-                          handleDownload={handleDownload}
-                        />
-                      ))}
+                      {PlanDocuments.filter((doc: any) => doc && doc.link).map(
+                        (doc: any, index: number) => (
+                          <DocumentCard
+                            key={index}
+                            doc={doc}
+                            handleDownload={handleDownload}
+                          />
+                        )
+                      )}
                     </div>
                   ) : (
                     <div>Ingen dokumenter funnet!</div>
@@ -2052,13 +2056,15 @@ const PlotDetailPage: React.FC<{
                 <>
                   {exemptions && exemptions?.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {exemptions.map((doc: any, index: number) => (
-                        <DocumentCard
-                          key={index}
-                          doc={doc}
-                          handleDownload={handleDownload}
-                        />
-                      ))}
+                      {exemptions
+                        .filter((doc: any) => doc && doc.link)
+                        .map((doc: any, index: number) => (
+                          <DocumentCard
+                            key={index}
+                            doc={doc}
+                            handleDownload={handleDownload}
+                          />
+                        ))}
                     </div>
                   ) : (
                     <div>Ingen dokumenter funnet!</div>
@@ -2087,15 +2093,15 @@ const PlotDetailPage: React.FC<{
                   {KommunePlan?.planning_documents &&
                   KommunePlan.planning_documents.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {KommunePlan.planning_documents.map(
-                        (doc: any, index: number) => (
+                      {KommunePlan.planning_documents
+                        .filter((doc: any) => doc && doc.link)
+                        .map((doc: any, index: number) => (
                           <DocumentCard
                             key={index}
                             doc={doc}
                             handleDownload={handleDownload}
                           />
-                        )
-                      )}
+                        ))}
                     </div>
                   ) : (
                     <div>Ingen dokumenter funnet!</div>
