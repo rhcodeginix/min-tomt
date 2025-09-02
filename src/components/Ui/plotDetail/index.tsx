@@ -1499,7 +1499,7 @@ const PlotDetailPage: React.FC<{
                       {Array.from({ length: 4 }).map(
                         (_: any, index: number) => (
                           <div key={index}>
-                            <div className="flex justify-between items-center mb-4 lg:mb-6">
+                            <div className="flex gap-2 items-center mb-4 lg:mb-6">
                               <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
                               <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
                             </div>
