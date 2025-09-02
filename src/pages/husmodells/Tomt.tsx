@@ -27,6 +27,9 @@ const Tomt: React.FC<{
   BoxData: any;
   resultsLoading: any;
   Documents: any;
+  exemptions: any;
+  PlanDocuments: any;
+  documentLoading: any;
 }> = ({
   handleNext,
   handlePrevious,
@@ -46,6 +49,9 @@ const Tomt: React.FC<{
   BoxData,
   resultsLoading,
   Documents,
+  exemptions,
+  PlanDocuments,
+  documentLoading,
 }) => {
   const router = useRouter();
   const [hasMounted, setHasMounted] = useState(false);
@@ -93,6 +99,9 @@ const Tomt: React.FC<{
           BoxData={BoxData}
           resultsLoading={resultsLoading}
           Documents={Documents}
+          PlanDocuments={PlanDocuments}
+          exemptions={exemptions}
+          documentLoading={documentLoading}
         />
       ) : (
         <>

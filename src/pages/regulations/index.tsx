@@ -743,6 +743,9 @@ const Regulations = () => {
   const [results, setResult] = useState<any>(null);
   const [resultsLoading, setResultLoading] = useState(true);
   const [Documents, setDocuments] = useState<any>(null);
+  const [PlanDocuments, setPlanDocuments] = useState<any>(null);
+  const [exemptions, setExemptions] = useState<any>(null);
+  const [documentLoading, setDocumentLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlotData = async () => {
@@ -771,24 +774,41 @@ const Regulations = () => {
         }
 
         if (json && json?.plan_link) {
-          const res = await fetch(
-            "https://iplotnor-areaplanner.hf.space/resolve",
-            {
+          const [res, resPlan] = await Promise.all([
+            fetch("https://iplotnor-areaplanner.hf.space/resolve", {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 step1_url: json?.plan_link,
                 api_token: "D7D7FFB4-1A4A-44EA-BD15-BCDB6CEF8CA5",
               }),
-            }
-          );
+            }),
+            fetch("https://iplotnor-areaplanner.hf.space/other-documents", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                step1_url: json?.plan_link,
+                api_token: "D7D7FFB4-1A4A-44EA-BD15-BCDB6CEF8CA5",
+              }),
+            }),
+          ]);
 
-          if (!res.ok) throw new Error("Request failed");
+          if (!res.ok || !resPlan.ok) {
+            throw new Error("Request failed");
+          }
 
-          const data = await res.json();
+          const [data, dataPlan] = await Promise.all([
+            res.json(),
+            resPlan.json(),
+          ]);
+
+          setPlanDocuments(dataPlan?.planning_treatments);
+          setExemptions(dataPlan?.exemptions);
           setDocuments(data);
+          if (dataPlan) {
+            setDocumentLoading(false);
+          }
+
           if (data?.inputs?.internal_plan_id) {
             const uniqueId = String(data?.inputs?.internal_plan_id);
 
@@ -890,6 +910,9 @@ const Regulations = () => {
           BoxData={BoxData}
           resultsLoading={resultsLoading}
           Documents={Documents}
+          PlanDocuments={PlanDocuments}
+          exemptions={exemptions}
+          documentLoading={documentLoading}
         />
       ),
     },
@@ -928,6 +951,9 @@ const Regulations = () => {
           BoxData={BoxData}
           resultsLoading={resultsLoading}
           Documents={Documents}
+          PlanDocuments={PlanDocuments}
+          exemptions={exemptions}
+          documentLoading={documentLoading}
         />
       ),
     },

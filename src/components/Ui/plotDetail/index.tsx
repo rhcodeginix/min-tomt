@@ -12,11 +12,13 @@ import Eierinformasjon from "@/components/Ui/regulationChart/Eierinformasjon";
 import Ic_file from "@/public/images/Ic_file.svg";
 import Ic_download_primary from "@/public/images/Ic_download_primary.svg";
 import {
+  BadgeX,
   Building,
   ClipboardList,
   FileText,
   FileUser,
   Files,
+  NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
 // import { db } from "@/config/firebaseConfig";
@@ -30,6 +32,9 @@ const PlotDetailPage: React.FC<{
   askData: any;
   Documents: any;
   results: any;
+  exemptions: any;
+  PlanDocuments: any;
+  documentLoading: any;
 }> = ({
   lamdaDataFromApi,
   loadingAdditionalData,
@@ -38,6 +43,9 @@ const PlotDetailPage: React.FC<{
   CadastreDataFromApi,
   Documents,
   results,
+  exemptions,
+  PlanDocuments,
+  documentLoading,
 }) => {
   const [dropdownState, setDropdownState] = useState({
     Tomteopplysninger: false,
@@ -199,6 +207,16 @@ const PlotDetailPage: React.FC<{
     { id: "Bygninger", label: "Bygninger", icon: <Building /> },
     { id: "Plandokumenter", label: "Plandokumenter", icon: <ClipboardList /> },
     { id: "Dokumenter", label: "Dokumenter", icon: <Files /> },
+    {
+      id: "Planleggingsdokumenter",
+      label: "Planleggingsdokumenter",
+      icon: <NotepadText />,
+    },
+    {
+      id: "Unntak",
+      label: "Unntak",
+      icon: <BadgeX />,
+    },
   ];
   const [PlotActiveTab, setPlotActiveTab] = useState<string>(plotTabs[0].id);
 
@@ -250,7 +268,9 @@ const PlotDetailPage: React.FC<{
           </div>
         </div>
         <h5 className="text-darkBlack text-xs md:text-sm font-medium truncate">
-          {doc?.name || "Loading..."}
+          {doc?.name?.toLowerCase().includes("unknown")
+            ? doc?.link?.split("/").pop()?.split("?")[0]
+            : doc?.name || "Loading..."}
         </h5>
       </div>
       <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 w-[52px] sm:w-[56px] md:w-auto">
@@ -1394,7 +1414,7 @@ const PlotDetailPage: React.FC<{
       </div>
 
       <div className="w-full mt-[44px]">
-        <div className="w-full md:w-max">
+        <div className="w-full big:w-max">
           <div className="flex flex-nowrap border border-gray3 rounded-lg bg-gray3 p-[6px] mb-6 md:mb-[38px] overflow-x-auto overFlowScrollHidden">
             {plotTabs.map((tab: any) => (
               <button
@@ -1936,21 +1956,106 @@ const PlotDetailPage: React.FC<{
           )}
           {PlotActiveTab === "Dokumenter" && (
             <>
-              {Documents ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[
-                    Documents?.rule_book,
-                    ...(Documents?.planning_documents || []),
-                  ].map((doc, index) => (
-                    <DocumentCard
-                      key={index}
-                      doc={doc}
-                      handleDownload={handleDownload}
-                    />
-                  ))}
-                </div>
+              {documentLoading ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_: any, index: number) => (
+                      <div
+                        key={index}
+                        className="border flex items-center gap-2 border-[#ECE9FE] bg-white rounded-[50px] text-xs md:text-sm cursor-pointer"
+                      >
+                        <div className="w-full h-[50px] rounded-lg custom-shimmer"></div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               ) : (
-                <div>Ingen dokumenter funnet!</div>
+                <>
+                  {Documents ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {[
+                        Documents?.rule_book,
+                        ...(Documents?.planning_documents || []),
+                      ].map((doc, index) => (
+                        <DocumentCard
+                          key={index}
+                          doc={doc}
+                          handleDownload={handleDownload}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div>Ingen dokumenter funnet!</div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+          {PlotActiveTab === "Planleggingsdokumenter" && (
+            <>
+              {documentLoading ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_: any, index: number) => (
+                      <div
+                        key={index}
+                        className="border flex items-center gap-2 border-[#ECE9FE] bg-white rounded-[50px] text-xs md:text-sm cursor-pointer"
+                      >
+                        <div className="w-full h-[50px] rounded-lg custom-shimmer"></div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {PlanDocuments ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {PlanDocuments.map((doc: any, index: number) => (
+                        <DocumentCard
+                          key={index}
+                          doc={doc}
+                          handleDownload={handleDownload}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div>Ingen dokumenter funnet!</div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+          {PlotActiveTab === "Unntak" && (
+            <>
+              {documentLoading ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_: any, index: number) => (
+                      <div
+                        key={index}
+                        className="border flex items-center gap-2 border-[#ECE9FE] bg-white rounded-[50px] text-xs md:text-sm cursor-pointer"
+                      >
+                        <div className="w-full h-[50px] rounded-lg custom-shimmer"></div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {exemptions ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {exemptions.map((doc: any, index: number) => (
+                        <DocumentCard
+                          key={index}
+                          doc={doc}
+                          handleDownload={handleDownload}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div>Ingen dokumenter funnet!</div>
+                  )}
+                </>
               )}
             </>
           )}
