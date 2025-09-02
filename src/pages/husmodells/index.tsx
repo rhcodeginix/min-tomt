@@ -462,7 +462,7 @@ const HusmodellDetail = () => {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 step1_url: json?.plan_link,
-                api_token: "D7D7FFB4-1A4A-44EA-BD15-BCDB6CEF8CA5",
+                api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
               }),
             }),
             fetch("https://iplotnor-areaplanner.hf.space/other-documents", {
@@ -470,7 +470,7 @@ const HusmodellDetail = () => {
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 step1_url: json?.plan_link,
-                api_token: "D7D7FFB4-1A4A-44EA-BD15-BCDB6CEF8CA5",
+                api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
               }),
             }),
           ]);
