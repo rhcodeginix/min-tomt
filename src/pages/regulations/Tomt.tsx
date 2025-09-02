@@ -62,6 +62,8 @@ const Tomt: React.FC<{
   exemptions: any;
   PlanDocuments: any;
   documentLoading: any;
+  KommunePlan: any;
+  KommuneLoading: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -80,6 +82,8 @@ const Tomt: React.FC<{
   exemptions,
   PlanDocuments,
   documentLoading,
+  KommunePlan,
+  KommuneLoading,
 }) => {
   const router = useRouter();
   const popup = useRef<HTMLDivElement>(null);
@@ -193,6 +197,8 @@ const Tomt: React.FC<{
               exemptions={exemptions}
               PlanDocuments={PlanDocuments}
               documentLoading={documentLoading}
+              KommunePlan={KommunePlan}
+              KommuneLoading={KommuneLoading}
             />
           </div>
           {!loginUser && (

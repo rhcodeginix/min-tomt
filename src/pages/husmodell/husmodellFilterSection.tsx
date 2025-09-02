@@ -3,7 +3,7 @@ import Ic_search from "@/public/images/Ic_search.svg";
 import Ic_chevron_down from "@/public/images/Ic_chevron_down.svg";
 import { useState } from "react";
 import { Slider, styled } from "@mui/material";
-import { convertCurrencyFormat } from "../housemodell-plot/Tilpass";
+import { convertCurrencyFormat } from "../husmodells";
 
 const CustomSlider = styled(Slider)({
   color: "#006555",

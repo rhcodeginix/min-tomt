@@ -24,6 +24,21 @@ import ApiUtils from "@/api";
 import Verdivurdering from "./Verdivurdering";
 import NotFound from "../page-not-found";
 
+export function convertCurrencyFormat(input: any) {
+  const numberPart = String(input).replace(/\s+/g, "").replace(/kr/i, "");
+
+  const parsed = parseInt(numberPart, 10);
+  if (isNaN(parsed)) return input;
+
+  const formatted = parsed.toLocaleString("no-NO", {
+    style: "decimal",
+    useGrouping: true,
+    minimumFractionDigits: 0,
+  });
+
+  return `kr ${formatted}`;
+}
+
 const HusmodellDetail = () => {
   const [currIndex, setCurrIndex] = useState(0);
   useEffect(() => {
@@ -428,6 +443,8 @@ const HusmodellDetail = () => {
   const [PlanDocuments, setPlanDocuments] = useState<any>(null);
   const [exemptions, setExemptions] = useState<any>(null);
   const [documentLoading, setDocumentLoading] = useState(true);
+  const [KommunePlan, setKommunePlan] = useState<any>(null);
+  const [KommuneLoading, setKommuneLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlotData = async () => {
@@ -456,6 +473,32 @@ const HusmodellDetail = () => {
         }
 
         if (json && json?.plan_link) {
+          const KommuneData = await fetch(
+            "https://iplotnor-areaplanner.hf.space/kommuneplanens",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                coordinates_url: json?.plan_link,
+                knr: `${lamdaDataFromApi?.searchParameters?.kommunenummer}`,
+                gnr: `${lamdaDataFromApi?.searchParameters?.gardsnummer}`,
+                bnr: `${lamdaDataFromApi?.searchParameters?.bruksnummer}`,
+                api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
+                debug_mode: true,
+              }),
+            }
+          );
+
+          if (!KommuneData.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const KommunePlanJson = await KommuneData.json();
+          setKommunePlan(KommunePlanJson);
+          setKommuneLoading(false);
+
           const [res, resPlan] = await Promise.all([
             fetch("https://iplotnor-areaplanner.hf.space/resolve", {
               method: "POST",
@@ -638,6 +681,8 @@ const HusmodellDetail = () => {
           PlanDocuments={PlanDocuments}
           exemptions={exemptions}
           documentLoading={documentLoading}
+          KommunePlan={KommunePlan}
+          KommuneLoading={KommuneLoading}
         />
       ),
     },

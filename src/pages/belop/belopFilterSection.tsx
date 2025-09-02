@@ -6,7 +6,7 @@ import { Slider, styled } from "@mui/material";
 import { useRouter } from "next/router";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
-import { convertCurrencyFormat } from "../housemodell-plot/Tilpass";
+import { convertCurrencyFormat } from "../husmodells";
 
 const CustomSlider = styled(Slider)({
   color: "#006555",

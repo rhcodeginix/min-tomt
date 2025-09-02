@@ -30,6 +30,8 @@ const Tomt: React.FC<{
   exemptions: any;
   PlanDocuments: any;
   documentLoading: any;
+  KommunePlan: any;
+  KommuneLoading: any;
 }> = ({
   handleNext,
   handlePrevious,
@@ -52,6 +54,8 @@ const Tomt: React.FC<{
   exemptions,
   PlanDocuments,
   documentLoading,
+  KommunePlan,
+  KommuneLoading,
 }) => {
   const router = useRouter();
   const [hasMounted, setHasMounted] = useState(false);
@@ -102,6 +106,8 @@ const Tomt: React.FC<{
           PlanDocuments={PlanDocuments}
           exemptions={exemptions}
           documentLoading={documentLoading}
+          KommunePlan={KommunePlan}
+          KommuneLoading={KommuneLoading}
         />
       ) : (
         <>

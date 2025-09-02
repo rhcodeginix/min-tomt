@@ -12,7 +12,7 @@ import Img_vipps_login from "@/public/images/Img_vipps_login.png";
 import { useRouter } from "next/router";
 import Ic_close_darkgreen from "@/public/images/Ic_close_darkgreen.svg";
 import VippsButton from "@/components/vipps";
-import { convertCurrencyFormat } from "../housemodell-plot/Tilpass";
+import { convertCurrencyFormat } from ".";
 
 const bedroomOptions = [
   "1+ soverom",

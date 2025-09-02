@@ -43,6 +43,8 @@ const HouseModelSingleProperty: React.FC<{
   exemptions: any;
   PlanDocuments: any;
   documentLoading: any;
+  KommunePlan: any;
+  KommuneLoading: any;
 }> = ({
   handleNext,
   HouseModelData,
@@ -63,6 +65,8 @@ const HouseModelSingleProperty: React.FC<{
   exemptions,
   PlanDocuments,
   documentLoading,
+  KommunePlan,
+  KommuneLoading,
 }) => {
   const router = useRouter();
   const { homePage } = router.query;
@@ -325,6 +329,8 @@ const HouseModelSingleProperty: React.FC<{
                 exemptions={exemptions}
                 PlanDocuments={PlanDocuments}
                 documentLoading={documentLoading}
+                KommunePlan={KommunePlan}
+                KommuneLoading={KommuneLoading}
               />
             </div>
             <div className={`${activeTab === "house" ? "block" : "hidden"}`}>

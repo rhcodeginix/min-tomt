@@ -14,7 +14,6 @@ import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import PropertyHouseDetails from "@/components/Ui/husmodellPlot/PropertyHouseDetails";
 import { useCustomizeHouse } from "@/context/selectHouseContext";
-import { convertCurrencyFormat } from "../housemodell-plot/Tilpass";
 import {
   addDoc,
   collection,
@@ -27,6 +26,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import { useRouter } from "next/router";
+import { convertCurrencyFormat } from ".";
 
 const Tilpass: React.FC<any> = ({
   handleNext,

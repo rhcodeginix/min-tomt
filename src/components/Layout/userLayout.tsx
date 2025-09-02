@@ -19,19 +19,11 @@ const UserLayout = ({ children }: Props) => {
 
     const { pathname } = router;
 
-    if (!pathname.startsWith("/housemodell-plot")) {
-      localStorage.removeItem("soverom");
-      localStorage.removeItem("city");
-      localStorage.removeItem("subcity");
-      localStorage.removeItem("Hustype");
-      localStorage.removeItem("TypeHusmodell");
-    }
     if (!pathname.startsWith("husmodells")) {
       localStorage.removeItem("city");
       localStorage.removeItem("subcity");
     }
     if (
-      !pathname.startsWith("/housemodell-plot") &&
       !pathname.startsWith("/husmodells") &&
       !pathname.startsWith("/regulations")
     ) {

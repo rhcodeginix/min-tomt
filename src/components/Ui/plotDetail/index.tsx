@@ -18,6 +18,7 @@ import {
   FileText,
   FileUser,
   Files,
+  NotebookText,
   NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
@@ -35,6 +36,8 @@ const PlotDetailPage: React.FC<{
   exemptions: any;
   PlanDocuments: any;
   documentLoading: any;
+  KommunePlan: any;
+  KommuneLoading: any;
 }> = ({
   lamdaDataFromApi,
   loadingAdditionalData,
@@ -46,6 +49,8 @@ const PlotDetailPage: React.FC<{
   exemptions,
   PlanDocuments,
   documentLoading,
+  KommunePlan,
+  KommuneLoading,
 }) => {
   const [dropdownState, setDropdownState] = useState({
     Tomteopplysninger: false,
@@ -216,6 +221,11 @@ const PlotDetailPage: React.FC<{
       id: "Unntak",
       label: "Unntak",
       icon: <BadgeX />,
+    },
+    {
+      id: "Kommuneplaner",
+      label: "Kommuneplaner",
+      icon: <NotebookText />,
     },
   ];
   const [PlotActiveTab, setPlotActiveTab] = useState<string>(plotTabs[0].id);
@@ -1416,7 +1426,7 @@ const PlotDetailPage: React.FC<{
       </div>
 
       <div className="w-full mt-[44px]">
-        <div className="w-full big:w-max">
+        <div className="w-full flex justify-start">
           <div className="flex flex-nowrap border border-gray3 rounded-lg bg-gray3 p-[6px] mb-6 md:mb-[38px] overflow-x-auto overFlowScrollHidden">
             {plotTabs.map((tab: any) => (
               <button
@@ -2053,6 +2063,43 @@ const PlotDetailPage: React.FC<{
                           handleDownload={handleDownload}
                         />
                       ))}
+                    </div>
+                  ) : (
+                    <div>Ingen dokumenter funnet!</div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+          {PlotActiveTab === "Kommuneplaner" && (
+            <>
+              {KommuneLoading ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_: any, index: number) => (
+                      <div
+                        key={index}
+                        className="border flex items-center gap-2 border-[#ECE9FE] bg-white rounded-[50px] text-xs md:text-sm cursor-pointer"
+                      >
+                        <div className="w-full h-[50px] rounded-lg custom-shimmer"></div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  {KommunePlan?.planning_documents &&
+                  KommunePlan.planning_documents.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {KommunePlan.planning_documents.map(
+                        (doc: any, index: number) => (
+                          <DocumentCard
+                            key={index}
+                            doc={doc}
+                            handleDownload={handleDownload}
+                          />
+                        )
+                      )}
                     </div>
                   ) : (
                     <div>Ingen dokumenter funnet!</div>
