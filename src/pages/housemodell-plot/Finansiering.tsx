@@ -30,6 +30,9 @@ const Finansiering: React.FC<{
   handlePrevious: any;
   pris: any;
   supplierData: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -40,6 +43,9 @@ const Finansiering: React.FC<{
   handlePrevious,
   pris,
   supplierData,
+  results,
+  BoxData,
+  resultsLoading,
 }) => {
   const [custHouse, setCusHouse] = useState<any>(null);
   useEffect(() => {
@@ -191,6 +197,9 @@ const Finansiering: React.FC<{
           lamdaDataFromApi={lamdaDataFromApi}
           HouseModelData={HouseModelData}
           loading={loadingLamdaData}
+          results={results}
+          BoxData={BoxData}
+          resultsLoading={resultsLoading}
         />
       )}
 

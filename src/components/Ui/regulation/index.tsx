@@ -19,12 +19,18 @@ const HusmodellPropertyPage: React.FC<{
   askData: any;
   handleNext: any;
   handlePrevious: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
 }> = ({
   CadastreDataFromApi,
   lamdaDataFromApi,
   askData,
   handleNext,
   handlePrevious,
+  results,
+  BoxData,
+  resultsLoading,
 }) => {
   const [HouseModelProperty, setHouseModelProperty] = useState([]);
   const [maxRangeData, setMaxRangeData] = useState<number>(0);
@@ -240,6 +246,9 @@ const HusmodellPropertyPage: React.FC<{
         CadastreDataFromApi={CadastreDataFromApi}
         lamdaDataFromApi={lamdaDataFromApi}
         askData={askData}
+        results={results}
+        BoxData={BoxData}
+        resultsLoading={resultsLoading}
       />
       <div className="relative pt-5 lg:pt-8">
         <SideSpaceContainer>

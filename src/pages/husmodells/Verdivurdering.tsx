@@ -30,6 +30,9 @@ const Verdivurdering: React.FC<{
   pris: any;
   loading: any;
   supplierData: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
 }> = ({
   // handleNext,
   lamdaDataFromApi,
@@ -40,6 +43,9 @@ const Verdivurdering: React.FC<{
   pris,
   loading,
   supplierData,
+  results,
+  BoxData,
+  resultsLoading,
 }) => {
   const router = useRouter();
 
@@ -161,11 +167,12 @@ const Verdivurdering: React.FC<{
               <div
                 className="text-primary text-xs md:text-sm font-medium cursor-pointer"
                 onClick={() => {
-                  const currIndex = HouseModelData &&
-                  HouseModelData?.Husdetaljer?.Leverandører ===
-                    "9f523136-72ca-4bde-88e5-de175bc2fc71"
-                    ? 2
-                    : 4;
+                  const currIndex =
+                    HouseModelData &&
+                    HouseModelData?.Husdetaljer?.Leverandører ===
+                      "9f523136-72ca-4bde-88e5-de175bc2fc71"
+                      ? 2
+                      : 4;
                   localStorage.setItem("currIndex", currIndex.toString());
                   handlePrevious();
                 }}
@@ -196,6 +203,9 @@ const Verdivurdering: React.FC<{
             lamdaDataFromApi={lamdaDataFromApi}
             HouseModelData={HouseModelData}
             loading={loading}
+            results={results}
+            BoxData={BoxData}
+            resultsLoading={resultsLoading}
           />
         )}
 

@@ -29,6 +29,9 @@ const Finansiering: React.FC<{
   HouseModelData: any;
   handlePrevious: any;
   supplierData: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -38,6 +41,9 @@ const Finansiering: React.FC<{
   HouseModelData,
   handlePrevious,
   supplierData,
+  results,
+  BoxData,
+  resultsLoading,
 }) => {
   const router = useRouter();
   const { homePage } = router.query;
@@ -241,6 +247,9 @@ const Finansiering: React.FC<{
           lamdaDataFromApi={lamdaDataFromApi}
           HouseModelData={HouseModelData}
           loading={loadingLamdaData}
+          results={results}
+          BoxData={BoxData}
+          resultsLoading={resultsLoading}
         />
       )}
       <div className="pt-6 pb-8">

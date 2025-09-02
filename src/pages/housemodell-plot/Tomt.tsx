@@ -33,6 +33,10 @@ const Tomt: React.FC<{
   HouseModelData: any;
   supplierData: any;
   pris: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
+  Documents: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -47,6 +51,10 @@ const Tomt: React.FC<{
   HouseModelData,
   supplierData,
   pris,
+  results,
+  BoxData,
+  resultsLoading,
+  Documents,
 }) => {
   const router = useRouter();
   const { homePage } = router.query;
@@ -160,6 +168,9 @@ const Tomt: React.FC<{
         lamdaDataFromApi={lamdaDataFromApi}
         HouseModelData={HouseModelData}
         loading={loadingAdditionalData}
+        results={results}
+        BoxData={BoxData}
+        resultsLoading={resultsLoading}
       />
       <SideSpaceContainer>
         <LeadsBox />
@@ -210,6 +221,8 @@ const Tomt: React.FC<{
                 askData={askData}
                 loadingLamdaData={loadingLamdaData}
                 CadastreDataFromApi={CadastreDataFromApi}
+                results={results}
+                Documents={Documents}
               />
             </div>
             <div className={`${activeTab === "house" ? "block" : "hidden"}`}>
@@ -304,8 +317,7 @@ const Tomt: React.FC<{
             </h2>
             <p className="text-black text-xs md:text-sm desktop:text-base text-center mb-4">
               Logg inn for å få tilgang til alt{" "}
-              <span className="font-bold">MinTomt</span> har å
-              by på.
+              <span className="font-bold">MinTomt</span> har å by på.
             </p>
             <Formik
               initialValues={{ terms_condition: false }}

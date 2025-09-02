@@ -34,6 +34,9 @@ const Oppsummering: React.FC<{
   handlePrevious: any;
   pris: any;
   supplierData: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -44,6 +47,9 @@ const Oppsummering: React.FC<{
   handlePrevious,
   pris,
   supplierData,
+  results,
+  BoxData,
+  resultsLoading,
 }) => {
   const Husdetaljer = HouseModelData?.Husdetaljer;
   const [stored, setStored] = useState<any>();
@@ -206,6 +212,9 @@ const Oppsummering: React.FC<{
         lamdaDataFromApi={lamdaDataFromApi}
         HouseModelData={HouseModelData}
         loading={loading}
+        results={results}
+        BoxData={BoxData}
+        resultsLoading={resultsLoading}
       />
 
       <div className="pt-6 pb-8">

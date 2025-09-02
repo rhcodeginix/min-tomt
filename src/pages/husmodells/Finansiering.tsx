@@ -30,6 +30,9 @@ const Finansiering: React.FC<{
   pris: any;
   loading: any;
   supplierData: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -40,6 +43,9 @@ const Finansiering: React.FC<{
   pris,
   loading,
   supplierData,
+  results,
+  BoxData,
+  resultsLoading,
 }) => {
   const router = useRouter();
   const { noPlot } = router.query;
@@ -217,6 +223,9 @@ const Finansiering: React.FC<{
             lamdaDataFromApi={lamdaDataFromApi}
             HouseModelData={HouseModelData}
             loading={loading}
+            results={results}
+            BoxData={BoxData}
+            resultsLoading={resultsLoading}
           />
         )}
 

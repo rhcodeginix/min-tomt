@@ -8,6 +8,7 @@ import {
   getDocs,
   limit,
   query,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import { useRouter } from "next/router";
@@ -134,17 +135,20 @@ const Property: React.FC = () => {
               }
             }
             if (data && data?.rule_book) {
-              const pdfResponse = await fetch(data?.rule_book?.link);
-              const pdfBlob = await pdfResponse.blob();
-
-              const formData = new FormData();
-              formData.append("file", pdfBlob, "rule_book.pdf");
-
               const responseData = await fetch(
-                "https://iplotnor-norwaypropertyagent.hf.space/extract_file",
+                "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
                 {
                   method: "POST",
-                  body: formData,
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    pdf_url: data?.rule_book?.link,
+                    plot_size_m2: `${
+                      property?.lamdaDataFromApi?.eiendomsInformasjon
+                        ?.basisInformasjon?.areal_beregnet ?? 0
+                    }`,
+                  }),
                 }
               );
 
@@ -154,6 +158,34 @@ const Property: React.FC = () => {
 
               const responseResult = await responseData.json();
               finalResults.push(responseResult?.data);
+
+              if (responseResult?.data) {
+                const uniqueId = String(data?.inputs?.internal_plan_id);
+
+                if (!uniqueId) {
+                  console.warn("No uniqueId found, skipping Firestore setDoc");
+                  return;
+                }
+
+                const plansDocRef = doc(db, "mintomt_plans", uniqueId);
+
+                const formatDate = (date: Date) =>
+                  date
+                    .toLocaleString("sv-SE", { timeZone: "UTC" })
+                    .replace(",", "");
+
+                const existingDoc = await getDoc(plansDocRef);
+
+                if (!existingDoc.exists()) {
+                  await setDoc(plansDocRef, {
+                    id: uniqueId,
+                    updatedAt: formatDate(new Date()),
+                    createdAt: formatDate(new Date()),
+                    documents: { ...data },
+                    rule: { ...responseResult?.data },
+                  });
+                }
+              }
             }
           }
         } catch (e) {

@@ -28,6 +28,10 @@ const TomtHusmodell: React.FC<{
   setAdditionalData: any;
   setLamdaDataFromApi: any;
   setCadastreDataFromApi: any;
+  results: any;
+  BoxData: any;
+  resultsLoading: any;
+  Documents: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -46,6 +50,10 @@ const TomtHusmodell: React.FC<{
   setAdditionalData,
   setLamdaDataFromApi,
   setCadastreDataFromApi,
+  results,
+  BoxData,
+  resultsLoading,
+  Documents,
 }) => {
   const router = useRouter();
 
@@ -96,6 +104,10 @@ const TomtHusmodell: React.FC<{
           HouseModelData={HouseModelData}
           supplierData={supplierData}
           pris={pris}
+          results={results}
+          BoxData={BoxData}
+          resultsLoading={resultsLoading}
+          Documents={Documents}
         />
       ) : (
         <Belop
@@ -145,8 +157,7 @@ const TomtHusmodell: React.FC<{
             </h2>
             <p className="text-black text-xs md:text-sm desktop:text-base text-center mb-4">
               Logg inn for å få tilgang til alt{" "}
-              <span className="font-bold">MinTomt</span> har å
-              by på.
+              <span className="font-bold">MinTomt</span> har å by på.
             </p>
             <Formik
               initialValues={{ terms_condition: false }}
