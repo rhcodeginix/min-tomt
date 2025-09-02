@@ -1495,17 +1495,13 @@ const PlotDetailPage: React.FC<{
                         );
                       })
                   ) : (
-                    <div>
+                    <>
                       {Array.from({ length: 4 }).map(
                         (_: any, index: number) => (
                           <div key={index}>
                             <div className="flex justify-between items-center mb-4 lg:mb-6">
                               <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
-                              <Image
-                                fetchPriority="auto"
-                                src={Ic_generelt}
-                                alt="image"
-                              />
+                              <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
                             </div>
 
                             <div className="flex flex-col gap-2 md:gap-3">
@@ -1516,7 +1512,7 @@ const PlotDetailPage: React.FC<{
                           </div>
                         )
                       )}
-                    </div>
+                    </>
                   )}
                 </div>
                 <div className="relative w-full md:w-1/2">
