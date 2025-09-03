@@ -571,8 +571,8 @@ const HusmodellDetail = () => {
                 setKommuneLoading(false);
               }
               if (r.name === "other-documents") {
-                setPlanDocuments(r.data?.planning_treatments ?? {});
-                setExemptions(r.data?.exemptions ?? {});
+                setPlanDocuments(r.data?.planning_treatments ?? []);
+                setExemptions(r.data?.exemptions ?? []);
               }
             }
           });
