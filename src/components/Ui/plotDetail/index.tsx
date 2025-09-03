@@ -22,10 +22,6 @@ import {
   NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
-// import { saveAs } from "file-saver";
-// import axios from "axios";
-// import { db } from "@/config/firebaseConfig";
-// import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const PlotDetailPage: React.FC<{
   loadingAdditionalData: any;
@@ -232,108 +228,30 @@ const PlotDetailPage: React.FC<{
   ];
   const [PlotActiveTab, setPlotActiveTab] = useState<string>(plotTabs[0].id);
 
-  // const handleDownload = (filePath: any) => {
-  //   try {
-  //     if (!filePath?.link) {
-  //       console.error("File path is missing!");
-  //       return;
-  //     }
-
-  //     const link = document.createElement("a");
-  //     link.href = filePath.link;
-  //     link.setAttribute(
-  //       "download",
-  //       filePath?.name?.toLowerCase().includes("unknown")
-  //         ? filePath?.link?.split("/").pop()?.split("?")[0] || "download.pdf"
-  //         : filePath?.name || "download.pdf"
-  //     );
-
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //   } catch (error) {
-  //     console.error("Error downloading file:", error);
-  //   }
-  // };
-
-  // const handleDownload = async (filePath: any) => {
-  //   if (!filePath?.link) return;
-
-  //   try {
-  //     // Attempt to fetch the file
-  //     const response = await fetch(filePath.link, { mode: "cors" });
-  //     if (!response.ok) throw new Error("Network response was not ok");
-
-  //     const blob = await response.blob();
-
-  //     saveAs(
-  //       blob,
-  //       filePath?.name?.toLowerCase().includes("unknown")
-  //         ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
-  //         : filePath?.name || "download.pdf"
-  //     );
-  //   } catch (err) {
-  //     console.warn("CORS blocked, opening in new tab instead.");
-  //     // Fallback: open in new tab
-  //     window.open(filePath.link, "_blank");
-  //   }
-  // };
-
   const handleDownload = async (filePath: any) => {
     if (!filePath?.link) return;
 
-    // try {
-    //   const response = await axios.get(filePath.link, {
-    //     responseType: "blob",
-    //   });
-
-    //   const blob = new Blob([response.data], { type: "application/pdf" });
-    //   const fileName = filePath.name || "download.pdf";
-
-    //   saveAs(blob, fileName);
-    // } catch (error) {
-    //   console.error("Download failed:", error);
-    // }
     try {
-      if (typeof window === "undefined") {
-        console.warn("Download not available during SSR");
-        return false;
+      if (!filePath?.link) {
+        console.error("File path is missing!");
+        return;
       }
-
-      const response = await fetch(filePath.link, {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const objectUrl = window.URL.createObjectURL(blob);
 
       const link = document.createElement("a");
-      link.href = objectUrl;
-      if (filePath.name) {
-        link.download = filePath.name;
-      }
-      link.style.display = "none";
+      link.href = filePath.link;
+      link.setAttribute(
+        "download",
+        filePath?.name?.toLowerCase().includes("unknown")
+          ? filePath?.link?.split("/").pop()?.split("?")[0] || "download.pdf"
+          : filePath?.name || "download.pdf"
+      );
 
       document.body.appendChild(link);
       link.click();
-
-      setTimeout(() => {
-        if (document.body.contains(link)) {
-          document.body.removeChild(link);
-        }
-        window.URL.revokeObjectURL(objectUrl);
-      }, 100);
-
-      return true;
-    } catch (error) {
-      console.error("Fetch download failed:", error);
-      return;
+      document.body.removeChild(link);
+    } catch (err) {
+      console.warn("CORS blocked, opening in new tab instead.");
+      window.open(filePath.link, "_blank");
     }
   };
 
