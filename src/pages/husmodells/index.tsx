@@ -499,40 +499,47 @@ const HusmodellDetail = () => {
           setKommunePlan(KommunePlanJson);
           setKommuneLoading(false);
 
-          const [res, resPlan] = await Promise.all([
-            fetch("https://iplotnor-areaplanner.hf.space/resolve", {
+          const res = await fetch(
+            "https://iplotnor-areaplanner.hf.space/resolve",
+            {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 step1_url: json?.plan_link,
                 api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
               }),
-            }),
-            fetch("https://iplotnor-areaplanner.hf.space/other-documents", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                step1_url: json?.plan_link,
-                api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
-              }),
-            }),
-          ]);
+            }
+          );
 
-          if (!res.ok || !resPlan.ok) {
-            throw new Error("Request failed");
+          if (!res.ok) {
+            throw new Error("Resolve request failed");
           }
 
-          const [data, dataPlan] = await Promise.all([
-            res.json(),
-            resPlan.json(),
-          ]);
-
-          setPlanDocuments(dataPlan?.planning_treatments);
-          setExemptions(dataPlan?.exemptions);
+          const data = await res.json();
           setDocuments(data);
-          if (dataPlan) {
-            setDocumentLoading(false);
-          }
+
+          fetch("https://iplotnor-areaplanner.hf.space/other-documents", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              step1_url: json?.plan_link,
+              api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
+            }),
+          })
+            .then((resPlan) => {
+              if (!resPlan.ok)
+                throw new Error("Other-documents request failed");
+              return resPlan.json();
+            })
+            .then((dataPlan) => {
+              setPlanDocuments(dataPlan?.planning_treatments);
+              setExemptions(dataPlan?.exemptions);
+              if (dataPlan) setDocumentLoading(false);
+            })
+            .catch((err) => {
+              console.error("Other-documents API failed:", err);
+              setDocumentLoading(false);
+            });
 
           if (data?.inputs?.internal_plan_id) {
             const uniqueId = String(data?.inputs?.internal_plan_id);
