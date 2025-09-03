@@ -22,8 +22,8 @@ import {
   NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
-import { saveAs } from "file-saver";
-import axios from "axios";
+// import { saveAs } from "file-saver";
+// import axios from "axios";
 // import { db } from "@/config/firebaseConfig";
 // import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -282,17 +282,48 @@ const PlotDetailPage: React.FC<{
   const handleDownload = async (filePath: any) => {
     if (!filePath?.link) return;
 
+    // try {
+    //   const response = await axios.get(filePath.link, {
+    //     responseType: "blob",
+    //   });
+
+    //   const blob = new Blob([response.data], { type: "application/pdf" });
+    //   const fileName = filePath.name || "download.pdf";
+
+    //   saveAs(blob, fileName);
+    // } catch (error) {
+    //   console.error("Download failed:", error);
+    // }
     try {
-      const response = await axios.get(filePath.link, {
-        responseType: "blob",
-      });
+      // Check if running in browser
+      if (typeof window === "undefined") {
+        console.warn("Download not available during SSR");
+        return false;
+      }
 
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const fileName = filePath.name || "download.pdf";
+      const link = document.createElement("a");
+      link.href = filePath.link;
+      if (filePath.name) {
+        link.download = filePath.name;
+      }
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.style.display = "none";
 
-      saveAs(blob, fileName);
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link);
+        }
+      }, 100);
+
+      return true;
     } catch (error) {
       console.error("Download failed:", error);
+      return false;
     }
   };
 
