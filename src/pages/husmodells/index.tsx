@@ -600,7 +600,7 @@ const HusmodellDetail = () => {
     fetchPlotData();
   }, [CadastreDataFromApi]);
 
-  const makeApiCall = async (apiCall: any, timeout = 150000) => {
+  const makeApiCall = async (apiCall: any, timeout = 500000) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
