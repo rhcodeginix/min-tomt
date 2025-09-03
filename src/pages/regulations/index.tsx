@@ -781,7 +781,7 @@ const Regulations = () => {
           const makeApiCall = async (apiCall: any, timeout = 150000) => {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeout);
-          
+
             try {
               const response = await fetch(apiCall.url, {
                 method: "POST",
@@ -789,41 +789,41 @@ const Regulations = () => {
                 body: JSON.stringify(apiCall.body),
                 signal: controller.signal,
               });
-          
+
               clearTimeout(timeoutId);
-          
+
               if (!response.ok) {
                 throw new Error(
                   `${apiCall.name} request failed with status ${response.status}`
                 );
               }
-          
+
               const data = await response.json();
-          
+
               switch (apiCall.name) {
                 case "kommuneplanens":
                   setKommunePlan(data);
                   setKommuneLoading(false);
                   break;
-          
+
                 case "resolve":
                   setDocuments(data);
                   await handleResolveData(data);
                   break;
-          
+
                 case "other-documents":
                   setPlanDocuments(data?.planning_treatments);
                   setExemptions(data?.exemptions);
                   break;
               }
-          
+
               successfulResponses.push({
                 name: apiCall.name,
                 success: true,
                 data: data,
                 error: null,
               });
-          
+
               return {
                 name: apiCall.name,
                 success: true,
@@ -832,7 +832,9 @@ const Regulations = () => {
               };
             } catch (error: any) {
               if (error.name === "AbortError") {
-                console.error(`${apiCall.name} API timed out after ${timeout}ms`);
+                console.error(
+                  `${apiCall.name} API timed out after ${timeout}ms`
+                );
               } else {
                 console.error(`${apiCall.name} API failed:`, error);
               }
@@ -844,7 +846,6 @@ const Regulations = () => {
               };
             }
           };
-          
 
           const handleResolveData = async (data: any) => {
             if (!data) return;
