@@ -22,7 +22,7 @@ import {
   NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
-import axios from "axios";
+import { saveAs } from "file-saver";
 // import { db } from "@/config/firebaseConfig";
 // import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -256,30 +256,22 @@ const PlotDetailPage: React.FC<{
   // };
 
   const handleDownload = async (filePath: any) => {
+    if (!filePath?.link) return;
+
     try {
-      if (!filePath?.link) {
-        console.error("File path is missing!");
-        return;
-      }
+      // Attempt to fetch the file
+      const response = await fetch(filePath.link);
+      const blob = await response.blob();
 
-      const response = await axios.get(filePath.link, {
-        responseType: "blob",
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filePath?.name?.toLowerCase().includes("unknown")
-        ? filePath?.link?.split("/").pop()?.split("?")[0] || "download.pdf"
-        : filePath?.name || "download.pdf";
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading file:", error);
+      saveAs(
+        blob,
+        filePath?.name?.toLowerCase().includes("unknown")
+          ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
+          : filePath?.name || "download.pdf"
+      );
+    } catch (err) {
+      console.warn("CORS blocked, opening in new tab instead.");
+      // Fallback: open in new tab
       window.open(filePath.link, "_blank");
     }
   };
