@@ -22,6 +22,7 @@ import {
   NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
+import axios from "axios";
 // import { db } from "@/config/firebaseConfig";
 // import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -230,27 +231,56 @@ const PlotDetailPage: React.FC<{
   ];
   const [PlotActiveTab, setPlotActiveTab] = useState<string>(plotTabs[0].id);
 
-  const handleDownload = (filePath: any) => {
+  // const handleDownload = (filePath: any) => {
+  //   try {
+  //     if (!filePath?.link) {
+  //       console.error("File path is missing!");
+  //       return;
+  //     }
+
+  //     const link = document.createElement("a");
+  //     link.href = filePath.link;
+  //     link.setAttribute(
+  //       "download",
+  //       filePath?.name?.toLowerCase().includes("unknown")
+  //         ? filePath?.link?.split("/").pop()?.split("?")[0] || "download.pdf"
+  //         : filePath?.name || "download.pdf"
+  //     );
+
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   } catch (error) {
+  //     console.error("Error downloading file:", error);
+  //   }
+  // };
+
+  const handleDownload = async (filePath: any) => {
     try {
       if (!filePath?.link) {
         console.error("File path is missing!");
         return;
       }
-  
+
+      const response = await axios.get(filePath.link, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
-      link.href = filePath.link;
-      link.setAttribute(
-        "download",
-        filePath?.name?.toLowerCase().includes("unknown")
-          ? filePath?.link?.split("/").pop()?.split("?")[0] || "download.pdf"
-          : filePath?.name || "download.pdf"
-      );
-  
+      link.href = url;
+      link.download = filePath?.name?.toLowerCase().includes("unknown")
+        ? filePath?.link?.split("/").pop()?.split("?")[0] || "download.pdf"
+        : filePath?.name || "download.pdf";
+
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading file:", error);
+      window.open(filePath.link, "_blank");
     }
   };
 
