@@ -805,8 +805,8 @@ const Regulations = () => {
           const data = existingDoc.data();
           setDocuments(data.resolve ?? {});
           setKommunePlan(data.kommuneplanens ?? {});
-          setPlanDocuments(data["other-documents"]?.planning_treatments ?? {});
-          setExemptions(data["other-documents"]?.exemptions ?? {});
+          setPlanDocuments(data["other-documents"]?.planning_treatments ?? []);
+          setExemptions(data["other-documents"]?.exemptions ?? []);
           setResult(data.rule ?? {});
           setResultLoading(false);
           setKommuneLoading(false);
