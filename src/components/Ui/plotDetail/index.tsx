@@ -295,35 +295,45 @@ const PlotDetailPage: React.FC<{
     //   console.error("Download failed:", error);
     // }
     try {
-      // Check if running in browser
       if (typeof window === "undefined") {
         console.warn("Download not available during SSR");
         return false;
       }
 
+      const response = await fetch(filePath.link, {
+        method: "GET",
+        mode: "cors",
+        cache: "no-cache",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const objectUrl = window.URL.createObjectURL(blob);
+
       const link = document.createElement("a");
-      link.href = filePath.link;
+      link.href = objectUrl;
       if (filePath.name) {
         link.download = filePath.name;
       }
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
       link.style.display = "none";
 
       document.body.appendChild(link);
       link.click();
 
-      // Cleanup
       setTimeout(() => {
         if (document.body.contains(link)) {
           document.body.removeChild(link);
         }
+        window.URL.revokeObjectURL(objectUrl);
       }, 100);
 
       return true;
     } catch (error) {
-      console.error("Download failed:", error);
-      return false;
+      console.error("Fetch download failed:", error);
+      return;
     }
   };
 
