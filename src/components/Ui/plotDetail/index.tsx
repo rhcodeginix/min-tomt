@@ -22,7 +22,8 @@ import {
   NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
-// import { saveAs } from "file-saver";
+import { saveAs } from "file-saver";
+import axios from "axios";
 // import { db } from "@/config/firebaseConfig";
 // import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -282,34 +283,19 @@ const PlotDetailPage: React.FC<{
     if (!filePath?.link) return;
 
     try {
-      const response = await fetch(filePath.link, {
-        method: "GET",
+      const response = await axios.get(filePath.link, {
+        responseType: "blob", // important for PDF
       });
 
-      if (!response.ok) throw new Error("Failed to fetch file");
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const fileName = filePath.name || "download.pdf";
 
-      const blob = await response.blob();
-
-      // Generate safe filename
-      const fileName = filePath?.name?.toLowerCase().includes("unknown")
-        ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
-        : filePath?.name || "download.pdf";
-
-      // Create a temporary URL
-      const url = window.URL.createObjectURL(blob);
-
-      // Create a link and click it
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Free memory
-      window.URL.revokeObjectURL(url);
+      saveAs(blob, fileName);
     } catch (error) {
-      console.error("Download failed", error);
+      console.error("Download failed:", error);
+
+      // fallback: open in new tab
+      window.open(filePath.link, "_blank");
     }
   };
 
