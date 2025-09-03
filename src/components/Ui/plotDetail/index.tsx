@@ -278,26 +278,40 @@ const PlotDetailPage: React.FC<{
   //   }
   // };
 
-  const handleDownload = (filePath: any) => {
+  const handleDownload = async (filePath: any) => {
     if (!filePath?.link) return;
   
-    // Generate a safe filename
-    const fileName =
-      filePath?.name?.toLowerCase().includes("unknown")
-        ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
-        : filePath?.name || "download.pdf";
+    try {
+      const response = await fetch(filePath.link, {
+        method: "GET",
+      });
   
-    // Create a hidden <a> element
-    const link = document.createElement("a");
-    link.href = filePath.link;
+      if (!response.ok) throw new Error("Failed to fetch file");
   
-    // This tells the browser to download instead of open
-    link.setAttribute("download", fileName);
-    link.setAttribute("target", "_blank");
+      const blob = await response.blob();
   
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      // Generate safe filename
+      const fileName =
+        filePath?.name?.toLowerCase().includes("unknown")
+          ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
+          : filePath?.name || "download.pdf";
+  
+      // Create a temporary URL
+      const url = window.URL.createObjectURL(blob);
+  
+      // Create a link and click it
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      // Free memory
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download failed", error);
+    }
   };
   
 
