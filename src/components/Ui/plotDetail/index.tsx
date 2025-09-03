@@ -260,7 +260,9 @@ const PlotDetailPage: React.FC<{
 
     try {
       // Attempt to fetch the file
-      const response = await fetch(filePath.link);
+      const response = await fetch(filePath.link, { mode: "cors" });
+      if (!response.ok) throw new Error("Network response was not ok");
+
       const blob = await response.blob();
 
       saveAs(
