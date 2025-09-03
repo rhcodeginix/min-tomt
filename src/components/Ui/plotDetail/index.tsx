@@ -284,7 +284,7 @@ const PlotDetailPage: React.FC<{
 
     try {
       const response = await axios.get(filePath.link, {
-        responseType: "blob", // important for PDF
+        responseType: "blob",
       });
 
       const blob = new Blob([response.data], { type: "application/pdf" });
@@ -293,9 +293,6 @@ const PlotDetailPage: React.FC<{
       saveAs(blob, fileName);
     } catch (error) {
       console.error("Download failed:", error);
-
-      // fallback: open in new tab
-      window.open(filePath.link, "_blank");
     }
   };
 
