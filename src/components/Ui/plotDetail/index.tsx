@@ -22,7 +22,7 @@ import {
   NotepadText,
 } from "lucide-react";
 import NorkartMap from "@/components/map";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 // import { db } from "@/config/firebaseConfig";
 // import { doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -255,28 +255,51 @@ const PlotDetailPage: React.FC<{
   //   }
   // };
 
-  const handleDownload = async (filePath: any) => {
+  // const handleDownload = async (filePath: any) => {
+  //   if (!filePath?.link) return;
+
+  //   try {
+  //     // Attempt to fetch the file
+  //     const response = await fetch(filePath.link, { mode: "cors" });
+  //     if (!response.ok) throw new Error("Network response was not ok");
+
+  //     const blob = await response.blob();
+
+  //     saveAs(
+  //       blob,
+  //       filePath?.name?.toLowerCase().includes("unknown")
+  //         ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
+  //         : filePath?.name || "download.pdf"
+  //     );
+  //   } catch (err) {
+  //     console.warn("CORS blocked, opening in new tab instead.");
+  //     // Fallback: open in new tab
+  //     window.open(filePath.link, "_blank");
+  //   }
+  // };
+
+  const handleDownload = (filePath: any) => {
     if (!filePath?.link) return;
-
-    try {
-      // Attempt to fetch the file
-      const response = await fetch(filePath.link, { mode: "cors" });
-      if (!response.ok) throw new Error("Network response was not ok");
-
-      const blob = await response.blob();
-
-      saveAs(
-        blob,
-        filePath?.name?.toLowerCase().includes("unknown")
-          ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
-          : filePath?.name || "download.pdf"
-      );
-    } catch (err) {
-      console.warn("CORS blocked, opening in new tab instead.");
-      // Fallback: open in new tab
-      window.open(filePath.link, "_blank");
-    }
+  
+    // Generate a safe filename
+    const fileName =
+      filePath?.name?.toLowerCase().includes("unknown")
+        ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
+        : filePath?.name || "download.pdf";
+  
+    // Create a hidden <a> element
+    const link = document.createElement("a");
+    link.href = filePath.link;
+  
+    // This tells the browser to download instead of open
+    link.setAttribute("download", fileName);
+    link.setAttribute("target", "_blank");
+  
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
+  
 
   const DocumentCard = ({
     doc,
