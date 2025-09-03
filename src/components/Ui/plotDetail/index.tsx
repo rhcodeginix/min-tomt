@@ -280,25 +280,24 @@ const PlotDetailPage: React.FC<{
 
   const handleDownload = async (filePath: any) => {
     if (!filePath?.link) return;
-  
+
     try {
       const response = await fetch(filePath.link, {
         method: "GET",
       });
-  
+
       if (!response.ok) throw new Error("Failed to fetch file");
-  
+
       const blob = await response.blob();
-  
+
       // Generate safe filename
-      const fileName =
-        filePath?.name?.toLowerCase().includes("unknown")
-          ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
-          : filePath?.name || "download.pdf";
-  
+      const fileName = filePath?.name?.toLowerCase().includes("unknown")
+        ? filePath?.link.split("/").pop()?.split("?")[0] || "download.pdf"
+        : filePath?.name || "download.pdf";
+
       // Create a temporary URL
       const url = window.URL.createObjectURL(blob);
-  
+
       // Create a link and click it
       const link = document.createElement("a");
       link.href = url;
@@ -306,14 +305,13 @@ const PlotDetailPage: React.FC<{
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-  
+
       // Free memory
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download failed", error);
     }
   };
-  
 
   const DocumentCard = ({
     doc,
