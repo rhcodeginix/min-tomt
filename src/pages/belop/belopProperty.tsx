@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
-import NorkartMap from "@/components/map";
+// import NorkartMap from "@/components/map";
+import GoogleMapComponent from "@/components/Ui/map";
 
 export function formatPrice(price: any) {
   if (typeof price === "string" && /[\s\u00A0]/.test(price)) {
@@ -194,12 +195,18 @@ const BelopProperty: React.FC<{
                         <div className="w-[37%] rounded-[8px] overflow-hidden h-[160px]">
                           {property?.plot?.lamdaDataFromApi?.coordinates
                             ?.convertedCoordinates && (
-                            <NorkartMap
+                            // <NorkartMap
+                            //   coordinates={
+                            //     property?.plot?.lamdaDataFromApi?.coordinates
+                            //       ?.convertedCoordinates
+                            //   }
+                            //   MAX_ZOOM={20}
+                            // />
+                            <GoogleMapComponent
                               coordinates={
                                 property?.plot?.lamdaDataFromApi?.coordinates
                                   ?.convertedCoordinates
                               }
-                              MAX_ZOOM={20}
                             />
                           )}
                         </div>

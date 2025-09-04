@@ -32,7 +32,8 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRouter } from "next/router";
-import NorkartMap from "@/components/map";
+// import NorkartMap from "@/components/map";
+import GoogleMapComponent from "@/components/Ui/map";
 
 const FasiliteterArray: any = [
   { name: "Fiskemuligheter" },
@@ -1097,9 +1098,12 @@ const AddPlotForm = () => {
                         <>
                           <div className="bg-[#EFF1F5] w-full h-[350px] rounded-[8px] overflow-hidden mt-2 relative">
                             {values?.map_image && (
-                              <NorkartMap
+                              // <NorkartMap
+                              //   coordinates={values?.map_image}
+                              //   MAX_ZOOM={20}
+                              // />
+                              <GoogleMapComponent
                                 coordinates={values?.map_image}
-                                MAX_ZOOM={20}
                               />
                             )}
                           </div>

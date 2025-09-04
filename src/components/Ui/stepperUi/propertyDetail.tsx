@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useAddress } from "@/context/addressContext";
 import Ic_Step_icon from "@/public/images/Ic_Step_icon.svg";
 import Image from "next/image";
-import NorkartMap from "@/components/map";
 import { useRouter } from "next/router";
+import GoogleMapComponent from "../map";
 
 export function toCamelCase(str: any) {
   if (!str) return "";
@@ -55,11 +55,16 @@ const PropertyDetail: React.FC<any> = ({
             ) : (
               <>
                 {lamdaDataFromApi?.coordinates?.convertedCoordinates && (
-                  <NorkartMap
+                  // <NorkartMap
+                  //   coordinates={
+                  //     lamdaDataFromApi?.coordinates?.convertedCoordinates
+                  //   }
+                  //   MAX_ZOOM={18}
+                  // />
+                  <GoogleMapComponent
                     coordinates={
                       lamdaDataFromApi?.coordinates?.convertedCoordinates
                     }
-                    MAX_ZOOM={18}
                   />
                 )}
               </>

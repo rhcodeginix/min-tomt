@@ -21,7 +21,7 @@ import {
   NotebookText,
   NotepadText,
 } from "lucide-react";
-import NorkartMap from "@/components/map";
+import GoogleMapComponent from "../map";
 
 const PlotDetailPage: React.FC<{
   loadingAdditionalData: any;
@@ -1401,11 +1401,16 @@ const PlotDetailPage: React.FC<{
               ) : (
                 <>
                   {lamdaDataFromApi?.coordinates?.convertedCoordinates && (
-                    <NorkartMap
+                    // <NorkartMap
+                    //   coordinates={
+                    //     lamdaDataFromApi?.coordinates?.convertedCoordinates
+                    //   }
+                    //   MAX_ZOOM={18}
+                    // />
+                    <GoogleMapComponent
                       coordinates={
                         lamdaDataFromApi?.coordinates?.convertedCoordinates
                       }
-                      MAX_ZOOM={18}
                     />
                   )}
                 </>

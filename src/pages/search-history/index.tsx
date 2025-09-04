@@ -1,6 +1,7 @@
 "use client";
+import GoogleMapComponent from "@/components/Ui/map";
 import SideSpaceContainer from "@/components/common/sideSpace";
-import NorkartMap from "@/components/map";
+// import NorkartMap from "@/components/map";
 import { auth, db } from "@/config/firebaseConfig";
 import { useAddress } from "@/context/addressContext";
 import { onAuthStateChanged } from "firebase/auth";
@@ -122,12 +123,18 @@ const index = () => {
                     <div className="h-[300px] md:h-[350px] cursor-pointer">
                       {property?.lamdaDataFromApi?.coordinates
                         ?.convertedCoordinates && (
-                        <NorkartMap
+                        // <NorkartMap
+                        //   coordinates={
+                        //     property?.lamdaDataFromApi?.coordinates
+                        //       ?.convertedCoordinates
+                        //   }
+                        //   MAX_ZOOM={20}
+                        // />
+                        <GoogleMapComponent
                           coordinates={
                             property?.lamdaDataFromApi?.coordinates
                               ?.convertedCoordinates
                           }
-                          MAX_ZOOM={20}
                         />
                       )}
                     </div>

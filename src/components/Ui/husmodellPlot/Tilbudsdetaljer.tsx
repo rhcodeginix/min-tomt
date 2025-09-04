@@ -4,7 +4,7 @@ import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import Loader from "@/components/Loader";
 import { formatCurrency } from "../RegulationHusmodell/Illustrasjoner";
-import NorkartMap from "@/components/map";
+import GoogleMapComponent from "../map";
 
 export function addDaysToDate(dateString: any, days: any) {
   let date = new Date(dateString);
@@ -259,12 +259,18 @@ const Tilbudsdetaljer: React.FC<{ isRemove?: any }> = ({ isRemove }) => {
               <div className="w-1/2 sm:w-[37%] rounded-[8px] h-full overflow-hidden">
                 {finalData?.plot?.lamdaDataFromApi?.coordinates
                   ?.convertedCoordinates && (
-                  <NorkartMap
+                  // <NorkartMap
+                  //   coordinates={
+                  //     finalData?.plot?.lamdaDataFromApi?.coordinates
+                  //       ?.convertedCoordinates
+                  //   }
+                  //   MAX_ZOOM={20}
+                  // />
+                  <GoogleMapComponent
                     coordinates={
                       finalData?.plot?.lamdaDataFromApi?.coordinates
                         ?.convertedCoordinates
                     }
-                    MAX_ZOOM={20}
                   />
                 )}
               </div>

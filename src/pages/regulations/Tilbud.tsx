@@ -13,7 +13,7 @@ import "swiper/css/pagination";
 import { v4 as uuidv4 } from "uuid";
 import LeadsBox from "@/components/Ui/husmodellPlot/leadsBox";
 import { useRouter } from "next/router";
-import NorkartMap from "@/components/map";
+// import NorkartMap from "@/components/map";
 import {
   Timestamp,
   addDoc,
@@ -30,6 +30,7 @@ import { auth, db } from "@/config/firebaseConfig";
 import { toast } from "react-hot-toast";
 import { addDaysToDate } from "@/components/Ui/husmodellPlot/Tilbudsdetaljer";
 import { onAuthStateChanged } from "firebase/auth";
+import GoogleMapComponent from "@/components/Ui/map";
 
 const Tilbud: React.FC<{
   handleNext: any;
@@ -452,11 +453,16 @@ const Tilbud: React.FC<{
                   </div>
                   <div className="w-[37%] rounded-[8px] overflow-hidden h-full">
                     {lamdaDataFromApi?.coordinates?.convertedCoordinates && (
-                      <NorkartMap
+                      // <NorkartMap
+                      //   coordinates={
+                      //     lamdaDataFromApi?.coordinates?.convertedCoordinates
+                      //   }
+                      //   MAX_ZOOM={20}
+                      // />
+                      <GoogleMapComponent
                         coordinates={
                           lamdaDataFromApi?.coordinates?.convertedCoordinates
                         }
-                        MAX_ZOOM={20}
                       />
                     )}
                   </div>

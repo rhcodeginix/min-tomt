@@ -13,12 +13,13 @@ import {
 import { db } from "@/config/firebaseConfig";
 import { useRouter } from "next/router";
 import { formatPrice } from "@/pages/belop/belopProperty";
-import NorkartMap from "@/components/map";
+// import NorkartMap from "@/components/map";
 import Image from "next/image";
 import Ic_area1 from "@/public/images/Ic_area1.svg";
 import Ic_area2 from "@/public/images/Ic_area2.svg";
 import Ic_Bya from "@/public/images/Ic_Bya.svg";
 import Ic_Bya_m2 from "@/public/images/Ic_Bya_m2.svg";
+import GoogleMapComponent from "@/components/Ui/map";
 
 const Property: React.FC = () => {
   const router = useRouter();
@@ -274,12 +275,18 @@ const Property: React.FC = () => {
                       <div className="w-full h-[200px] md:h-[234px] rounded-[8px] overflow-hidden">
                         {property?.lamdaDataFromApi?.coordinates
                           ?.convertedCoordinates && (
-                          <NorkartMap
+                          // <NorkartMap
+                          //   coordinates={
+                          //     property?.lamdaDataFromApi?.coordinates
+                          //       ?.convertedCoordinates
+                          //   }
+                          //   MAX_ZOOM={20}
+                          // />
+                          <GoogleMapComponent
                             coordinates={
                               property?.lamdaDataFromApi?.coordinates
                                 ?.convertedCoordinates
                             }
-                            MAX_ZOOM={20}
                           />
                         )}
                       </div>

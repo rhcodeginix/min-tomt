@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import { formatPrice } from "@/pages/belop/belopProperty";
-import NorkartMap from "@/components/map";
+import GoogleMapComponent from "../../map";
 
 const PlotProperty: React.FC<{
   isLoading: any;
@@ -203,12 +203,18 @@ const PlotProperty: React.FC<{
                         <div className="w-[37%] rounded-[8px] overflow-hidden h-[160px]">
                           {property?.plot?.lamdaDataFromApi?.coordinates
                             ?.convertedCoordinates && (
-                            <NorkartMap
+                            // <NorkartMap
+                            //   coordinates={
+                            //     property?.plot?.lamdaDataFromApi?.coordinates
+                            //       ?.convertedCoordinates
+                            //   }
+                            //   MAX_ZOOM={20}
+                            // />
+                            <GoogleMapComponent
                               coordinates={
                                 property?.plot?.lamdaDataFromApi?.coordinates
                                   ?.convertedCoordinates
                               }
-                              MAX_ZOOM={20}
                             />
                           )}
                         </div>
