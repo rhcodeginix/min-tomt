@@ -136,7 +136,7 @@ const Property: React.FC = () => {
             }
             if (data && data?.rule_book) {
               const responseData = await fetch(
-                "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+                "https://iplotnor-norwaypropertyagent.hf.space/extract_json_direct_gpt",
                 {
                   method: "POST",
                   headers: {

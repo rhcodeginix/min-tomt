@@ -836,8 +836,8 @@ const Regulations = () => {
           // setResult(result?.data);
 
           const extractResult = await makeApiCall({
-            name: "extract_json",
-            url: "https://iplotnor-norwaypropertyagent.hf.space/extract_json",
+            name: "extract_json_direct_gpt",
+            url: "https://iplotnor-norwaypropertyagent.hf.space/extract_json_direct_gpt",
             body: {
               pdf_url: resolveResult.data?.rule_book?.link,
               plot_size_m2:
@@ -898,6 +898,26 @@ const Regulations = () => {
               }
             }
           });
+
+          const kommunePlanId =
+            firebaseData?.kommuneplanens?.kommuneplan_info?.id;
+          const kommunePlansDocRef = doc(
+            db,
+            "kommune_plans",
+            String(kommunePlanId)
+          );
+          const existingKommuneDoc = await getDoc(kommunePlansDocRef);
+
+          const uniquekommuneId = String(kommunePlanId);
+
+          if (!existingKommuneDoc.exists()) {
+            await setDoc(kommunePlansDocRef, {
+              id: uniquekommuneId,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              data: firebaseData?.kommuneplanens,
+            });
+          }
 
           const uniqueId = String(internalPlanId);
 
