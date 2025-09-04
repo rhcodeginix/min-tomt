@@ -1,11 +1,20 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
+// const getRandomColor = (index: number) => {
+//   const baseHue = 260;
+//   const variation = (index * 20) % 40;
+//   return `hsl(${baseHue + variation}, 65%, ${50 + (index % 10)}%)`;
+// };
+
 const getRandomColor = (index: number) => {
-  const baseHue = 260;
-  const variation = (index * 20) % 40;
-  return `hsl(${baseHue + variation}, 65%, ${50 + (index % 10)}%)`;
+  const baseHue = 170;
+  const variation = (index * 15) % 40;
+  const saturation = 90;
+  const lightness = 25 + (index % 10) * 3;
+  return `hsl(${baseHue + variation}, ${saturation}%, ${lightness}%)`;
 };
+
 const EierinformasjonChart: React.FC<{
   chartData: any;
   loadingAdditionalData: any;
