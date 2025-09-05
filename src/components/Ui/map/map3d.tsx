@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 // import "mapbox-gl/dist/mapbox-gl.css";
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoicmhzaHVrbGEiLCJhIjoiY21mNWR1bXYyMDQ4NzJrczUwN2N2bHFpeiJ9.2gdYH9Q_EQWbz1Wo6CC-7A";
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAP_BOX;
 
 interface Map3DProps {
   coordinates?: [number, number];

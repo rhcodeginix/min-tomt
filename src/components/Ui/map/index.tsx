@@ -163,8 +163,7 @@ import Ic_close_darkgreen from "@/public/images/Ic_close_darkgreen.svg";
 import Map3D from "./map3d";
 import Ic_logo_green from "@/public/images/Ic_logo_green.svg";
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoicmhzaHVrbGEiLCJhIjoiY21mNWR1bXYyMDQ4NzJrczUwN2N2bHFpeiJ9.2gdYH9Q_EQWbz1Wo6CC-7A";
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAP_BOX;
 
 interface MapComponentProps {
   coordinates: any;
