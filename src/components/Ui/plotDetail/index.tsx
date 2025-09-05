@@ -290,6 +290,29 @@ const PlotDetailPage: React.FC<{
     </div>
   );
 
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const toggleRuleDropdown = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+  const dropdownRuleRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRuleRef.current &&
+        !dropdownRuleRef.current.contains(event.target as Node)
+      ) {
+        setOpenIndex(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <div className="rounded-lg border border-[#EFF1F5] w-full">
@@ -1784,7 +1807,11 @@ const PlotDetailPage: React.FC<{
                             {KommuneRule?.rules.map(
                               (item: any, index: number) => {
                                 return (
-                                  <div key={index}>
+                                  <div
+                                    key={index}
+                                    className="relative"
+                                    ref={dropdownRuleRef}
+                                  >
                                     <div className="flex items-start gap-2 md:gap-3 text-secondary text-sm lg:text-base">
                                       <Image
                                         fetchPriority="auto"
@@ -1792,7 +1819,21 @@ const PlotDetailPage: React.FC<{
                                         alt="image"
                                       />
                                       <span>{item?.rule}</span>
+                                      <Image
+                                        fetchPriority="auto"
+                                        src={Ic_info_circle}
+                                        alt="info"
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                          toggleRuleDropdown(index)
+                                        }
+                                      />
                                     </div>
+                                    {openIndex === index && (
+                                      <div className="top-3 z-100 bg-white shadow-shadow1 p-3 rounded-lg text-sm text-secondary absolute right-0 w-auto max-w-64">
+                                        {item.description}
+                                      </div>
+                                    )}
                                   </div>
                                 );
                               }
