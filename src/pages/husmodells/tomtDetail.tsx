@@ -44,6 +44,8 @@ const TomtHouseDetails: React.FC<{
   documentLoading: any;
   KommunePlan: any;
   KommuneLoading: any;
+  KommuneRule: any;
+  KommuneRuleLoading: any;
 }> = ({
   handleNext,
   HouseModelData,
@@ -65,6 +67,8 @@ const TomtHouseDetails: React.FC<{
   documentLoading,
   KommunePlan,
   KommuneLoading,
+  KommuneRule,
+  KommuneRuleLoading,
 }) => {
   const router = useRouter();
   const { homePage } = router.query;
@@ -313,6 +317,8 @@ const TomtHouseDetails: React.FC<{
                 documentLoading={documentLoading}
                 KommunePlan={KommunePlan}
                 KommuneLoading={KommuneLoading}
+                KommuneRule={KommuneRule}
+                KommuneRuleLoading={KommuneRuleLoading}
               />
             </div>
             <div className={`${activeTab === "house" ? "block" : "hidden"}`}>

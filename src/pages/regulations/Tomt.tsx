@@ -64,6 +64,8 @@ const Tomt: React.FC<{
   documentLoading: any;
   KommunePlan: any;
   KommuneLoading: any;
+  KommuneRule: any;
+  KommuneRuleLoading: any;
 }> = ({
   handleNext,
   lamdaDataFromApi,
@@ -84,6 +86,8 @@ const Tomt: React.FC<{
   documentLoading,
   KommunePlan,
   KommuneLoading,
+  KommuneRule,
+  KommuneRuleLoading,
 }) => {
   const router = useRouter();
   const popup = useRef<HTMLDivElement>(null);
@@ -199,6 +203,8 @@ const Tomt: React.FC<{
               documentLoading={documentLoading}
               KommunePlan={KommunePlan}
               KommuneLoading={KommuneLoading}
+              KommuneRule={KommuneRule}
+              KommuneRuleLoading={KommuneRuleLoading}
             />
           </div>
           {!loginUser && (

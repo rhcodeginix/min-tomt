@@ -16,6 +16,7 @@ import {
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { useUserLayoutContext } from "@/context/userLayoutContext";
@@ -445,6 +446,8 @@ const HusmodellDetail = () => {
   const [documentLoading, setDocumentLoading] = useState(true);
   const [KommunePlan, setKommunePlan] = useState<any>(null);
   const [KommuneLoading, setKommuneLoading] = useState(true);
+  const [KommuneRule, setKommuneRule] = useState<any>(null);
+  const [KommuneRuleLoading, setKommuneRuleLoading] = useState<any>(false);
 
   useEffect(() => {
     const fetchPlotData = async () => {
@@ -506,15 +509,44 @@ const HusmodellDetail = () => {
 
         if (existingDoc.exists()) {
           const data = existingDoc.data();
-          setDocuments(data.resolve ?? {});
-          setKommunePlan(data.kommuneplanens ?? {});
+          setDocuments(data?.resolve ?? {});
+          setKommunePlan(data?.kommuneplanens ?? {});
           setPlanDocuments(data["other-documents"]?.planning_treatments ?? []);
           setExemptions(data["other-documents"]?.exemptions ?? []);
           setResult(data?.extract_json_direct_gpt?.data ?? {});
           setResultLoading(false);
           setKommuneLoading(false);
+
+          if (data?.kommuneplanens?.rule_book?.link && !data?.kommune_rules) {
+            const kommuneRuleRes = await fetch(
+              "https://iplotnor-norwaypropertyagent.hf.space/extract_rules",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  url: data.kommuneplanens.rule_book.link,
+                }),
+              }
+            );
+
+            const kommuneRuleJson = await kommuneRuleRes.json();
+
+            await updateDoc(plansDocRef, {
+              kommune_rules: kommuneRuleJson,
+              updatedAt: new Date().toISOString(),
+            });
+
+            setKommuneRule(kommuneRuleJson ?? {});
+          } else {
+            setKommuneRule(data?.kommune_rules ?? {});
+          }
+
+          setKommuneRuleLoading(false);
           return;
         }
+
         if (
           resolveResult.data?.rule_book &&
           resolveResult.data?.rule_book?.link
@@ -579,6 +611,28 @@ const HusmodellDetail = () => {
             }
           });
 
+          let kommuneRulesArr: any;
+          if (firebaseData?.kommuneplanens?.rule_book?.link) {
+            const kommuneRule = await fetch(
+              "https://iplotnor-norwaypropertyagent.hf.space/extract_rules",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  url: firebaseData.kommuneplanens.rule_book.link,
+                }),
+              }
+            );
+
+            const kommuneRuleJson = await kommuneRule.json();
+
+            kommuneRulesArr = kommuneRuleJson;
+            setKommuneRule(kommuneRuleJson ?? {});
+            setKommuneRuleLoading(false);
+          }
+
           const kommunePlanId =
             firebaseData?.kommuneplanens?.kommuneplan_info?.id;
           const kommunePlansDocRef = doc(
@@ -607,6 +661,7 @@ const HusmodellDetail = () => {
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
               documents: { ...resolveResult.data },
+              kommune_rules: kommuneRulesArr,
               ...firebaseData,
             });
           }
@@ -644,14 +699,18 @@ const HusmodellDetail = () => {
       const data = await response.json();
 
       switch (apiCall.name) {
+        case "extract_json_direct_gpt":
+          setResult(data?.data?.data ?? {});
+          break;
+
         case "kommuneplanens":
-          setKommunePlan(data);
+          setKommunePlan(data ?? {});
           setKommuneLoading(false);
           break;
 
         case "other-documents":
-          setPlanDocuments(data?.planning_treatments);
-          setExemptions(data?.exemptions);
+          setPlanDocuments(data?.planning_treatments ?? []);
+          setExemptions(data?.exemptions ?? []);
           break;
       }
 
@@ -662,11 +721,30 @@ const HusmodellDetail = () => {
         error: null,
       };
     } catch (error: any) {
+      clearTimeout(timeoutId);
+
       if (error.name === "AbortError") {
         console.error(`${apiCall.name} API timed out after ${timeout}ms`);
       } else {
         console.error(`${apiCall.name} API failed:`, error);
       }
+
+      switch (apiCall.name) {
+        case "extract_json_direct_gpt":
+          setResult({});
+          break;
+
+        case "kommuneplanens":
+          setKommunePlan({});
+          setKommuneLoading(false);
+          break;
+
+        case "other-documents":
+          setPlanDocuments([]);
+          setExemptions([]);
+          break;
+      }
+
       return {
         name: apiCall.name,
         success: false,
@@ -748,6 +826,8 @@ const HusmodellDetail = () => {
           documentLoading={documentLoading}
           KommunePlan={KommunePlan}
           KommuneLoading={KommuneLoading}
+          KommuneRule={KommuneRule}
+          KommuneRuleLoading={KommuneRuleLoading}
         />
       ),
     },
