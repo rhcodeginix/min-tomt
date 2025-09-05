@@ -103,7 +103,7 @@ const HouseModelSingleProperty: React.FC<{
   }, []);
   useEffect(() => {
     const fetchData = async () => {
-      if (!user || !plotId || !id) return;
+      if (!plotId || !id || !user?.id) return;
 
       const queryParams = new URLSearchParams(window.location.search);
       const isEmptyPlot = queryParams.get("empty");
@@ -115,7 +115,7 @@ const HouseModelSingleProperty: React.FC<{
         query(
           collection(db, "leads_from_supplier"),
           where("plotId", "==", String(plotId)),
-          where("husmodellId", "==", id),
+          where("husmodellId", "==", String(id)),
           where("created_by", "==", user.id)
         )
       );

@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GoogleMap, Polygon, useJsApiLoader } from "@react-google-maps/api";
 
-const GoogleMapComponent: React.FC<{ coordinates: any }> = ({
+const GoogleMapComponent: React.FC<{ coordinates: any; zoom?: any }> = ({
   coordinates,
+  zoom,
 }) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
 
@@ -112,22 +113,22 @@ const GoogleMapComponent: React.FC<{ coordinates: any }> = ({
 
     if (map) {
       map.panTo(clickedLatLng);
-      map.setZoom(12);
+      // map.setZoom(12);
     }
   };
 
-  useEffect(() => {
-    if (map && bounds) {
-      const googleBounds = new google.maps.LatLngBounds(
-        { lat: bounds.south, lng: bounds.west },
-        { lat: bounds.north, lng: bounds.east }
-      );
+  // useEffect(() => {
+  //   if (map && bounds) {
+  //     const googleBounds = new google.maps.LatLngBounds(
+  //       { lat: bounds.south, lng: bounds.west },
+  //       { lat: bounds.north, lng: bounds.east }
+  //     );
 
-      window.setTimeout(() => {
-        map.fitBounds(googleBounds);
-      }, 500);
-    }
-  }, [map, bounds]);
+  //     // window.setTimeout(() => {
+  //     //   map.fitBounds(googleBounds);
+  //     // }, 500);
+  //   }
+  // }, [map, bounds]);
 
   if (!isLoaded) return <div className="text-center py-4">Loading map...</div>;
 
@@ -138,6 +139,7 @@ const GoogleMapComponent: React.FC<{ coordinates: any }> = ({
       onLoad={onLoad}
       onUnmount={onUnmount}
       options={mapOptions}
+      zoom={zoom ? zoom : 19}
     >
       {coordinates && coordinates.length > 0 && (
         <Polygon

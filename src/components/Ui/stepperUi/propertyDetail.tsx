@@ -49,7 +49,7 @@ const PropertyDetail: React.FC<any> = ({
     <>
       <div className="flex flex-col laptop:flex-row laptop:items-center gap-4 laptop:justify-between">
         <div className="flex flex-col sm:flex-row gap-3 md:gap-5 sm:items-center">
-          <div className="rounded-[12px] overflow-hidden w-full sm:w-[132px] h-[200px] sm:h-[100px]">
+          <div className="rounded-[12px] overflow-hidden w-full sm:w-[135px] h-[200px] sm:h-[130px]">
             {loading ? (
               <div className="w-full h-full rounded-lg custom-shimmer"></div>
             ) : (
@@ -65,6 +65,7 @@ const PropertyDetail: React.FC<any> = ({
                     coordinates={
                       lamdaDataFromApi?.coordinates?.convertedCoordinates
                     }
+                    zoom={18}
                   />
                 )}
               </>
