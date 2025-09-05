@@ -65,7 +65,7 @@ const PropertyDetail: React.FC<any> = ({
                     coordinates={
                       lamdaDataFromApi?.coordinates?.convertedCoordinates
                     }
-                    zoom={18}
+                    // zoom={18}
                   />
                 )}
               </>
