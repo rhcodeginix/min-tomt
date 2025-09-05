@@ -5,7 +5,7 @@ import mapboxgl from "mapbox-gl";
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAP_BOX;
 
 interface Map3DProps {
-  coordinates?: [number, number];
+  coordinates?: any;
 }
 
 const Map3D: React.FC<Map3DProps> = ({ coordinates }) => {
@@ -14,10 +14,11 @@ const Map3D: React.FC<Map3DProps> = ({ coordinates }) => {
   const exagRef = useRef<HTMLInputElement | null>(null);
   const opacityRef = useRef<HTMLInputElement | null>(null);
 
+
   const START: any = {
     center:
-      coordinates && coordinates.length === 2
-        ? [coordinates[0], coordinates[1]]
+      coordinates && coordinates.length > 0
+        ? [coordinates[0].longitude, coordinates[1].latitude]
         : [10.501013344017752, 59.75169381162908],
     zoom: 17.6,
     pitch: 45,
