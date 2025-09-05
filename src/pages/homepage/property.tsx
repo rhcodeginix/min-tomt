@@ -97,6 +97,11 @@ const Property: React.FC = () => {
             }
           );
           const json = await response.json();
+          if (!json?.plan_link) {
+            setResult({});
+            setBoxDataList([]);
+            return;
+          }
           results.push(json);
 
           if (json && json?.plan_link) {
