@@ -207,10 +207,10 @@ const PlotDetailPage: React.FC<{
     }
     setSelectedImage(image);
   };
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<any>("Eiendomsinformasjon");
 
-  const toggleAccordion = () => {
-    setIsOpen(!isOpen);
+  const toggleAccordion = (key: string) => {
+    setIsOpen((prev: any) => (prev === key ? "" : key));
   };
 
   const plotTabs: any = [
@@ -225,8 +225,8 @@ const PlotDetailPage: React.FC<{
       icon: <NotepadText />,
     },
     {
-      id: "Unntak",
-      label: "Unntak",
+      id: "Dispensasjoner",
+      label: "Dispensasjoner",
       icon: <BadgeX />,
     },
     {
@@ -254,6 +254,8 @@ const PlotDetailPage: React.FC<{
           ? filePath?.link?.split("/").pop()?.split("?")[0] || "download.pdf"
           : filePath?.name || "download.pdf"
       );
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
 
       document.body.appendChild(link);
       link.click();
@@ -323,7 +325,7 @@ const PlotDetailPage: React.FC<{
       <div className="rounded-lg border border-[#EFF1F5] w-full">
         <div
           className="flex items-center justify-between gap-2 cursor-pointer p-4 md:p-5"
-          onClick={toggleAccordion}
+          onClick={() => toggleAccordion("Eiendomsinformasjon")}
         >
           {loadingLamdaData ? (
             <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
@@ -332,7 +334,7 @@ const PlotDetailPage: React.FC<{
               Eiendomsinformasjon
             </h3>
           )}
-          {isOpen ? (
+          {isOpen === "Eiendomsinformasjon" ? (
             <Image fetchPriority="auto" src={Ic_chevron_up} alt="arrow" />
           ) : (
             <Image
@@ -344,7 +346,7 @@ const PlotDetailPage: React.FC<{
           )}
         </div>
         <div
-          className={`${isOpen ? "block border-t border-[#EFF1F5] p-3.5 md:p-5" : "hidden"}`}
+          className={`${isOpen === "Eiendomsinformasjon" ? "block border-t border-[#EFF1F5] p-3.5 md:p-5" : "hidden"}`}
         >
           <div className="flex flex-col desktop:flex-row gap-4 lg:gap-6 justify-between">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-5 desktop:gap-6">
@@ -1451,6 +1453,33 @@ const PlotDetailPage: React.FC<{
           </div>
         </div>
       </div>
+      {/* <div className="rounded-lg border border-[#EFF1F5] w-full mt-[44px]">
+        <div
+          className="flex items-center justify-between gap-2 cursor-pointer p-4 md:p-5"
+          onClick={() => toggleAccordion("Arkitekturplan")}
+        >
+          {loadingLamdaData ? (
+            <div className="w-[100px] h-[20px] rounded-lg custom-shimmer"></div>
+          ) : (
+            <h3 className="text-black text-lg md:text-xl desktop:text-2xl font-semibold">
+              Arkitekturplan
+            </h3>
+          )}
+          {isOpen === "Arkitekturplan" ? (
+            <Image fetchPriority="auto" src={Ic_chevron_up} alt="arrow" />
+          ) : (
+            <Image
+              fetchPriority="auto"
+              src={Ic_chevron_up}
+              alt="arrow"
+              className="rotate-180"
+            />
+          )}
+        </div>
+        <div
+          className={`${isOpen === "Arkitekturplan" ? "block border-t border-[#EFF1F5] p-3.5 md:p-5" : "hidden"}`}
+        ></div>
+      </div> */}
 
       <div className="w-full mt-[44px]">
         <div className="w-full flex justify-start">
@@ -2106,7 +2135,7 @@ const PlotDetailPage: React.FC<{
               )}
             </>
           )}
-          {PlotActiveTab === "Unntak" && (
+          {PlotActiveTab === "Dispensasjoner" && (
             <>
               {documentLoading ? (
                 <>
