@@ -14,7 +14,6 @@ const Map3D: React.FC<Map3DProps> = ({ coordinates }) => {
   const exagRef = useRef<HTMLInputElement | null>(null);
   const opacityRef = useRef<HTMLInputElement | null>(null);
 
-
   const START: any = {
     center:
       coordinates && coordinates.length > 0
