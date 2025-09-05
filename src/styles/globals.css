@@ -12,6 +12,7 @@
 }
 
 body {
+  touch-action: pan-x pan-y;
   font-family: "Schibsted Grotesk", sans-serif;
   background-color: #fff;
 }
@@ -137,7 +138,7 @@ input::placeholder {
 }
 .screen-index {
   background: #111322;
-  border: 1px solid #012A23;
+  border: 1px solid #012a23;
   height: 24px;
   width: 24px;
   border-radius: 50%;
@@ -165,7 +166,7 @@ input::placeholder {
 .screen-indicator-span.current .screen-index {
   background-color: white;
   border: 1px solid white;
-  color: #012A23;
+  color: #012a23;
 }
 .screen-indicator-span.completed .screen-index {
   color: #099250;
@@ -478,7 +479,7 @@ td {
 }
 
 .custom-swiper .swiper-pagination-bullet-active {
-  background-color: #012A23;
+  background-color: #012a23;
   width: 24px;
   border-radius: 10px;
 }
@@ -735,14 +736,13 @@ td {
   .slick-prev {
     left: 4px !important;
   }
-  
+
   .slick-next {
     right: 4px !important;
   }
   .slick-dots {
     bottom: -30px !important;
   }
-  
 }
 .slick-arrow.slick-next.slick-disabled,
 .slick-arrow.slick-prev.slick-disabled {
