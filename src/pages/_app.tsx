@@ -43,6 +43,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Head>
           <title>Mintomt</title>
           <meta name="description" content="Your app description here" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+          />
         </Head>
         <Component {...pageProps} />
         <Toaster
