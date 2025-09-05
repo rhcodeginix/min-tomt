@@ -79,8 +79,8 @@ const Map3D: React.FC<Map3DProps> = ({ coordinates }) => {
         });
       }
 
-      const layers = map.getStyle().layers || [];
-      const firstSymbolId = layers.find((l) => l.type === "symbol")?.id;
+      const layers: any = map.getStyle().layers || [];
+      const firstSymbolId = layers.find((l: any) => l.type === "symbol")?.id;
 
       if (!map.getLayer("kart-ortho-layer")) {
         map.addLayer(
@@ -119,6 +119,48 @@ const Map3D: React.FC<Map3DProps> = ({ coordinates }) => {
             },
           },
           firstSymbolId
+        );
+      }
+
+      const boundaryCoordinates = coordinates?.map((coord: any) => [
+        coord.longitude,
+        coord.latitude,
+      ]);
+      if (
+        boundaryCoordinates?.[0] !==
+        boundaryCoordinates?.[boundaryCoordinates.length - 1]
+      ) {
+        boundaryCoordinates.push(boundaryCoordinates[0]);
+      }
+
+      const BOUNDARY: any = {
+        type: "Feature",
+        geometry: {
+          type: "Polygon",
+          coordinates: [boundaryCoordinates || []],
+        },
+      };
+
+      if (!map.getSource("boundary") && coordinates?.length) {
+        map.addSource("boundary", {
+          type: "geojson",
+          data: BOUNDARY,
+        });
+
+        const topLayerId = layers[layers.length - 1].id;
+
+        map.addLayer(
+          {
+            id: "boundary-line",
+            type: "line",
+            source: "boundary",
+            layout: {},
+            paint: {
+              "line-color": "red",
+              "line-width": 3,
+            },
+          },
+          topLayerId
         );
       }
     });
