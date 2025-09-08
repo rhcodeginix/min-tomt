@@ -6,7 +6,7 @@ import Image from "next/image";
 import Ic_check from "@/public/images/Ic_check.svg";
 import Ic_x_close from "@/public/images/Ic_x_close.svg";
 import Ic_chevron_up from "@/public/images/Ic_chevron_up.svg";
-import Ic_chevron_right from "@/public/images/Ic_chevron_right.svg";
+// import Ic_chevron_right from "@/public/images/Ic_chevron_right.svg";
 import GoogleMapNearByComponent from "@/components/Ui/map/nearbyBuiildingMap";
 import Eierinformasjon from "@/components/Ui/regulationChart/Eierinformasjon";
 import Ic_file from "@/public/images/Ic_file.svg";
@@ -22,6 +22,8 @@ import {
   NotepadText,
 } from "lucide-react";
 import GoogleMapComponent from "../map";
+import Modal from "@/components/common/modal";
+import Ic_close_darkgreen from "@/public/images/Ic_close_darkgreen.svg";
 
 const PlotDetailPage: React.FC<{
   loadingAdditionalData: any;
@@ -120,27 +122,27 @@ const PlotDetailPage: React.FC<{
     CadastreDataFromApi?.cadastreApi?.response?.item?.geojson?.bbox;
 
   const isValidBBOX = Array.isArray(BBOXData) && BBOXData.length === 4;
-  const scrollContainerRef: any = useRef(null);
+  // const scrollContainerRef: any = useRef(null);
 
-  const scrollByAmount = 90;
+  // const scrollByAmount = 90;
 
-  const handleScrollUp = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: -scrollByAmount,
-        behavior: "smooth",
-      });
-    }
-  };
+  // const handleScrollUp = () => {
+  //   if (scrollContainerRef.current) {
+  //     scrollContainerRef.current.scrollBy({
+  //       left: -scrollByAmount,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // };
 
-  const handleScrollDown = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: scrollByAmount,
-        behavior: "smooth",
-      });
-    }
-  };
+  // const handleScrollDown = () => {
+  //   if (scrollContainerRef.current) {
+  //     scrollContainerRef.current.scrollBy({
+  //       left: scrollByAmount,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // };
   const adjustedBBOX: any = isValidBBOX && [
     BBOXData[0] - 30,
     BBOXData[1] - 30,
@@ -172,7 +174,7 @@ const PlotDetailPage: React.FC<{
     }
   }, [isValidBBOX, BBOXData]);
 
-  const images = isValidBBOX
+  const images: any = isValidBBOX
     ? [
         {
           id: 1,
@@ -192,21 +194,21 @@ const PlotDetailPage: React.FC<{
       ]
     : [];
 
-  const [selectedImage, setSelectedImage] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (!selectedImage && images.length > 0) {
-      setSelectedImage(images[0]);
-    }
-  }, [images, selectedImage]);
-  const handleImageClick = (image: any) => {
-    if (selectedImage?.id === image.id) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-    }
-    setSelectedImage(image);
-  };
+  // const [selectedImage, setSelectedImage] = useState<any>(null);
+  // const [loading, setLoading] = useState(false);
+  // useEffect(() => {
+  //   if (!selectedImage && images.length > 0) {
+  //     setSelectedImage(images[0]);
+  //   }
+  // }, [images, selectedImage]);
+  // const handleImageClick = (image: any) => {
+  //   if (selectedImage?.id === image.id) {
+  //     setLoading(false);
+  //   } else {
+  //     setLoading(true);
+  //   }
+  //   setSelectedImage(image);
+  // };
   const [isOpen, setIsOpen] = useState<any>("Eiendomsinformasjon");
 
   const toggleAccordion = (key: string) => {
@@ -319,6 +321,106 @@ const PlotDetailPage: React.FC<{
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+
+  const maxVisible = 4;
+  const extraImages = images.length - maxVisible;
+
+  const [isSingleModalOpen, setIsSingleModalOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [zoom, setZoom] = useState(1);
+
+  const handleSingleModal = (index: number) => {
+    setSelectedIndex(index);
+    setZoom(1);
+    setIsSingleModalOpen(true);
+  };
+
+  const handleSingleCloseModal = () => {
+    setIsSingleModalOpen(false);
+    setSelectedIndex(null);
+    setZoom(1);
+  };
+
+  const [baseScale, setBaseScale] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [translateX, setTranslateX] = useState(0);
+  const [translateY, setTranslateY] = useState(0);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (!isSingleModalOpen || selectedIndex === null) return;
+
+    const container = containerRef.current;
+    const img = imgRef.current;
+
+    if (container && img) {
+      const cRect = container.getBoundingClientRect();
+      const imgW = img.naturalWidth;
+      const imgH = img.naturalHeight;
+
+      if (imgW && imgH) {
+        const cover = Math.max(cRect.width / imgW, cRect.height / imgH);
+        setBaseScale(cover);
+        setZoom(cover);
+        setTranslateX(0);
+        setTranslateY(0);
+      }
+    }
+  }, [isSingleModalOpen, selectedIndex]);
+
+  const clampPosition = (x: number, y: number) => {
+    if (!containerRef.current || !imgRef.current) return { x, y };
+
+    const container = containerRef.current.getBoundingClientRect();
+    const imgW = imgRef.current.naturalWidth * zoom;
+    const imgH = imgRef.current.naturalHeight * zoom;
+
+    const maxX = Math.max(0, (imgW - container.width) / 2);
+    const maxY = Math.max(0, (imgH - container.height) / 2);
+
+    return {
+      x: Math.min(maxX, Math.max(-maxX, x)),
+      y: Math.min(maxY, Math.max(-maxY, y)),
+    };
+  };
+
+  const handleZoomIn = () => setZoom((z) => z + 0.25);
+  const handleZoomOut = () =>
+    setZoom((z) => {
+      const newZoom = Math.max(baseScale, z - 0.25);
+      if (newZoom === baseScale) {
+        setTranslateX(0);
+        setTranslateY(0);
+      }
+      return newZoom;
+    });
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoom > baseScale) {
+      setIsDragging(true);
+      setStartX(e.clientX - translateX);
+      setStartY(e.clientY - translateY);
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const newX = e.clientX - startX;
+    const newY = e.clientY - startY;
+    const { x, y } = clampPosition(newX, newY);
+    setTranslateX(x);
+    setTranslateY(y);
+  };
+
+  const handleMouseUp = () => setIsDragging(false);
 
   return (
     <>
@@ -1453,7 +1555,7 @@ const PlotDetailPage: React.FC<{
           </div>
         </div>
       </div>
-      {/* <div className="rounded-lg border border-[#EFF1F5] w-full mt-[44px]">
+      <div className="rounded-lg border border-[#EFF1F5] w-full mt-[44px]">
         <div
           className="flex items-center justify-between gap-2 cursor-pointer p-4 md:p-5"
           onClick={() => toggleAccordion("Arkitekturplan")}
@@ -1478,8 +1580,38 @@ const PlotDetailPage: React.FC<{
         </div>
         <div
           className={`${isOpen === "Arkitekturplan" ? "block border-t border-[#EFF1F5] p-3.5 md:p-5" : "hidden"}`}
-        ></div>
-      </div> */}
+        >
+          <div className="relative w-full">
+            <div className="gap-4 md:gap-6 lg:gap-8 grid grid-cols-2 md:grid-cols-4">
+              {images.slice(0, maxVisible).map((image: any, index: number) => {
+                const isLast =
+                  index === maxVisible - 1 && images.length > maxVisible;
+                return (
+                  <div
+                    key={index}
+                    className="relative cursor-pointer rounded-[12px] overflow-hidden"
+                    onClick={() => handleSingleModal(index)}
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className="w-full h-full object-cover border border-[#7D89B033]"
+                    />
+                    {isLast && (
+                      <div
+                        className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl font-bold"
+                        onClick={isLast ? handleOpenModal : undefined}
+                      >
+                        +{extraImages}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="w-full mt-[44px]">
         <div className="w-full flex justify-start">
@@ -1548,8 +1680,7 @@ const PlotDetailPage: React.FC<{
                                             <span>
                                               {rule?.norwegian_text
                                                 ? rule.norwegian_text
-                                                : rule.rule_name}{" "}
-                                              (Regulation plan)
+                                                : rule.rule_name}
                                             </span>
                                           </div>
                                         )
@@ -1631,7 +1762,7 @@ const PlotDetailPage: React.FC<{
                     </div>
                   </div> */}
 
-                  {loadingAdditionalData ? (
+                  {/* {loadingAdditionalData ? (
                     <div className="w-full h-[400px] lg:h-[590px] rounded-lg custom-shimmer mt-[36px] md:mt-[46px] lg:mt-[55px]"></div>
                   ) : (
                     <div className="w-full flex flex-col gap-5 md:gap-6 lg:gap-8 items-center mt-[36px] md:mt-[46px] lg:mt-[55px]">
@@ -1827,7 +1958,7 @@ const PlotDetailPage: React.FC<{
                         )}
                       </div>
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div className="relative w-full md:w-1/2">
                   <div className="flex flex-col gap-5 lg:gap-9">
@@ -2219,6 +2350,88 @@ const PlotDetailPage: React.FC<{
           )}
         </div>
       </div>
+
+      {isModalOpen && (
+        <Modal isOpen={false} onClose={() => setIsModalOpen(false)}>
+          <div className="bg-white p-4 md:p-7 rounded-lg max-w-[85vw] md:max-w-4xl w-full relative h-[80vh] overflow-y-auto">
+            <button
+              className="absolute top-2 md:top-3 right-0 md:right-3"
+              onClick={() => setIsModalOpen(false)}
+            >
+              <Image src={Ic_close_darkgreen} alt="close" />
+            </button>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {images.map((image: any, index: number) => (
+                <img
+                  key={index}
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-auto rounded-[12px]"
+                />
+              ))}
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {isSingleModalOpen && selectedIndex !== null && (
+        <Modal onClose={() => setIsSingleModalOpen(false)} isOpen={false}>
+          <div className="bg-white p-4 md:p-7 rounded-lg max-w-[85vw] md:max-w-5xl w-full relative">
+            <button
+              className="absolute top-2 md:top-3 right-0 md:right-3"
+              onClick={() => handleSingleCloseModal()}
+            >
+              <Image src={Ic_close_darkgreen} alt="close" />
+            </button>
+
+            <div className="flex gap-4 mb-4">
+              <button
+                onClick={handleZoomOut}
+                className="px-3 py-1 bg-darkGreen text-white rounded"
+              >
+                -
+              </button>
+              <button
+                onClick={handleZoomIn}
+                className="px-3 py-1 bg-darkGreen text-white rounded"
+              >
+                +
+              </button>
+            </div>
+
+            <div
+              ref={containerRef}
+              className="relative overflow-hidden max-h-[80vh] max-w-[90vw] border border-gray rounded-lg touch-none flex items-center justify-center"
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
+              <img
+                ref={imgRef}
+                src={images[selectedIndex].src}
+                alt={images[selectedIndex].alt}
+                draggable={false}
+                className="select-none"
+                style={{
+                  cursor:
+                    zoom > baseScale
+                      ? isDragging
+                        ? "grabbing"
+                        : "grab"
+                      : "default",
+                  transform: `translate(${translateX}px, ${translateY}px) scale(${zoom})`,
+                  transformOrigin: "center center",
+                  transition: isDragging ? "none" : "transform 0.2s ease",
+                  maxWidth: "none",
+                  maxHeight: "none",
+                }}
+              />
+            </div>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
