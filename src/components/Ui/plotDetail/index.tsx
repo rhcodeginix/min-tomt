@@ -40,6 +40,7 @@ const PlotDetailPage: React.FC<{
   KommuneLoading: any;
   KommuneRule: any;
   KommuneRuleLoading: any;
+  otherDocumentInput: any;
 }> = ({
   lamdaDataFromApi,
   loadingAdditionalData,
@@ -55,6 +56,7 @@ const PlotDetailPage: React.FC<{
   KommuneLoading,
   KommuneRule,
   KommuneRuleLoading,
+  otherDocumentInput,
 }) => {
   const [dropdownState, setDropdownState] = useState({
     Tomteopplysninger: false,
@@ -268,6 +270,61 @@ const PlotDetailPage: React.FC<{
     }
   };
 
+  const handleDownloads = async (filePath: any) => {
+    if (!filePath?.id) {
+      console.error("File ID is missing!");
+      return;
+    }
+    let finalData: any;
+    try {
+      const response = await fetch(
+        `https://api.arealplaner.no/api/kunder/${otherDocumentInput?.tenant}/dokumenter/${filePath.id}`,
+        {
+          headers: {
+            "x-waapi-token": process.env.NEXT_PUBLIC_DOCUMENT_TOKEN || "",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch document info");
+
+      const data = await response.json();
+
+      if (!data?.direkteUrl) {
+        console.error("Direct URL for file is missing!");
+        return;
+      }
+      finalData = data;
+
+      const fileResponse = await fetch(data.direkteUrl, {
+        headers: {
+          "x-waapi-token": process.env.NEXT_PUBLIC_DOCUMENT_TOKEN || "",
+        },
+      });
+
+      if (!fileResponse.ok) throw new Error("Failed to fetch file");
+
+      const blob = await fileResponse.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        filePath?.name?.toLowerCase().includes("unknown")
+          ? data.direkteUrl.split("/").pop()?.split("?")[0] || "download.pdf"
+          : filePath?.name || "download.pdf"
+      );
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      window.open(finalData.direkteUrl, "_blank");
+    }
+  };
+
   const DocumentCard = ({
     doc,
     handleDownload,
@@ -293,7 +350,16 @@ const PlotDetailPage: React.FC<{
           src={Ic_download_primary}
           alt="download"
           className="cursor-pointer w-5 h-5 md:w-6 md:h-6"
-          onClick={() => handleDownload(doc)}
+          onClick={() => {
+            if (
+              PlotActiveTab === "Planleggingsdokumenter" ||
+              PlotActiveTab === "Dispensasjoner"
+            ) {
+              handleDownloads(doc);
+            } else {
+              handleDownload(doc);
+            }
+          }}
         />
       </div>
     </div>

@@ -34,6 +34,7 @@ const Tomt: React.FC<{
   KommuneLoading: any;
   KommuneRule: any;
   KommuneRuleLoading: any;
+  otherDocumentInput: any;
 }> = ({
   handleNext,
   handlePrevious,
@@ -60,6 +61,7 @@ const Tomt: React.FC<{
   KommuneLoading,
   KommuneRule,
   KommuneRuleLoading,
+  otherDocumentInput,
 }) => {
   const router = useRouter();
   const [hasMounted, setHasMounted] = useState(false);
@@ -114,6 +116,7 @@ const Tomt: React.FC<{
           KommuneLoading={KommuneLoading}
           KommuneRule={KommuneRule}
           KommuneRuleLoading={KommuneRuleLoading}
+          otherDocumentInput={otherDocumentInput}
         />
       ) : (
         <>

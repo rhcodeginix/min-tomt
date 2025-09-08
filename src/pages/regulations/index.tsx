@@ -751,6 +751,7 @@ const Regulations = () => {
   const [KommuneRuleLoading, setKommuneRuleLoading] = useState<any>(false);
   const [documentLoading, setDocumentLoading] = useState(true);
   const [KommuneLoading, setKommuneLoading] = useState(true);
+  const [otherDocumentInput, setOtherDocumentInput] = useState<any>(null);
 
   useEffect(() => {
     const fetchPlotData = async () => {
@@ -782,31 +783,53 @@ const Regulations = () => {
           setExemptions([]);
           setResult({});
           setKommuneLoading(false);
+          setOtherDocumentInput({});
           return;
         }
 
-        const resolveApiCall = {
-          name: "resolve",
-          url: "https://iplotnor-areaplanner.hf.space/resolve",
-          body: {
-            step1_url: json.plan_link,
-            api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
+        const apis = [
+          {
+            name: "resolve",
+            url: "https://iplotnor-areaplanner.hf.space/resolve",
+            body: {
+              step1_url: json.plan_link,
+              api_token: process.env.NEXT_PUBLIC_DOCUMENT_TOKEN,
+            },
           },
-        };
+          {
+            name: "other-documents",
+            url: "https://iplotnor-areaplanner.hf.space/other-documents",
+            body: {
+              step1_url: json.plan_link,
+              api_token: process.env.NEXT_PUBLIC_DOCUMENT_TOKEN,
+            },
+          },
+        ];
 
-        const resolveResult = await makeApiCall(resolveApiCall);
+        const apisResults = await Promise.all(apis.map((c) => makeApiCall(c)));
 
-        if (!resolveResult.success) {
+        const resolveResult: any = apisResults.find(
+          (r) => r.name === "resolve"
+        );
+        const otherDocsResult = apisResults.find(
+          (r) => r.name === "other-documents"
+        );
+
+        if (!resolveResult.success || !otherDocsResult?.success) {
           setResultLoading(false);
           setDocuments({});
           setKommunePlan({});
           setPlanDocuments([]);
           setExemptions([]);
+          setOtherDocumentInput({});
           setResult({});
           setKommuneLoading(false);
           return;
         }
         setDocuments(resolveResult.data);
+        setPlanDocuments(otherDocsResult?.data?.planning_treatments ?? []);
+        setExemptions(otherDocsResult?.data?.exemptions ?? []);
+        setOtherDocumentInput(otherDocsResult?.data?.inputs ?? {});
 
         const internalPlanId = resolveResult.data?.inputs?.internal_plan_id;
         if (!internalPlanId) {
@@ -821,8 +844,6 @@ const Regulations = () => {
           const data = existingDoc.data();
           setDocuments(data?.resolve ?? {});
           setKommunePlan(data?.kommuneplanens ?? {});
-          setPlanDocuments(data["other-documents"]?.planning_treatments ?? []);
-          setExemptions(data["other-documents"]?.exemptions ?? []);
           setResult(data?.extract_json_direct_gpt?.data ?? {});
           setResultLoading(false);
           setKommuneLoading(false);
@@ -883,14 +904,14 @@ const Regulations = () => {
                 debug_mode: true,
               },
             },
-            {
-              name: "other-documents",
-              url: "https://iplotnor-areaplanner.hf.space/other-documents",
-              body: {
-                step1_url: json.plan_link,
-                api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
-              },
-            },
+            // {
+            //   name: "other-documents",
+            //   url: "https://iplotnor-areaplanner.hf.space/other-documents",
+            //   body: {
+            //     step1_url: json.plan_link,
+            //     api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
+            //   },
+            // },
           ];
 
           const otherResults = await Promise.all(
@@ -913,10 +934,11 @@ const Regulations = () => {
                 setKommunePlan(r.data);
                 setKommuneLoading(false);
               }
-              if (r.name === "other-documents") {
-                setPlanDocuments(r.data?.planning_treatments ?? []);
-                setExemptions(r.data?.exemptions ?? []);
-              }
+              // if (r.name === "other-documents") {
+              //   setPlanDocuments(r.data?.planning_treatments ?? []);
+              //   setExemptions(r.data?.exemptions ?? []);
+              //   setOtherDocumentInput(r.data?.inputs ?? {});
+              // }
             }
           });
 
@@ -1076,10 +1098,11 @@ const Regulations = () => {
           setKommuneLoading(false);
           break;
 
-        case "other-documents":
-          setPlanDocuments(data?.planning_treatments ?? []);
-          setExemptions(data?.exemptions ?? []);
-          break;
+        // case "other-documents":
+        //   setPlanDocuments(data?.planning_treatments ?? []);
+        //   setExemptions(data?.exemptions ?? []);
+        //   setOtherDocumentInput(data?.inputs ?? {});
+        //   break;
       }
 
       return {
@@ -1107,10 +1130,11 @@ const Regulations = () => {
           setKommuneLoading(false);
           break;
 
-        case "other-documents":
-          setPlanDocuments([]);
-          setExemptions([]);
-          break;
+        // case "other-documents":
+        //   setPlanDocuments([]);
+        //   setExemptions([]);
+        //   setOtherDocumentInput({});
+        //   break;
       }
 
       return {
@@ -1154,6 +1178,7 @@ const Regulations = () => {
           KommuneLoading={KommuneLoading}
           KommuneRule={KommuneRule}
           KommuneRuleLoading={KommuneRuleLoading}
+          otherDocumentInput={otherDocumentInput}
         />
       ),
     },
@@ -1199,6 +1224,7 @@ const Regulations = () => {
           KommuneLoading={KommuneLoading}
           KommuneRule={KommuneRule}
           KommuneRuleLoading={KommuneRuleLoading}
+          otherDocumentInput={otherDocumentInput}
         />
       ),
     },
