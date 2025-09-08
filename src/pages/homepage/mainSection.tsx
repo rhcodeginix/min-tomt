@@ -43,16 +43,24 @@ const MainSection = () => {
                     src={Ic_boligpartner}
                     alt="boligpartner"
                     fetchPriority="auto"
+                    className="w-[109px]"
                   />
                   <Image
                     src={Ic_fjellheimhytta}
                     alt="fjellheimhytta"
+                    className="w-[149px]"
                     fetchPriority="auto"
                   />
-                  <Image src={Ic_eie} alt="eie" fetchPriority="auto" />
+                  <Image
+                    src={Ic_eie}
+                    alt="eie"
+                    fetchPriority="auto"
+                    className="w-[47px]"
+                  />
                   <Image
                     src={Ic_sparbank}
                     alt="sparbank"
+                    className="w-[103px]"
                     fetchPriority="auto"
                   />
                 </div>
