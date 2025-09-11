@@ -897,9 +897,9 @@ const Regulations = () => {
               url: "https://iplotnor-areaplanner.hf.space/kommuneplanens",
               body: {
                 coordinates_url: json.plan_link,
-                knr: `${kommunenummer}`,
-                gnr: `${gardsnummer}`,
-                bnr: `${bruksnummer}`,
+                knr: `${lamdaDataFromApi?.searchParameters?.kommunenummer}`,
+                gnr: `${lamdaDataFromApi?.searchParameters?.gardsnummer}`,
+                bnr: `${lamdaDataFromApi?.searchParameters?.bruksnummer}`,
                 api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
                 debug_mode: true,
               },
