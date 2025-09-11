@@ -112,9 +112,6 @@ const Regulations = () => {
   //   return () => unsubscribe();
   // }, [isCall]);
 
-  // console.log(CadastreDataFromApi?.presentationAddressApi?.response
-  //   ?.item?.municipality?.municipalityName);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
