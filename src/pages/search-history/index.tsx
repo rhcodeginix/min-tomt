@@ -27,7 +27,7 @@ const index = () => {
         try {
           const propertiesSnapshot = await getDocs(propertiesCollectionRef);
           const fetchedProperties: any = propertiesSnapshot.docs.map((doc) => ({
-            id: doc.id,
+            propertyId: doc.id,
             ...doc.data(),
           }));
 
@@ -62,7 +62,7 @@ const index = () => {
               const propertiesSnapshot = await getDocs(propertiesCollectionRef);
               const fetchedProperties: any = propertiesSnapshot.docs.map(
                 (doc) => ({
-                  id: doc.id,
+                  propertyId: doc.id,
                   ...doc.data(),
                 })
               );
@@ -108,43 +108,45 @@ const index = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 desktop:grid-cols-4 gap-x-4 lg:gap-x-6 desktop:gap-x-8 gap-y-7 lg:gap-y-9 desktop:gap-y-12">
             {userProperties.length > 0 ? (
-              userProperties.map((property: any, index) => (
-                <Link
-                  key={index}
-                  href={`/regulations?propertyId=${property?.propertyId}`}
-                  className="relative"
-                  onClick={() => {
-                    setStoreAddress(property?.getAddress);
-                    const currIndex = 0;
-                    localStorage.setItem("currIndex", currIndex.toString());
-                  }}
-                >
-                  <div className="flex flex-col gap-3 cursor-pointer relative z-40">
-                    <div className="h-[300px] md:h-[350px] cursor-pointer">
-                      {property?.lamdaDataFromApi?.coordinates
-                        ?.convertedCoordinates && (
-                        // <NorkartMap
-                        //   coordinates={
-                        //     property?.lamdaDataFromApi?.coordinates
-                        //       ?.convertedCoordinates
-                        //   }
-                        //   MAX_ZOOM={20}
-                        // />
-                        <GoogleMapComponent
-                          coordinates={
-                            property?.lamdaDataFromApi?.coordinates
-                              ?.convertedCoordinates
-                          }
-                        />
-                      )}
+              userProperties.map((property: any, index) => {
+                return (
+                  <Link
+                    key={index}
+                    href={`/regulations?propertyId=${property?.propertyId}`}
+                    className="relative"
+                    onClick={() => {
+                      setStoreAddress(property?.getAddress);
+                      const currIndex = 0;
+                      localStorage.setItem("currIndex", currIndex.toString());
+                    }}
+                  >
+                    <div className="flex flex-col gap-3 cursor-pointer relative z-40">
+                      <div className="h-[300px] md:h-[350px] cursor-pointer">
+                        {property?.lamdaDataFromApi?.coordinates
+                          ?.convertedCoordinates && (
+                          // <NorkartMap
+                          //   coordinates={
+                          //     property?.lamdaDataFromApi?.coordinates
+                          //       ?.convertedCoordinates
+                          //   }
+                          //   MAX_ZOOM={20}
+                          // />
+                          <GoogleMapComponent
+                            coordinates={
+                              property?.lamdaDataFromApi?.coordinates
+                                ?.convertedCoordinates
+                            }
+                          />
+                        )}
+                      </div>
+                      <h4 className="text-black font-medium text-base lg:text-lg">
+                        {property?.getAddress?.adressetekst}
+                      </h4>
                     </div>
-                    <h4 className="text-black font-medium text-base lg:text-lg">
-                      {property?.getAddress?.adressetekst}
-                    </h4>
-                  </div>
-                  <div className="absolute z-50 top-0 left-0 h-full w-full"></div>
-                </Link>
-              ))
+                    <div className="absolute z-50 top-0 left-0 h-full w-full"></div>
+                  </Link>
+                );
+              })
             ) : (
               <p>No Search History found.</p>
             )}
