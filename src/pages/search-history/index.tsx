@@ -22,7 +22,7 @@ const index = () => {
           db,
           "users",
           userUID,
-          "add_plot"
+          "property"
         );
         try {
           const propertiesSnapshot = await getDocs(propertiesCollectionRef);
@@ -56,7 +56,7 @@ const index = () => {
                 db,
                 "users",
                 userUID,
-                "add_plot"
+                "property"
               );
 
               const propertiesSnapshot = await getDocs(propertiesCollectionRef);
