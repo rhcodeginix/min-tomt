@@ -2049,7 +2049,9 @@ const PlotDetailPage: React.FC<{
                                         src={Ic_check_true}
                                         alt="image"
                                       />
-                                      <span>{item?.rule}</span>
+                                      <span>
+                                        {item?.rule} ({item?.area_type})
+                                      </span>
                                       <Image
                                         fetchPriority="auto"
                                         src={Ic_info_circle}
@@ -2062,7 +2064,7 @@ const PlotDetailPage: React.FC<{
                                     </div>
                                     {openIndex === index && (
                                       <div className="top-3 z-100 bg-white shadow-shadow1 p-3 rounded-lg text-sm text-secondary absolute right-0 w-auto max-w-64">
-                                        {item.description}
+                                        {item?.category} ({item?.rule_number})
                                       </div>
                                     )}
                                   </div>

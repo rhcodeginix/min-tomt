@@ -501,18 +501,34 @@ const HusmodellDetail = () => {
               api_token: process.env.NEXT_PUBLIC_DOCUMENT_TOKEN,
             },
           },
+          {
+            name: "kommuneplanens",
+            url: "https://iplotnor-areaplanner.hf.space/kommuneplanens",
+            body: {
+              coordinates_url: json.plan_link,
+              knr: `${lamdaDataFromApi?.searchParameters?.kommunenummer}`,
+              gnr: `${lamdaDataFromApi?.searchParameters?.gardsnummer}`,
+              bnr: `${lamdaDataFromApi?.searchParameters?.bruksnummer}`,
+              api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
+              debug_mode: true,
+            },
+          },
         ];
 
         const apisResults = await Promise.all(apis.map((c) => makeApiCall(c)));
 
-        const resolveResult: any = apisResults.find(
-          (r) => r.name === "resolve"
-        );
-        const otherDocsResult = apisResults.find(
-          (r) => r.name === "other-documents"
-        );
+        let firebaseData: any = {};
+        apisResults.forEach((r) => {
+          if (r.success) {
+            firebaseData[r.name] = r.data;
+          }
+        });
 
-        if (!resolveResult.success || !otherDocsResult?.success) {
+        const resolveResult: any = firebaseData["resolve"];
+        const otherDocsResult = firebaseData["other-documents"];
+        const kommuneplanensResult = firebaseData["kommuneplanens"];
+
+        if (!resolveResult || !otherDocsResult) {
           setResultLoading(false);
           setDocuments({});
           setKommunePlan({});
@@ -523,12 +539,15 @@ const HusmodellDetail = () => {
           setKommuneLoading(false);
           return;
         }
-        setDocuments(resolveResult.data);
-        setPlanDocuments(otherDocsResult?.data?.planning_treatments ?? []);
-        setExemptions(otherDocsResult?.data?.exemptions ?? []);
-        setOtherDocumentInput(otherDocsResult?.data?.inputs ?? {});
 
-        const internalPlanId = resolveResult.data?.inputs?.internal_plan_id;
+        setDocuments(resolveResult);
+        setPlanDocuments(otherDocsResult?.planning_treatments ?? []);
+        setExemptions(otherDocsResult?.exemptions ?? []);
+        setOtherDocumentInput(otherDocsResult?.inputs ?? {});
+        setKommunePlan(kommuneplanensResult ?? {});
+        setKommuneLoading(false);
+
+        const internalPlanId = resolveResult?.inputs?.internal_plan_id;
         if (!internalPlanId) {
           setResultLoading(false);
           return;
@@ -540,24 +559,20 @@ const HusmodellDetail = () => {
         if (existingDoc.exists()) {
           const data = existingDoc.data();
           setDocuments(data?.resolve ?? {});
-          setKommunePlan(data?.kommuneplanens ?? {});
-          // setPlanDocuments(data["other-documents"]?.planning_treatments ?? []);
-          // setExemptions(data["other-documents"]?.exemptions ?? []);
-          // setOtherDocumentInput(data["other-documents"]?.inputs ?? {});
           setResult(data?.extract_json_direct_gpt?.data ?? {});
           setResultLoading(false);
-          setKommuneLoading(false);
 
           if (data?.kommuneplanens?.rule_book?.link && !data?.kommune_rules) {
             const kommuneRuleRes = await fetch(
-              "https://iplotnor-norwaypropertyagent.hf.space/extract_rules",
+              "https://pdf-extractor-629346971068.europe-west1.run.app/extract",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  url: data.kommuneplanens.rule_book.link,
+                  pdf_url: data.kommuneplanens.rule_book.link,
+                  municipality:
+                    CadastreDataFromApi?.presentationAddressApi?.response?.item
+                      ?.municipality?.municipalityName,
                 }),
               }
             );
@@ -578,82 +593,46 @@ const HusmodellDetail = () => {
           return;
         }
 
-        if (
-          resolveResult.data?.rule_book &&
-          resolveResult.data?.rule_book?.link
-        ) {
+        if (resolveResult?.rule_book?.link) {
           const apiCalls = [
             {
               name: "extract_json_direct_gpt",
               url: "https://iplotnor-norwaypropertyagent.hf.space/extract_json_direct_gpt",
               body: {
-                pdf_url: resolveResult.data?.rule_book?.link,
+                pdf_url: resolveResult?.rule_book?.link,
                 plot_size_m2:
                   lamdaDataFromApi?.eiendomsInformasjon?.basisInformasjon
                     ?.areal_beregnet ?? 0,
               },
             },
-            {
-              name: "kommuneplanens",
-              url: "https://iplotnor-areaplanner.hf.space/kommuneplanens",
-              body: {
-                coordinates_url: json.plan_link,
-                knr: `${lamdaDataFromApi?.searchParameters?.kommunenummer}`,
-                gnr: `${lamdaDataFromApi?.searchParameters?.gardsnummer}`,
-                bnr: `${lamdaDataFromApi?.searchParameters?.bruksnummer}`,
-                api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
-                debug_mode: true,
-              },
-            },
-            // {
-            //   name: "other-documents",
-            //   url: "https://iplotnor-areaplanner.hf.space/other-documents",
-            //   body: {
-            //     step1_url: json.plan_link,
-            //     api_token: `${process.env.NEXT_PUBLIC_DOCUMENT_TOKEN}`,
-            //   },
-            // },
           ];
 
           const otherResults = await Promise.all(
             apiCalls.map((c) => makeApiCall(c))
           );
 
-          const firebaseData: any = {
-            resolve: resolveResult.data,
-          };
           otherResults.forEach((r) => {
             if (r.success) firebaseData[r.name] = r.data;
           });
 
           otherResults.forEach((r) => {
-            if (r.success) {
-              if (r.name === "extract_json_direct_gpt") {
-                setResult(r?.data?.data);
-              }
-              if (r.name === "kommuneplanens") {
-                setKommunePlan(r.data);
-                setKommuneLoading(false);
-              }
-              // if (r.name === "other-documents") {
-              //   setPlanDocuments(r.data?.planning_treatments ?? []);
-              //   setExemptions(r.data?.exemptions ?? []);
-              //   setOtherDocumentInput(r.data?.inputs ?? {});
-              // }
+            if (r.success && r.name === "extract_json_direct_gpt") {
+              setResult(r?.data?.data);
             }
           });
 
           let kommuneRulesArr: any;
           if (firebaseData?.kommuneplanens?.rule_book?.link) {
             const kommuneRule = await fetch(
-              "https://iplotnor-norwaypropertyagent.hf.space/extract_rules",
+              "https://pdf-extractor-629346971068.europe-west1.run.app/extract",
               {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  url: firebaseData.kommuneplanens.rule_book.link,
+                  pdf_url: firebaseData.kommuneplanens.rule_book.link,
+                  municipality:
+                    CadastreDataFromApi?.presentationAddressApi?.response?.item
+                      ?.municipality?.municipalityName,
                 }),
               }
             );
@@ -674,11 +653,9 @@ const HusmodellDetail = () => {
           );
           const existingKommuneDoc = await getDoc(kommunePlansDocRef);
 
-          const uniquekommuneId = String(kommunePlanId);
-
           if (!existingKommuneDoc.exists()) {
             await setDoc(kommunePlansDocRef, {
-              id: uniquekommuneId,
+              id: String(kommunePlanId),
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
               data: firebaseData?.kommuneplanens,
@@ -692,7 +669,7 @@ const HusmodellDetail = () => {
               id: uniqueId,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
-              documents: { ...resolveResult.data },
+              documents: { ...resolveResult },
               kommune_rules: kommuneRulesArr,
               ...firebaseData,
             });
@@ -740,11 +717,11 @@ const HusmodellDetail = () => {
           setKommuneLoading(false);
           break;
 
-        // case "other-documents":
-        //   setPlanDocuments(data?.planning_treatments ?? []);
-        //   setOtherDocumentInput(data?.inputs ?? {});
-        //   setExemptions(data?.exemptions ?? []);
-        //   break;
+        case "other-documents":
+          setPlanDocuments(data?.planning_treatments ?? []);
+          setExemptions(data?.exemptions ?? []);
+          setOtherDocumentInput(data?.inputs ?? {});
+          break;
       }
 
       return {
@@ -772,11 +749,11 @@ const HusmodellDetail = () => {
           setKommuneLoading(false);
           break;
 
-        // case "other-documents":
-        //   setPlanDocuments([]);
-        //   setOtherDocumentInput({});
-        //   setExemptions([]);
-        //   break;
+        case "other-documents":
+          setPlanDocuments([]);
+          setExemptions([]);
+          setOtherDocumentInput({});
+          break;
       }
 
       return {
