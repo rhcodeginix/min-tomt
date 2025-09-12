@@ -9,12 +9,12 @@ import Ic_chevron_up from "@/public/images/Ic_chevron_up.svg";
 // import Ic_chevron_right from "@/public/images/Ic_chevron_right.svg";
 import GoogleMapNearByComponent from "@/components/Ui/map/nearbyBuiildingMap";
 import Eierinformasjon from "@/components/Ui/regulationChart/Eierinformasjon";
-import Ic_file from "@/public/images/Ic_file.svg";
-import Ic_download_primary from "@/public/images/Ic_download_primary.svg";
 import {
+  ArrowDownToLine,
   BadgeX,
   Building,
   ClipboardList,
+  File,
   FileText,
   FileUser,
   Files,
@@ -218,14 +218,14 @@ const PlotDetailPage: React.FC<{
   };
 
   const plotTabs: any = [
-    { id: "Regulering", label: "Regulering", icon: <FileText /> },
-    { id: "Eierinformasjon", label: "Eierinformasjon", icon: <FileUser /> },
+    { id: "Oppsummering", label: "Oppsummering", icon: <FileText /> },
+    { id: "Eiere", label: "Eiere", icon: <FileUser /> },
     { id: "Bygninger", label: "Bygninger", icon: <Building /> },
-    { id: "Plandokumenter", label: "Plandokumenter", icon: <ClipboardList /> },
-    { id: "Dokumenter", label: "Dokumenter", icon: <Files /> },
+    { id: "PlanID", label: "PlanID", icon: <ClipboardList /> },
+    { id: "Plandokumenter", label: "Plandokumenter", icon: <Files /> },
     {
-      id: "Planleggingsdokumenter",
-      label: "Planleggingsdokumenter",
+      id: "Lokale reguleringsendringer",
+      label: "Lokale reguleringsendringer",
       icon: <NotepadText />,
     },
     {
@@ -332,27 +332,32 @@ const PlotDetailPage: React.FC<{
     doc: any;
     handleDownload: (doc: any) => void;
   }) => (
-    <div className="border border-gray2 rounded-lg p-2 md:p-3 bg-[#F9FAFB] flex items-center justify-between relative w-full">
+    <div
+      className={`border ${doc?.type === "Bestemmelser" ? "border-primary" : doc?.type === "Plankart" ? "border-[#FFF2E7]" : "border-gray2"} rounded-lg p-2 md:p-3 ${doc?.type === "Bestemmelser" ? "bg-primary" : doc?.type === "Plankart" ? "bg-[#FFF2E7]" : "bg-[#F9FAFB]"} flex items-center justify-between relative w-full`}
+    >
       <div className="flex items-center gap-2.5 md:gap-4 truncate w-[calc(100%-60px)] md:w-[calc(100%-65px)]">
         <div className="border-[4px] border-gray rounded-full flex items-center justify-center">
           <div className="bg-[#F9FAFB] w-7 h-7 rounded-full flex justify-center items-center">
-            <Image src={Ic_file} alt="file" />
+            <File
+              className={`w-4 h-4 ${doc?.type === "Plankart" ? "text-darkBlack" : "text-primary"}`}
+            />
           </div>
         </div>
-        <h5 className="text-darkBlack text-xs md:text-sm font-medium truncate">
+        <h5
+          className={`${doc?.type === "Bestemmelser" ? "text-white" : "text-darkBlack"} text-xs md:text-sm font-medium truncate`}
+        >
           {doc?.name?.toLowerCase().includes("unknown")
             ? doc?.link?.split("/").pop()?.split("?")[0]
-            : doc?.name || "Loading..."}
+            : doc?.name || "Loading..."}{" "}
+          {doc?.type && `(${doc?.type})`}
         </h5>
       </div>
       <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 w-[52px] sm:w-[56px] md:w-auto">
-        <Image
-          src={Ic_download_primary}
-          alt="download"
-          className="cursor-pointer w-5 h-5 md:w-6 md:h-6"
+        <ArrowDownToLine
+          className={`cursor-pointer w-5 h-5 md:w-6 md:h-6 ${doc?.type === "Bestemmelser" ? "text-white" : doc?.type === "Plankart" ? "border-[#111322]" : "text-primary"}`}
           onClick={() => {
             if (
-              PlotActiveTab === "Planleggingsdokumenter" ||
+              PlotActiveTab === "Lokale reguleringsendringer" ||
               PlotActiveTab === "Dispensasjoner"
             ) {
               handleDownloads(doc);
@@ -1699,7 +1704,7 @@ const PlotDetailPage: React.FC<{
           </div>
         </div>
         <div>
-          {PlotActiveTab === "Regulering" && (
+          {PlotActiveTab === "Oppsummering" && (
             <>
               <div className="flex flex-col md:flex-row gap-5 lg:gap-9 desktop:gap-[60px]">
                 {/* <div> */}
@@ -2101,7 +2106,7 @@ const PlotDetailPage: React.FC<{
               </div>
             </>
           )}
-          {PlotActiveTab === "Eierinformasjon" && (
+          {PlotActiveTab === "Eiere" && (
             <Eierinformasjon
               data={lamdaDataFromApi?.latestOwnership}
               loadingAdditionalData={loadingLamdaData}
@@ -2228,7 +2233,7 @@ const PlotDetailPage: React.FC<{
               )}
             </>
           )}
-          {PlotActiveTab === "Plandokumenter" && (
+          {PlotActiveTab === "PlanID" && (
             <>
               {isValidBBOX && featureInfo && (
                 <div>
@@ -2249,7 +2254,7 @@ const PlotDetailPage: React.FC<{
               )}
             </>
           )}
-          {PlotActiveTab === "Dokumenter" && (
+          {PlotActiveTab === "Plandokumenter" && (
             <>
               {!Documents ? (
                 <>
@@ -2294,7 +2299,7 @@ const PlotDetailPage: React.FC<{
               )}
             </>
           )}
-          {PlotActiveTab === "Planleggingsdokumenter" && (
+          {PlotActiveTab === "Lokale reguleringsendringer" && (
             <>
               {documentLoading ? (
                 <>
